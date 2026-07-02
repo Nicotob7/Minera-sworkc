@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+/*
+  SWC / Sworkc Technologies — Sistema de diseño (rediseño premium).
+  Paleta: azul profundo #0A0C77 + cyan tecnológico #00A6D6 + BLANCO base + grises fríos.
+  Usar SIEMPRE tokens, nunca hex crudo en componentes.
+*/
+
+@theme {
+  /* ---- Marca: azul profundo corporativo (#0A0C77) ---- */
+  --color-brand-50: #ebecfa;
+  --color-brand-100: #d6d8f5;
+  --color-brand-200: #aeb2ec;
+  --color-brand-300: #7e84df;
+  --color-brand-400: #5158d2;
+  --color-brand-500: #2e36be;
+  --color-brand-600: #1c239e;
+  --color-brand-700: #14188a;
+  --color-brand-800: #0e1180;
+  --color-brand-900: #0a0c77; /* azul profundo corporativo */
+  --color-brand-950: #060733;
+  --color-brand: #0a0c77;
+
+  /* ---- Acento: cyan tecnológico (#00A6D6) ---- */
+  --color-cyan-50: #e5f8fe;
+  --color-cyan-100: #c2effb;
+  --color-cyan-200: #8fe2f7;
+  --color-cyan-300: #54d0f0;
+  --color-cyan-400: #1fb8e4;
+  --color-cyan-500: #00a6d6; /* cyan tecnológico */
+  --color-cyan-600: #0086b3;
+  --color-cyan-700: #016b90;
+  --color-cyan-800: #0a5874;
+  --color-cyan-900: #0e4961;
+  --color-cyan: #00a6d6;
+
+  /* ---- Alias de interacción ---- */
+  --color-accent: #0a0c77; /* primario */
+  --color-accent-2: #00a6d6; /* cyan */
+
+  /* ---- Neutros (blanco base + grises fríos) ---- */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-gray-50: #f5f8fc;
+  --color-gray-100: #eef2f8;
+  --color-gray-200: #e3e9f1;
+  --color-gray-300: #cdd6e3;
+  --color-surface-2: #f5f8fc;
+  --color-border: #e3e9f1;
+  --color-ink: #0b1020;
+  --color-ink-soft: #384256;
+  --color-muted-foreground: #5b6680;
+
+  /* ---- Contraste / franjas ---- */
+  --color-band-gray: #56616b;
+  --color-band-gray-2: #56616b;
+
+  /* ---- Estados semánticos (dashboard operacional) ---- */
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-success-fg: #166534;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fef3c7;
+  --color-warning-fg: #92400e;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fee2e2;
+  --color-danger-fg: #991b1b;
+  --color-info: #00a6d6;
+  --color-info-bg: #e0f5fc;
+  --color-info-fg: #0a5874;
+
+  /* ---- Tipografía ---- */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* ---- Radios ---- */
+  --radius: 0.875rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 999px;
+
+  /* ---- Sombras ---- */
+  --shadow-sm: 0 1px 2px rgba(11, 16, 32, 0.06), 0 1px 3px rgba(11, 16, 32, 0.08);
+  --shadow-md: 0 6px 18px rgba(11, 16, 32, 0.08), 0 2px 6px rgba(11, 16, 32, 0.05);
+  --shadow-lg: 0 24px 60px rgba(11, 16, 32, 0.14), 0 8px 20px rgba(11, 16, 32, 0.08);
+  --shadow-glow: 0 14px 44px rgba(10, 12, 119, 0.3);
+  --shadow-cyan: 0 14px 44px rgba(0, 166, 214, 0.32);
+}
+
+/* ---- Gradientes y degradados reutilizables ---- */
+:root {
+  --gradient-brand: linear-gradient(135deg, #0a0c77 0%, #1c239e 55%, #00a6d6 130%);
+  --gradient-cta: linear-gradient(120deg, #0a0c77 0%, #1c239e 100%);
+  --gradient-cyan: linear-gradient(120deg, #00a6d6 0%, #54d0f0 100%);
+  --gradient-blue-impact: linear-gradient(120deg, #0a0c77 0%, #14188a 50%, #0a0c77 100%);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+
+  ::selection {
+    background: var(--color-brand-900);
+    color: #ffffff;
+  }
+
+  .font-mono,
+  [class*="font-mono"] {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ===================== Keyframes ===================== */
+@keyframes swc-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes swc-fade-down { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+@keyframes swc-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes swc-ping { 0% { transform: scale(1); opacity: 0.55; } 70%, 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes swc-kenburns { from { transform: scale(1.06); } to { transform: scale(1.14); } }
+@keyframes swc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes swc-float-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+@keyframes swc-spin { to { transform: rotate(360deg); } }
+@keyframes swc-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+@keyframes swc-scan { 0% { transform: translateY(-120%); } 100% { transform: translateY(120%); } }
+@keyframes swc-grid-pan { from { background-position: 0 0; } to { background-position: 44px 44px; } }
+@keyframes swc-dash { to { stroke-dashoffset: 0; } }
+@keyframes swc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ===================== Utilidades de animación ===================== */
+.animate-fade-up { opacity: 0; animation: swc-fade-up 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
+.animate-fade-down { opacity: 0; animation: swc-fade-down 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
+
+.tw-caret { color: currentColor; font-weight: 300; animation: swc-caret 1s step-end infinite; }
+.live-ping { animation: swc-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.kenburns { animation: swc-kenburns 20s ease-out forwards alternate; }
+.float-slow { animation: swc-float 7s ease-in-out infinite; }
+.float-slower { animation: swc-float 9s ease-in-out infinite; }
+.float-x { animation: swc-float-x 8s ease-in-out infinite; }
+.spin-slow { animation: swc-spin 28s linear infinite; }
+.spin-slow-rev { animation: swc-spin 34s linear infinite reverse; }
+.glow-pulse { animation: swc-glow 3.6s ease-in-out infinite; }
+@keyframes swc-bob-l { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-3px); } }
+@keyframes swc-bob-r { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+.bob-l { animation: swc-bob-l 1.8s ease-in-out infinite; }
+.bob-r { animation: swc-bob-r 1.8s ease-in-out infinite; }
+
+/* Reveal al hacer scroll (lo activa el componente Reveal con .is-visible) */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* will-change eliminado: evita mantener capas de composición vivas de forma permanente. */
+}
+.reveal-up { transform: translateY(30px); }
+.reveal-left { transform: translateX(-36px); }
+.reveal-right { transform: translateX(36px); }
+.reveal-scale { transform: scale(0.93); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* ===================== Decorativos técnicos ===================== */
+.tech-grid {
+  background-image:
+    linear-gradient(to right, rgba(10, 12, 119, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10, 12, 119, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.tech-grid-dark {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.tech-grid-animated { animation: swc-grid-pan 8s linear infinite; }
+
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Sin degradados de texto: color solido (azul en claro, blanco en oscuro). */
+.text-gradient {
+  background: none;
+  color: var(--color-brand-900);
+  -webkit-text-fill-color: var(--color-brand-900);
+}
+/* Modo oscuro eliminado: el sitio es solo claro. */
+
+/* ===================== Accesibilidad: menos movimiento ===================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
