@@ -36,6 +36,8 @@ type CampoConfig = {
   type: string;
   autoComplete: string;
   required: boolean;
+  maxLength?: number;
+  pattern?: string;
 };
 
 type ContactoItem = {
@@ -43,6 +45,17 @@ type ContactoItem = {
   label: string;
   value: string;
   href?: string;
+};
+
+const CHILE_PHONE_PREFIX = "+569";
+const CHILE_PHONE_LOCAL_DIGITS = 8;
+const CHILE_PHONE_MAX_CHARS = CHILE_PHONE_PREFIX.length + CHILE_PHONE_LOCAL_DIGITS;
+
+const FIELD_LIMITS = {
+  nombre: 80,
+  empresa: 100,
+  email: 254,
+  mensaje: 1500,
 };
 
 const CAMPOS: CampoConfig[] = [
@@ -54,6 +67,7 @@ const CAMPOS: CampoConfig[] = [
     type: "text",
     autoComplete: "name",
     required: true,
+    maxLength: FIELD_LIMITS.nombre,
   },
   {
     id: "empresa",
@@ -63,6 +77,7 @@ const CAMPOS: CampoConfig[] = [
     type: "text",
     autoComplete: "organization",
     required: true,
+    maxLength: FIELD_LIMITS.empresa,
   },
   {
     id: "email",
@@ -72,15 +87,18 @@ const CAMPOS: CampoConfig[] = [
     type: "email",
     autoComplete: "email",
     required: true,
+    maxLength: FIELD_LIMITS.email,
   },
   {
     id: "telefono",
     label: "Teléfono",
-    placeholder: "+56 9 0000 0000",
+    placeholder: "+56912345678",
     icon: Phone,
     type: "tel",
     autoComplete: "tel",
     required: false,
+    maxLength: CHILE_PHONE_MAX_CHARS,
+    pattern: "\\+569\\d{8}",
   },
 ];
 
@@ -99,6 +117,36 @@ const EMPTY_FORM: FormData = {
   mensaje: "",
 };
 
+function limitTelefono(value: string) {
+  if (!value.trim()) return "";
+
+  const digits = value.replace(/\D/g, "");
+  const prefixDigits = CHILE_PHONE_PREFIX.replace(/\D/g, "");
+
+  if (!digits) return "";
+
+  if (digits.length < prefixDigits.length && prefixDigits.startsWith(digits)) {
+    return value.trim().startsWith("+") ? `+${digits}` : digits;
+  }
+
+  let localDigits = "";
+
+  if (digits.startsWith("569")) {
+    localDigits = digits.slice(3);
+  } else if (digits.startsWith("56")) {
+    const withoutCountry = digits.slice(2);
+    localDigits = withoutCountry.startsWith("9") ? withoutCountry.slice(1) : withoutCountry;
+  } else if (digits.startsWith("9")) {
+    localDigits = digits.slice(1);
+  } else {
+    localDigits = digits;
+  }
+
+  localDigits = localDigits.slice(0, CHILE_PHONE_LOCAL_DIGITS);
+
+  return `${CHILE_PHONE_PREFIX}${localDigits}`;
+}
+
 export function Contacto() {
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
   const [estado, setEstado] = useState<EnvioEstado>("idle");
@@ -107,7 +155,7 @@ export function Contacto() {
   const loading = estado === "loading";
 
   function update(field: keyof FormData, value: string) {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm((prev) => ({ ...prev, [field]: field === "telefono" ? limitTelefono(value) : value }));
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -118,17 +166,20 @@ export function Contacto() {
     setErrorMsg("");
 
     try {
+      const fields = new globalThis.FormData(e.currentTarget);
+      const website = fields.get("website")?.toString() ?? "";
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, website }),
       });
 
       const json = await res.json().catch(() => null);
 
       if (!res.ok || !json?.ok) {
         setEstado("error");
-        setErrorMsg("No pudimos enviar tu solicitud. Intenta nuevamente en unos minutos.");
+        setErrorMsg(json?.error ?? "No pudimos enviar tu mensaje. Intenta nuevamente en unos minutos.");
         return;
       }
 
@@ -201,10 +252,15 @@ function FormularioContacto({ form, estado, errorMsg, loading, onUpdate, onSubmi
       onSubmit={onSubmit}
       className="relative w-full max-w-2xl text-[#0b1020]"
     >
+      <div aria-hidden="true" className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden">
+        <label htmlFor="website">Sitio web</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="mb-7 text-center lg:text-left">
         <h3 className="font-display text-3xl font-semibold tracking-tight sm:text-[2.35rem]">Contáctanos</h3>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#5b6680] lg:mx-0">
-          Respondemos con una propuesta de reunión y contexto para tu operación.
+          Respondemos con contexto claro para tu operación.
         </p>
       </div>
 
@@ -222,7 +278,7 @@ function FormularioContacto({ form, estado, errorMsg, loading, onUpdate, onSubmi
 
       <div className="mt-6 flex items-center justify-between gap-4">
         <p className="max-w-[18rem] text-xs leading-relaxed text-[#6b7892]">
-          Tus datos se usarán solo para responder esta solicitud.
+          Tus datos se usarán solo para responder este mensaje.
         </p>
         <SubmitButton loading={loading} />
       </div>
@@ -279,6 +335,7 @@ function CampoInput({
   onChange: (field: keyof FormData, value: string) => void;
 }) {
   const Icon = campo.icon;
+  const descriptionId = campo.id === "telefono" ? `${campo.id}-hint` : undefined;
 
   return (
     <div>
@@ -296,12 +353,22 @@ function CampoInput({
           type={campo.type}
           required={campo.required}
           autoComplete={campo.autoComplete}
+          maxLength={campo.maxLength}
+          pattern={campo.pattern}
+          inputMode={campo.id === "telefono" ? "tel" : undefined}
+          title={campo.id === "telefono" ? "Formato chileno: +569XXXXXXXX." : undefined}
+          aria-describedby={descriptionId}
           value={value}
           onChange={(e) => onChange(campo.id, e.target.value)}
           placeholder={campo.placeholder}
           className="min-h-[48px] w-full rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 pl-11 text-base text-[#0b1020] transition-all duration-200 placeholder:text-[#8793a8] hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
         />
       </div>
+      {campo.id === "telefono" && (
+        <p id={descriptionId} className="mt-1.5 text-xs font-medium text-[#6b7892]">
+          Formato chileno: +569XXXXXXXX.
+        </p>
+      )}
     </div>
   );
 }
@@ -328,6 +395,7 @@ function CampoMensaje({
           name="mensaje"
           rows={3}
           required
+          maxLength={FIELD_LIMITS.mensaje}
           value={value}
           onChange={(e) => onChange("mensaje", e.target.value)}
           placeholder="Cuéntanos brevemente qué operación o flujo quieres digitalizar."
@@ -346,7 +414,7 @@ function SubmitButton({ loading }: { loading: boolean }) {
       type="submit"
       disabled={loading}
       aria-busy={loading}
-      aria-label="Solicitar demostración"
+      aria-label="Enviar mensaje"
       onMouseEnter={() => sendIconRef.current?.startAnimation()}
       onFocus={() => sendIconRef.current?.startAnimation()}
       className="group relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-[#0a0c77] text-white shadow-[0_16px_42px_rgba(10,12,119,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#14188a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:translate-y-0 sm:h-[52px] sm:w-[52px]"
@@ -390,14 +458,14 @@ function ExitoEstado({ onReset }: { onReset: () => void }) {
       </span>
       <h3 className="mt-6 font-display text-2xl font-semibold tracking-tight">Gracias, te contactaremos pronto</h3>
       <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-[#5b6680]">
-        Recibimos tu solicitud. Nuestro equipo se pondrá en contacto para coordinar la demostración.
+        Recibimos tu mensaje. Nuestro equipo se pondrá en contacto contigo pronto.
       </p>
       <button
         type="button"
         onClick={onReset}
         className="mt-7 inline-flex min-h-[44px] items-center justify-center rounded-[var(--radius)] border border-[#dce4ef] bg-white px-5 py-3 text-sm font-semibold text-[#0a0c77] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0a0c77] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30"
       >
-        Enviar otra solicitud
+        Enviar otro mensaje
       </button>
     </div>
   );

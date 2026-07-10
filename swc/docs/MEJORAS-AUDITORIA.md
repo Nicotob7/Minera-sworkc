@@ -21,6 +21,7 @@ Implementación de las correcciones de la [AUDITORIA.md](AUDITORIA.md), **sin ca
 
 - **Navbar:** foco de teclado visible en enlaces y CTA; `aria-controls`/`id` en el menú móvil; **cierre con Escape** (y al hacer scroll).
 - **Contacto:** inputs/textarea a **16px** (`text-base`) → evita el zoom automático de iOS; `handleSubmit` ahora **lee el body JSON** y valida `json?.ok` (no muestra éxito falso); **`role="status" aria-live`** en el estado de éxito.
+- **Contacto anti-spam:** teléfono chileno `+569XXXXXXXX`, límites de contenido, honeypot invisible y rate limit por IP (5 mensajes cada 10 minutos). Pendiente ideal a futuro: CAPTCHA/Cloudflare Turnstile o rate limit persistente con Redis/Upstash.
 - **Footer:** foco de teclado más claro en los enlaces.
 
 ## 4. Secciones: contraste y targets táctiles

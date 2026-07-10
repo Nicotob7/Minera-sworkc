@@ -10,7 +10,7 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 | `page.tsx` | S | Compone la página: `Navbar` + `<main id="contenido">` con las 7 secciones + `Footer`. |
 | `globals.css` | — | Tailwind v4: tokens en `@theme`, gradientes, keyframes y utilidades de animación (`reveal`, `float`, `glow-pulse`, `live-ping`, etc.). |
 | `robots.ts` / `sitemap.ts` | S | Generan `/robots.txt` y `/sitemap.xml`. |
-| `api/contact/route.ts` | S | `POST` del formulario. Valida y envía por **nodemailer** si hay SMTP; si no, degrada con `ok:true`. |
+| `api/contact/route.ts` | S | `POST` del formulario. Valida requeridos, límites de texto, teléfono chileno `+569XXXXXXXX`, honeypot y rate limit por IP (5/10 min); envía por **nodemailer** con Gmail SMTP (`SMTP_*`, `CONTACT_TO`) en texto/HTML. |
 
 ## `components/` (raíz)
 
@@ -50,7 +50,7 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 | `Servicios.tsx` | C | Los 10 módulos como mapa/panel interactivo (desktop) / acordeón (móvil), con icono animado, detalle y mini-gráfico por módulo. |
 | `DashboardInteractivo.tsx` | C | "Centro de control operacional": fila de KPIs, filtros (Rango/Turno), charts en vivo (FleetDonut/FailureBars/AvailabilityKPI) y feed de alertas. |
 | `FranjaAzul.tsx` | S | Franja blanca tipográfica "¿Sabías que…?" (dato de alto impacto). |
-| `Contacto.tsx` | C | Full-bleed: panel de imagen (trabajador) + formulario premium → `POST /api/contact`, con estados loading/success/error. |
+| `Contacto.tsx` | C | Full-bleed: panel de imagen (trabajador) + formulario premium → `POST /api/contact`, con estados loading/success/error, honeypot invisible y teléfono normalizado a `+569XXXXXXXX`. |
 | `FAQ.tsx` | C | Cronograma en 2 columnas: 6 preguntas numeradas con acordeón ("Leer más"). |
 | `Footer.tsx` | S | Footer azul oscuro simple: nombre "Sworkc Technologies", enlaces y copyright. |
 

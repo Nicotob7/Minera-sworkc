@@ -158,7 +158,7 @@ export function DashboardInteractivo() {
             variant="ghost-dark"
             className="w-full border-white/50 bg-white px-5 py-3 text-[#0b1020] hover:border-white hover:bg-white/90 hover:text-[#0b1020] focus-visible:ring-white sm:w-auto"
           >
-            Solicitar una demostración
+            Contactar al equipo
           </CTAButton>
         </div>
 

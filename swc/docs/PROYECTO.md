@@ -75,23 +75,42 @@ npm run lint     # eslint
 
 ## 7. Formulario de contacto
 
-`components/sections/Contacto.tsx` → `POST /api/contact`. El handler (`app/api/contact/route.ts`) valida campos, y **si hay SMTP configurado envía el correo**; si no, registra y responde ok (degradación elegante).
+`components/sections/Contacto.tsx` → `POST /api/contact`. El handler (`app/api/contact/route.ts`) valida campos, exige teléfono chileno opcional en formato `+569XXXXXXXX`, aplica límite por IP, descarta bots por honeypot, y **si hay SMTP configurado envía el correo**; si no, registra y responde ok (degradación elegante).
 
-Variables de entorno para envío real (crear `.env.local`):
+El correo llega con asunto `Nuevo mensaje de contacto - ...`, versión texto plano y versión HTML con ficha de datos + mensaje destacado. El `replyTo` queda con el email ingresado por el visitante para responder directo desde Gmail.
+
+Defensas anti-spam actuales:
+
+- **Rate limit por IP:** máximo 5 mensajes cada 10 minutos. Si se supera, responde `429`.
+- **Honeypot invisible:** campo `website`; si viene lleno, el mensaje se descarta sin enviar correo.
+- **Límites de contenido:** nombre 80 caracteres, empresa 100, email 254, mensaje 1500.
+- **Teléfono chileno:** el cliente normaliza a `+569XXXXXXXX`; el API vuelve a validar el mismo formato.
+
+Variables de entorno para envío real (en desarrollo van en `swc/.env`; en hosting/Vercel van en el panel de variables del proyecto):
 
 ```
-SMTP_HOST=...
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=...
-SMTP_PASS=...
-SMTP_FROM="SWC Web <no-reply@tudominio>"
-CONTACT_TO=destino@tudominio
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=tu-correo@gmail.com
+SMTP_PASS=tu_contrasena_de_aplicacion_sin_espacios
+SMTP_FROM="Formulario web SWC <tu-correo@gmail.com>"
+CONTACT_TO=contacto@sworkc.cl
 ```
+
+Notas para Gmail:
+
+- `SMTP_USER` es el Gmail que autentica y envía. Debe tener contraseña de aplicación.
+- `SMTP_PASS` es la contraseña de aplicación de Gmail, sin espacios.
+- `SMTP_FROM` es el remitente visible. Recomendado: `"Formulario web SWC <correo@dominio>"`.
+- Si `SMTP_USER` y `CONTACT_TO` son la misma cuenta, Gmail puede mostrar el remitente como "yo" en la bandeja. Para evitarlo, usa una cuenta/alias emisor distinto, por ejemplo `web@sworkc.cl`, y deja `CONTACT_TO=contacto@sworkc.cl`.
+- `CONTACT_TO` es donde llegan los mensajes del formulario. Si será un solo correo de contacto, puede ser el mismo de `SMTP_USER`.
+- `.env.example` es solo plantilla/documentación; los valores reales van en `.env` y no se suben al repositorio.
+- A futuro, si el formulario recibe tráfico alto o ataques reales, conviene sumar CAPTCHA/Cloudflare Turnstile y/o rate limit persistente con Redis/Upstash. El `Map` actual es suficiente como primera barrera para una landing simple, pero en serverless puede reiniciarse o variar por instancia.
 
 ## 8. Pendientes / placeholders por confirmar
 
 - **Dominio:** `SITE_URL` en `layout.tsx`, `robots.ts`, `sitemap.ts` = `https://www.sworkc.cl` (placeholder).
 - **Datos de contacto:** correo `contacto@sworkc.cl`, teléfono `+56 9 0000 0000`, LinkedIn (placeholder).
-- **SMTP:** sin configurar (el formulario funciona pero no envía hasta poner las variables).
+- **SMTP:** configurar `swc/.env` con las variables anteriores para que el formulario envíe correos reales.
 - Mejoras técnicas y de diseño pendientes: ver [MEJORAS-AUDITORIA.md](MEJORAS-AUDITORIA.md) y [AUDITORIA.md](AUDITORIA.md).

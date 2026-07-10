@@ -19,6 +19,7 @@ Landing page de **Sworkc Technologies** para su producto **sworkc control** (pla
 - **Stack:** Next.js 16 (App Router) · React 19 · Tailwind v4 · TypeScript · ApexCharts · Tabler Icons · motion · nodemailer.
 - **Tipo:** landing de una sola página (one-page) con 8 secciones, formulario de contacto con backend (`/api/contact`) y SEO completo.
 - **Idioma:** español (Chile), público B2B minero.
+- **Contacto:** el envío real usa Gmail SMTP. Los secretos van en `swc/.env`; `.env.example` solo documenta los nombres. El correo se envía como mensaje de contacto en texto/HTML, el teléfono se normaliza a `+569XXXXXXXX`, y el API tiene honeypot + rate limit por IP.
 
 ```bash
 npm install
