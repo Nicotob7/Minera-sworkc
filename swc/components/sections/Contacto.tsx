@@ -110,33 +110,30 @@ export function Contacto() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return;
-
-    setEstado("loading");
     setErrorMsg("");
 
+    // Landing estática: sin backend de correo. Abrimos el cliente de correo del
+    // usuario con los datos precargados; la solicitud llega a contacto@sworkc.cl.
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const json = await res.json().catch(() => null);
-
-      if (!res.ok || !json?.ok) {
-        setEstado("error");
-        setErrorMsg("No pudimos enviar tu solicitud. Intenta nuevamente en unos minutos.");
-        return;
-      }
-
+      const asunto = `Solicitud de demostración — ${form.empresa || form.nombre}`;
+      const cuerpo = [
+        `Nombre: ${form.nombre}`,
+        `Empresa: ${form.empresa}`,
+        `Email: ${form.email}`,
+        `Teléfono: ${form.telefono}`,
+        "",
+        "Mensaje:",
+        form.mensaje,
+      ].join("\n");
+      window.location.href = `mailto:contacto@sworkc.cl?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
       setEstado("success");
       setForm(EMPTY_FORM);
     } catch {
       setEstado("error");
-      setErrorMsg("Hubo un problema de conexión. Revisa tu red e intenta otra vez.");
+      setErrorMsg("No pudimos abrir tu cliente de correo. Escríbenos a contacto@sworkc.cl.");
     }
   }
 

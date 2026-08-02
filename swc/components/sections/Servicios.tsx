@@ -34,12 +34,12 @@ type Module = {
 const MODULES: Module[] = [
   {
     id: "ot",
-    title: "Ordenes de trabajo digitales",
+    title: "Órdenes de trabajo digitales",
     icon: ClipboardCheckIcon,
-    tag: "Operacion",
+    tag: "Operación",
     stat: "4 estados",
     desc: "Cada OT queda creada, asignada, ejecutada y cerrada con evidencia, responsable e historial.",
-    points: ["Asignacion por equipo", "Cierre con evidencia", "Historial trazable"],
+    points: ["Asignación por equipo", "Cierre con evidencia", "Historial trazable"],
   },
   {
     id: "horas",
@@ -48,16 +48,16 @@ const MODULES: Module[] = [
     tag: "Monitoreo",
     stat: "uso real",
     desc: "Controla horas operativas por maquinaria para anticipar mantenciones y proyectar carga.",
-    points: ["Conteo por equipo", "Umbrales configurables", "Proyeccion de uso"],
+    points: ["Conteo por equipo", "Umbrales configurables", "Proyección de uso"],
   },
   {
     id: "alertas",
     title: "Mantenciones y alertas",
     icon: BellIcon,
-    tag: "Prevencion",
+    tag: "Prevención",
     stat: "alerta temprana",
     desc: "Activa avisos por horas, fechas, criticidad o condiciones que amenazan la continuidad.",
-    points: ["Prioridad por criticidad", "Aviso a responsables", "Reglas por operacion"],
+    points: ["Prioridad por criticidad", "Aviso a responsables", "Reglas por operación"],
   },
   {
     id: "estados",
@@ -65,26 +65,26 @@ const MODULES: Module[] = [
     icon: WrenchIcon,
     tag: "Disponibilidad",
     stat: "flota viva",
-    desc: "Visualiza equipos disponibles, detenidos, en reparacion, inspeccion o pendientes.",
+    desc: "Visualiza equipos disponibles, detenidos, en reparación, inspección o pendientes.",
     points: ["Estado en vivo", "Detenciones registradas", "Pendientes priorizados"],
   },
   {
     id: "turnos",
-    title: "Gestion de turnos",
+    title: "Gestión de turnos",
     icon: RefreshCWIcon,
     tag: "Continuidad",
     stat: "relevo claro",
     desc: "Entrega pendientes, fallas y observaciones al turno siguiente sin depender de memoria o planillas.",
-    points: ["Resumen automatico", "Pendientes heredados", "Contexto entre turnos"],
+    points: ["Resumen automático", "Pendientes heredados", "Contexto entre turnos"],
   },
   {
     id: "fallas",
-    title: "Estadisticas de fallas",
+    title: "Estadísticas de fallas",
     icon: ChartLineIcon,
-    tag: "Analisis",
+    tag: "Análisis",
     stat: "tendencias",
-    desc: "Detecta frecuencia, reincidencias y tiempos de detencion para decidir con datos reales.",
-    points: ["Fallas por equipo", "Tiempos de reparacion", "Patrones repetitivos"],
+    desc: "Detecta frecuencia, reincidencias y tiempos de detención para decidir con datos reales.",
+    points: ["Fallas por equipo", "Tiempos de reparación", "Patrones repetitivos"],
   },
   {
     id: "hh",
@@ -92,8 +92,8 @@ const MODULES: Module[] = [
     icon: TimerIcon,
     tag: "Productividad",
     stat: "HH medidas",
-    desc: "Registra horas hombre por reparacion, inspeccion y mantencion para comparar productividad.",
-    points: ["HH por actividad", "Comparativa por equipo", "Costo de intervencion"],
+    desc: "Registra horas hombre por reparación, inspección y mantención para comparar productividad.",
+    points: ["HH por actividad", "Comparativa por equipo", "Costo de intervención"],
   },
   {
     id: "insumos",
@@ -101,8 +101,8 @@ const MODULES: Module[] = [
     icon: BoxesIcon,
     tag: "Inventario",
     stat: "stock visible",
-    desc: "Traza repuestos, materiales y consumibles usados por cada intervencion o mantencion.",
-    points: ["Consumo por reparacion", "Stock de repuestos", "Alertas de quiebre"],
+    desc: "Traza repuestos, materiales y consumibles usados por cada intervención o mantención.",
+    points: ["Consumo por reparación", "Stock de repuestos", "Alertas de quiebre"],
   },
   {
     id: "dashboard",
@@ -110,17 +110,17 @@ const MODULES: Module[] = [
     icon: LayoutGridIcon,
     tag: "Control",
     stat: "KPIs en vivo",
-    desc: "Reune disponibilidad, alertas, estados y productividad en una vista de mando operacional.",
+    desc: "Reúne disponibilidad, alertas, estados y productividad en una vista de mando operacional.",
     points: ["Indicadores clave", "Tendencias visuales", "Alertas centralizadas"],
   },
   {
     id: "reportes",
     title: "Reportabilidad",
     icon: FileChartLineIcon,
-    tag: "Gestion",
+    tag: "Gestión",
     stat: "datos listos",
-    desc: "Genera informacion descargable para supervision, planificacion, mantenimiento y administracion.",
-    points: ["Informes descargables", "Plantillas por area", "Datos consolidados"],
+    desc: "Genera información descargable para supervisión, planificación, mantenimiento y administración.",
+    points: ["Informes descargables", "Plantillas por área", "Datos consolidados"],
   },
 ];
 
@@ -278,10 +278,10 @@ export function Servicios() {
         <div className="mx-auto max-w-3xl text-center">
          
           <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Como funciona sworkc control
+            Cómo funciona sworkc control
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/78 sm:text-lg">
-            Sworkc control conecta cada pieza de la operacion en un solo mapa: terreno, turnos,
+            Sworkc control conecta cada pieza de la operación en un solo mapa: terreno, turnos,
             mantenimiento, insumos, reportes e indicadores.
           </p>
         </div>

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const SITE_URL = "https://www.sworkc.cl"; // PLACEHOLDER: dominio real por confirmar
+const SITE_URL = "https://sworkc.cl";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",

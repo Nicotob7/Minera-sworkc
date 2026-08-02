@@ -48,12 +48,12 @@ export function Navbar() {
           scrolled ? "shadow-[var(--shadow-lg)]" : "shadow-[var(--shadow-sm)]"
         }`}
       >
-        <a href="#inicio" className="flex shrink-0 items-center" aria-label="SWC — inicio">
+        <a href="#inicio" className="flex shrink-0 items-center" aria-label="SWORKC — inicio">
           <Image
             src="/logo-swc.png"
-            alt="SWC — System Workcont Technologies"
-            width={92}
-            height={53}
+            alt="SWORKC Technologies"
+            width={166}
+            height={50}
             priority
           />
         </a>

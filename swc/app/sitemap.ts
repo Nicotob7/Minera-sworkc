@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://www.sworkc.cl"; // PLACEHOLDER: dominio real por confirmar
+// Landing estática (output: export): las rutas de metadata deben ser estáticas.
+export const dynamic = "force-static";
+
+const SITE_URL = "https://sworkc.cl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

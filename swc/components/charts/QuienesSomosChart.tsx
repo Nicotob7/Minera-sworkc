@@ -70,7 +70,7 @@ const baseChartOptions: ApexOptions = {
     itemMargin: { horizontal: 12, vertical: 4 },
   },
   xaxis: {
-    categories: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+    categories: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
     axisBorder: { show: false },
     axisTicks: { show: false },
     labels: {

@@ -130,7 +130,7 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
     type: "bar",
     series: [{ name: "OT cerradas", data: [18, 24, 29, 37] }],
     options: barOptions(["Crear", "Asignar", "Ejecutar", "Cerrar"]),
-    title: "Ciclo de ordenes",
+    title: "Ciclo de órdenes",
     caption: "Avance semanal por estado",
   },
   horas: {
@@ -144,7 +144,7 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
     type: "radialBar",
     series: [82, 58, 34],
     options: baseOptions({
-      labels: ["Criticas", "Medias", "OK"],
+      labels: ["Críticas", "Medias", "OK"],
       colors: [palette.danger, palette.warning, palette.success],
       plotOptions: {
         radialBar: {
@@ -159,13 +159,13 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
       },
     }),
     title: "Prioridad de alertas",
-    caption: "Distribucion operacional",
+    caption: "Distribución operacional",
   },
   estados: {
     type: "donut",
     series: [58, 22, 12, 8],
     options: baseOptions({
-      labels: ["Disponibles", "Reparacion", "Detenidos", "Inspeccion"],
+      labels: ["Disponibles", "Reparación", "Detenidos", "Inspección"],
       colors: [palette.success, palette.cyan, palette.warning, palette.brandSoft],
       legend: { position: "bottom", labels: { colors: palette.ink } },
       plotOptions: {
@@ -182,7 +182,7 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
       },
     }),
     title: "Estado de flota",
-    caption: "Disponibilidad por condicion",
+    caption: "Disponibilidad por condición",
   },
   turnos: {
     type: "area",
@@ -214,7 +214,7 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
   hh: {
     type: "bar",
     series: [{ name: "HH", data: [58, 30, 49, 36] }],
-    options: barOptions(["Reparacion", "Inspeccion", "Mantencion", "Apoyo"], true),
+    options: barOptions(["Reparación", "Inspección", "Mantención", "Apoyo"], true),
     title: "Horas hombre",
     caption: "Carga por actividad",
   },
@@ -244,7 +244,7 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
       { name: "Disponibilidad", data: [87, 89, 91, 90, 94, 96, 98] },
       { name: "Cumplimiento", data: [62, 66, 68, 71, 73, 76, 79] },
     ],
-    options: axisOptions(["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"]),
+    options: axisOptions(["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]),
     title: "Indicadores clave",
     caption: "Disponibilidad vs cumplimiento",
   },
