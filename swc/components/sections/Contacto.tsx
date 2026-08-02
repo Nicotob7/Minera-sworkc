@@ -99,6 +99,10 @@ const EMPTY_FORM: FormData = {
   mensaje: "",
 };
 
+// Backend que recibe la solicitud y la envía por correo (SES).
+// Configurable en build con NEXT_PUBLIC_API_URL; por defecto, la API de prod.
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.sworkc.cl";
+
 export function Contacto() {
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
   const [estado, setEstado] = useState<EnvioEstado>("idle");
@@ -110,30 +114,33 @@ export function Contacto() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return;
+
+    setEstado("loading");
     setErrorMsg("");
 
-    // Landing estática: sin backend de correo. Abrimos el cliente de correo del
-    // usuario con los datos precargados; la solicitud llega a contacto@sworkc.cl.
     try {
-      const asunto = `Solicitud de demostración — ${form.empresa || form.nombre}`;
-      const cuerpo = [
-        `Nombre: ${form.nombre}`,
-        `Empresa: ${form.empresa}`,
-        `Email: ${form.email}`,
-        `Teléfono: ${form.telefono}`,
-        "",
-        "Mensaje:",
-        form.mensaje,
-      ].join("\n");
-      window.location.href = `mailto:contacto@sworkc.cl?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+      const res = await fetch(`${API_URL}/api/v1/contacto`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const json = await res.json().catch(() => null);
+
+      if (!res.ok || !json?.ok) {
+        setEstado("error");
+        setErrorMsg("No pudimos enviar tu solicitud. Intenta nuevamente en unos minutos.");
+        return;
+      }
+
       setEstado("success");
       setForm(EMPTY_FORM);
     } catch {
       setEstado("error");
-      setErrorMsg("No pudimos abrir tu cliente de correo. Escríbenos a contacto@sworkc.cl.");
+      setErrorMsg("Hubo un problema de conexión. Revisa tu red e intenta otra vez.");
     }
   }
 
