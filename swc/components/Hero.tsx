@@ -15,7 +15,7 @@ export function Hero() {
       {/* Imagen de fondo, esquina a esquina */}
       <Image
         src="/hero/final.png"
-        alt="Tablet mostrando el dashboard de sworkc control (Visión Operativa) en una faena minera al atardecer"
+        alt="Tablet mostrando el dashboard de sworkc (Visión Operativa) en una faena minera al atardecer"
         fill
         priority
         sizes="100vw"

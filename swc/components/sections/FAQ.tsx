@@ -67,7 +67,7 @@ export function FAQ() {
             Preguntas frecuentes
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-base text-ink-soft">
-            Algunas de las consultas más comunes sobre sworkc control.
+            Algunas de las consultas más comunes sobre sworkc.
           </p>
         </div>
 

@@ -278,10 +278,10 @@ export function Servicios() {
         <div className="mx-auto max-w-3xl text-center">
          
           <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Cómo funciona sworkc control
+            Cómo funciona sworkc
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/78 sm:text-lg">
-            Sworkc control conecta cada pieza de la operación en un solo mapa: terreno, turnos,
+            Sworkc conecta cada pieza de la operación en un solo mapa: terreno, turnos,
             mantenimiento, insumos, reportes e indicadores.
           </p>
         </div>

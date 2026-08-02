@@ -193,7 +193,7 @@ export function DashboardInteractivo() {
                   Centro de control operacional
                 </h3>
                 <p className="font-mono text-[11px] uppercase tracking-wide text-white/85">
-                  sworkc control · faena norte
+                  sworkc · faena norte
                 </p>
               </div>
             </div>
@@ -300,7 +300,7 @@ export function DashboardInteractivo() {
         </div>
 
         <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-white/85">
-          Lo que ves aquí es una muestra. En producción, sworkc control conecta telemetría, OT y
+          Lo que ves aquí es una muestra. En producción, sworkc conecta telemetría, OT y
           planificación en un único centro de mando.
         </p>
       </div>

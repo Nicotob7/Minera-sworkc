@@ -26,7 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const SITE_DESCRIPTION =
-  "sworkc control: plataforma digital para empresas mineras y contratistas. Órdenes de trabajo digitales, mantenciones, alertas, control de equipos e indicadores en tiempo real.";
+  "sworkc: plataforma digital para empresas mineras y contratistas. Órdenes de trabajo digitales, mantenciones, alertas, control de equipos e indicadores en tiempo real.";
 
 const SITE_TITLE =
   "Sworkc Technologies — Continuidad operacional minera en tiempo real";
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     "contratistas mineros",
     "indicadores en tiempo real",
     "Sworkc Technologies",
-    "sworkc control",
+    "sworkc",
   ],
   openGraph: {
     type: "website",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
         url: "/hero/final.png",
         width: 1672,
         height: 941,
-        alt: "sworkc control en faena minera",
+        alt: "sworkc en faena minera",
       },
     ],
   },
@@ -103,7 +103,7 @@ const jsonLd = {
     },
     {
       "@type": "SoftwareApplication",
-      name: "sworkc control",
+      name: "sworkc",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       description: SITE_DESCRIPTION,

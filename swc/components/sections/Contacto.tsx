@@ -158,7 +158,7 @@ export function Contacto() {
               <div className="absolute inset-x-8 bottom-0 h-16 rounded-full bg-black/30 blur-2xl" aria-hidden />
               <Image
                 src="/img/contact.png"
-                alt="Trabajador minero mostrando sworkc control en una tablet"
+                alt="Trabajador minero mostrando sworkc en una tablet"
                 width={447}
                 height={558}
                 priority={false}
