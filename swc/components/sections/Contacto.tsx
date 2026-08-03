@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   Building2,
   CheckCircle2,
-  Linkedin,
   Loader2,
   Mail,
   MapPin,
@@ -86,9 +85,8 @@ const CAMPOS: CampoConfig[] = [
 
 const CONTACTO_INFO: ContactoItem[] = [
   { icon: Mail, label: "Correo", value: "contacto@sworkc.cl", href: "mailto:contacto@sworkc.cl" },
-  { icon: Phone, label: "Teléfono", value: "+56 9 0000 0000", href: "tel:+56900000000" },
+  { icon: Phone, label: "Teléfono", value: "+56 9 8516 5976", href: "tel:+56985165976" },
   { icon: MapPin, label: "Ubicación", value: "Chile" },
-  { icon: Linkedin, label: "LinkedIn", value: "Sworkc Technologies", href: "https://www.linkedin.com" },
 ];
 
 const EMPTY_FORM: FormData = {
@@ -350,19 +348,19 @@ function SubmitButton({ loading }: { loading: boolean }) {
       type="submit"
       disabled={loading}
       aria-busy={loading}
-      aria-label="Solicitar demostración"
       onMouseEnter={() => sendIconRef.current?.startAnimation()}
       onFocus={() => sendIconRef.current?.startAnimation()}
-      className="group relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-[#0a0c77] text-white shadow-[0_16px_42px_rgba(10,12,119,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#14188a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:translate-y-0 sm:h-[52px] sm:w-[52px]"
+      className="group relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-pill)] bg-[#0a0c77] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_16px_42px_rgba(10,12,119,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#14188a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:translate-y-0"
     >
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]"
       />
+      <span className="relative">{loading ? "Enviando…" : "Solicitar demostración"}</span>
       {loading ? (
         <Loader2 size={18} className="relative animate-spin" />
       ) : (
-        <SendAnimatedIcon ref={sendIconRef} size={22} className="relative" />
+        <SendAnimatedIcon ref={sendIconRef} size={18} className="relative" />
       )}
     </button>
   );

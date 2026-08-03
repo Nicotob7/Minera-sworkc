@@ -279,7 +279,7 @@ export function ServicioModuleChart({ id, compact = false }: { id: ModuleChartId
           <p className="mt-0.5 text-xs text-muted-foreground">{config.caption}</p>
         </div>
         <span className="rounded-[var(--radius-pill)] border border-[#dce6f2] bg-white px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-brand-900">
-          live
+          En vivo
         </span>
       </div>
       <div role="img" aria-label={`${config.title}: ${config.caption}`}>

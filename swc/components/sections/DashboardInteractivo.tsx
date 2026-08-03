@@ -48,19 +48,19 @@ const RANGES: { key: RangeKey; label: string }[] = [
 
 const KPI_DATA: Record<RangeKey, Kpi[]> = {
   hoy: [
-    { id: "disp", label: "Disponibilidad", value: "98.6", unit: "%", delta: "+0.4", up: true, icon: Gauge },
+    { id: "disp", label: "Disponibilidad", value: "98,6", unit: "%", delta: "+0,4", up: true, icon: Gauge },
     { id: "online", label: "Equipos en línea", value: "48", unit: "/50", delta: "+2", up: true, icon: Radio },
     { id: "ot", label: "OT abiertas", value: "27", delta: "-5", up: true, icon: Tool },
     { id: "mant", label: "Mantenciones próximas", value: "9", delta: "+1", up: false, icon: Clock },
   ],
   "7d": [
-    { id: "disp", label: "Disponibilidad", value: "97.9", unit: "%", delta: "+1.1", up: true, icon: Gauge },
+    { id: "disp", label: "Disponibilidad", value: "97,9", unit: "%", delta: "+1,1", up: true, icon: Gauge },
     { id: "online", label: "Equipos en línea", value: "47", unit: "/50", delta: "+3", up: true, icon: Radio },
     { id: "ot", label: "OT abiertas", value: "142", delta: "-18", up: true, icon: Tool },
     { id: "mant", label: "Mantenciones próximas", value: "31", delta: "+4", up: false, icon: Clock },
   ],
   "30d": [
-    { id: "disp", label: "Disponibilidad", value: "98.1", unit: "%", delta: "+2.3", up: true, icon: Gauge },
+    { id: "disp", label: "Disponibilidad", value: "98,1", unit: "%", delta: "+2,3", up: true, icon: Gauge },
     { id: "online", label: "Equipos en línea", value: "49", unit: "/50", delta: "+6", up: true, icon: Radio },
     { id: "ot", label: "OT abiertas", value: "584", delta: "-63", up: true, icon: Tool },
     { id: "mant", label: "Mantenciones próximas", value: "112", delta: "+12", up: false, icon: Clock },
@@ -145,7 +145,7 @@ export function DashboardInteractivo() {
           <div className="max-w-3xl">
            
             <h2 id="dashboard-title" className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Tu operación, bajo control en tiempo real
+              Tu operación, bajo control en un solo lugar
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
               Un centro de control unificado donde disponibilidad, flota y alertas conviven en una sola vista.
@@ -250,7 +250,7 @@ export function DashboardInteractivo() {
             <article className={`${CARD_BASE} p-4 lg:col-span-12`} style={LIGHT_CARD_VARS}>
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#6b7892]">Feed de alertas</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#6b7892]">Registro de alertas</p>
                   <span className="font-mono text-[11px] text-[#6b7892]">· {shift}</span>
                 </div>
                 <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] bg-danger-bg px-2.5 py-1 text-[11px] font-semibold text-danger-fg">
@@ -300,8 +300,8 @@ export function DashboardInteractivo() {
         </div>
 
         <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-white/85">
-          Lo que ves aquí es una muestra. En producción, sworkc conecta telemetría, OT y
-          planificación en un único centro de mando.
+          Lo que ves aquí es una muestra con datos demostrativos. En producción, sworkc
+          centraliza tus OT, turnos y planificación, y puede integrarse con fuentes de telemetría.
         </p>
       </div>
     </section>

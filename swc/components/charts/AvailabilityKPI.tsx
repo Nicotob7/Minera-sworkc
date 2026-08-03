@@ -69,7 +69,7 @@ export function AvailabilityKPI() {
   const area = `${line} L${w} ${h} L0 ${h} Z`;
 
   return (
-    <div ref={rootRef} role="img" aria-label={`Disponibilidad ${pct.toFixed(1)}%`}>
+    <div ref={rootRef} role="img" aria-label={`Disponibilidad ${pct.toFixed(1).replace(".", ",")}%`}>
       <div className="flex items-center justify-between">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           Disponibilidad
@@ -83,7 +83,7 @@ export function AvailabilityKPI() {
         </span>
       </div>
       <div className="mt-1 flex items-baseline gap-1">
-        <span className="font-mono text-4xl font-medium tabular-nums text-ink">{pct.toFixed(1)}</span>
+        <span className="font-mono text-4xl font-medium tabular-nums text-ink">{pct.toFixed(1).replace(".", ",")}</span>
         <span className="font-mono text-xl text-muted-foreground">%</span>
       </div>
       <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 h-11 w-full" preserveAspectRatio="none" aria-hidden="true">
@@ -107,7 +107,7 @@ export function AvailabilityKPI() {
         <span className="font-mono font-medium tabular-nums text-ink-soft">
           {ot.toLocaleString("es-CL")}
         </span>{" "}
-        OT abiertas
+        OT gestionadas
       </p>
     </div>
   );

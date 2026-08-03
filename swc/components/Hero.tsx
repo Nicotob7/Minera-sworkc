@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Typewriter } from "./Typewriter";
+import { CTAButton } from "./ui/CTAButton";
 
 /**
  * Hero full-bleed con la foto final (tablet + faena).
@@ -44,7 +45,7 @@ export function Hero() {
             <span className="mt-1 block">
               <Typewriter
                 reserve
-                words={["en tiempo real", "con trazabilidad total", "sin pérdidas entre turnos"]}
+                words={["con trazabilidad total", "conectada entre turnos", "con la información en un solo lugar"]}
                 typeSpeed={95}
                 deleteSpeed={45}
                 pause={2400}
@@ -59,6 +60,18 @@ export function Hero() {
             Digitalizamos órdenes de trabajo, mantenciones y equipos: información de terreno
             convertida en decisiones.
           </p>
+
+          <div
+            className="animate-fade-up mt-7 flex flex-col gap-3 sm:flex-row"
+            style={{ animationDelay: "0.3s" }}
+          >
+            <CTAButton href="#contacto" variant="primary">
+              Solicitar una demostración
+            </CTAButton>
+            <CTAButton href="#servicios" variant="ghost-dark" icon={false}>
+              Ver cómo funciona
+            </CTAButton>
+          </div>
         </div>
       </div>
     </section>

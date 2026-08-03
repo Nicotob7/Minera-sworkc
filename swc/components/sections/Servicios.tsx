@@ -88,7 +88,7 @@ const MODULES: Module[] = [
   },
   {
     id: "hh",
-    title: "Control de HH",
+    title: "Control de horas-hombre",
     icon: TimerIcon,
     tag: "Productividad",
     stat: "HH medidas",
@@ -106,7 +106,7 @@ const MODULES: Module[] = [
   },
   {
     id: "dashboard",
-    title: "Dashboard operacional",
+    title: "Panel operacional",
     icon: LayoutGridIcon,
     tag: "Control",
     stat: "KPIs en vivo",

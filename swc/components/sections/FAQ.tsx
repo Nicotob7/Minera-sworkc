@@ -152,6 +152,7 @@ function FaqRow({
             type="button"
             onClick={onToggle}
             aria-expanded={open}
+            aria-label={`${open ? "Leer menos" : "Leer más"}: ${item.q}`}
             className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#0a0c77] transition-colors hover:text-[#1c239e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30"
           >
             {open ? "Leer menos" : "Leer más"}

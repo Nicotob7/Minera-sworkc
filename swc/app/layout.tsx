@@ -26,10 +26,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const SITE_DESCRIPTION =
-  "sworkc: plataforma digital para empresas mineras y contratistas. Órdenes de trabajo digitales, mantenciones, alertas, control de equipos e indicadores en tiempo real.";
+  "sworkc: plataforma digital para empresas mineras y contratistas. Órdenes de trabajo digitales, mantenciones, alertas, control de equipos e indicadores operacionales.";
 
 const SITE_TITLE =
-  "Sworkc Technologies — Continuidad operacional minera en tiempo real";
+  "Sworkc Technologies — Continuidad operacional minera";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     "control de equipos",
     "gestión de turnos minería",
     "contratistas mineros",
-    "indicadores en tiempo real",
+    "indicadores operacionales",
     "Sworkc Technologies",
     "sworkc",
   ],

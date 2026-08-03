@@ -133,7 +133,7 @@ export function QuienesSomosChart() {
         {[
           ["98%", "equipos disponibles"],
           ["76%", "OT cerradas"],
-          ["24/7", "monitoreo activo"],
+          ["24/7", "plataforma disponible"],
         ].map(([value, label]) => (
           <div key={label}>
             <p className="font-mono text-lg font-medium text-white sm:text-xl">{value}</p>
@@ -143,6 +143,10 @@ export function QuienesSomosChart() {
           </div>
         ))}
       </div>
+
+      <p className="mt-3 text-center text-[10px] text-white/55">
+        Datos demostrativos de una operación simulada.
+      </p>
     </div>
   );
 }
