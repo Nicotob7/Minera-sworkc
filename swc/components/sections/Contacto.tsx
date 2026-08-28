@@ -132,9 +132,10 @@ export function Contacto() {
     e.preventDefault();
     if (loading) return;
 
-    if (URL_RE.test(form.mensaje) || URL_RE.test(form.asuntoOtro)) {
+    const esOtro = form.asunto === "Otro";
+    if (URL_RE.test(form.mensaje) || (esOtro && URL_RE.test(form.asuntoOtro))) {
       setEstado("error");
-      setErrorMsg("Por seguridad, el mensaje no puede incluir enlaces (links). Escríbenos el detalle y te contactamos.");
+      setErrorMsg("Por seguridad, no puedes incluir enlaces (links). Escríbenos el detalle y te contactamos.");
       return;
     }
 
@@ -151,7 +152,7 @@ export function Contacto() {
           email: form.email,
           telefono: form.telefono,
           asunto: form.asunto,
-          asunto_otro: form.asunto === "Otro" ? form.asuntoOtro : "",
+          asunto_otro: esOtro ? form.asuntoOtro : "",
           mensaje: form.mensaje,
         }),
       });
@@ -160,7 +161,15 @@ export function Contacto() {
 
       if (!res.ok || !json?.ok) {
         setEstado("error");
-        setErrorMsg("No pudimos enviar tu solicitud. Intenta nuevamente en unos minutos.");
+        // 422 = validación (asunto/link/límites): reintentar no ayuda → guía clara.
+        // 429 = rate limit. Otros = transitorio.
+        setErrorMsg(
+          res.status === 422
+            ? "Revisa los datos: el asunto/mensaje no puede contener enlaces y el mensaje admite hasta 4000 caracteres."
+            : res.status === 429
+              ? "Demasiados envíos seguidos. Espera un minuto e inténtalo de nuevo."
+              : "No pudimos enviar tu solicitud. Intenta nuevamente en unos minutos.",
+        );
         return;
       }
 
@@ -352,23 +361,30 @@ function CampoAsunto({
   const esOtro = value === "Otro";
   return (
     <>
-      <div>
+      <div className={esOtro ? "" : "sm:col-span-2"}>
         <label htmlFor="asunto" className="mb-1.5 block text-sm font-semibold text-[#0b1020]">
           Asunto
           <span className="ml-1 text-[#0a0c77]">*</span>
         </label>
-        <select
-          id="asunto"
-          name="asunto"
-          required
-          value={value}
-          onChange={(e) => onChange("asunto", e.target.value)}
-          className="min-h-[48px] w-full cursor-pointer appearance-none rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 text-base text-[#0b1020] transition-all duration-200 hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
-        >
-          {ASUNTOS.map((a) => (
-            <option key={a} value={a}>{a}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            id="asunto"
+            name="asunto"
+            required
+            value={value}
+            onChange={(e) => {
+              const v = e.target.value;
+              onChange("asunto", v);
+              if (v !== "Otro") onChange("asuntoOtro", ""); // no arrastrar texto oculto
+            }}
+            className="min-h-[48px] w-full cursor-pointer appearance-none rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 pr-11 text-base text-[#0b1020] transition-all duration-200 hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
+          >
+            {ASUNTOS.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+          <span aria-hidden className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#7b879d]">▾</span>
+        </div>
       </div>
       {esOtro && (
         <div>
@@ -415,6 +431,7 @@ function CampoMensaje({
           name="mensaje"
           rows={3}
           required
+          maxLength={4000}
           value={value}
           onChange={(e) => onChange("mensaje", e.target.value)}
           placeholder="Cuéntanos brevemente qué operación o flujo quieres digitalizar."
