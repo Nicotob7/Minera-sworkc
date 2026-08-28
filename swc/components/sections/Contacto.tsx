@@ -24,8 +24,22 @@ type FormData = {
   empresa: string;
   email: string;
   telefono: string;
+  asunto: string;
+  asuntoOtro: string;
   mensaje: string;
 };
+
+// Mismos asuntos que valida el backend (lista cerrada; "Otro" habilita texto libre).
+const ASUNTOS = [
+  "Solicitar una demostración",
+  "Cotización y planes",
+  "Consulta técnica",
+  "Alianzas o partnership",
+  "Otro",
+] as const;
+
+// Anti-phishing (se valida igual en el backend): http(s)://, www., dominio/ruta.
+const URL_RE = /(https?:\/\/|www\.|\S+\.[a-z]{2,63}\/\S)/i;
 
 type CampoConfig = {
   id: keyof FormData;
@@ -94,6 +108,8 @@ const EMPTY_FORM: FormData = {
   empresa: "",
   email: "",
   telefono: "",
+  asunto: ASUNTOS[0],
+  asuntoOtro: "",
   mensaje: "",
 };
 
@@ -116,6 +132,12 @@ export function Contacto() {
     e.preventDefault();
     if (loading) return;
 
+    if (URL_RE.test(form.mensaje) || URL_RE.test(form.asuntoOtro)) {
+      setEstado("error");
+      setErrorMsg("Por seguridad, el mensaje no puede incluir enlaces (links). Escríbenos el detalle y te contactamos.");
+      return;
+    }
+
     setEstado("loading");
     setErrorMsg("");
 
@@ -123,7 +145,15 @@ export function Contacto() {
       const res = await fetch(`${API_URL}/api/v1/contacto`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          nombre: form.nombre,
+          empresa: form.empresa,
+          email: form.email,
+          telefono: form.telefono,
+          asunto: form.asunto,
+          asunto_otro: form.asunto === "Otro" ? form.asuntoOtro : "",
+          mensaje: form.mensaje,
+        }),
       });
 
       const json = await res.json().catch(() => null);
@@ -215,6 +245,8 @@ function FormularioContacto({ form, estado, errorMsg, loading, onUpdate, onSubmi
           <CampoInput key={campo.id} campo={campo} value={form[campo.id]} onChange={onUpdate} />
         ))}
 
+        <CampoAsunto value={form.asunto} otro={form.asuntoOtro} onChange={onUpdate} />
+
         <div className="sm:col-span-2">
           <CampoMensaje value={form.mensaje} onChange={onUpdate} />
         </div>
@@ -305,6 +337,59 @@ function CampoInput({
         />
       </div>
     </div>
+  );
+}
+
+function CampoAsunto({
+  value,
+  otro,
+  onChange,
+}: {
+  value: string;
+  otro: string;
+  onChange: (field: keyof FormData, value: string) => void;
+}) {
+  const esOtro = value === "Otro";
+  return (
+    <>
+      <div>
+        <label htmlFor="asunto" className="mb-1.5 block text-sm font-semibold text-[#0b1020]">
+          Asunto
+          <span className="ml-1 text-[#0a0c77]">*</span>
+        </label>
+        <select
+          id="asunto"
+          name="asunto"
+          required
+          value={value}
+          onChange={(e) => onChange("asunto", e.target.value)}
+          className="min-h-[48px] w-full cursor-pointer appearance-none rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 text-base text-[#0b1020] transition-all duration-200 hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
+        >
+          {ASUNTOS.map((a) => (
+            <option key={a} value={a}>{a}</option>
+          ))}
+        </select>
+      </div>
+      {esOtro && (
+        <div>
+          <label htmlFor="asuntoOtro" className="mb-1.5 block text-sm font-semibold text-[#0b1020]">
+            Especifica el asunto
+            <span className="ml-1 text-[#0a0c77]">*</span>
+          </label>
+          <input
+            id="asuntoOtro"
+            name="asuntoOtro"
+            type="text"
+            required
+            maxLength={100}
+            value={otro}
+            onChange={(e) => onChange("asuntoOtro", e.target.value)}
+            placeholder="Cuéntanos el tema (sin enlaces)"
+            className="min-h-[48px] w-full rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 text-base text-[#0b1020] transition-all duration-200 placeholder:text-[#8793a8] hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
+          />
+        </div>
+      )}
+    </>
   );
 }
 
