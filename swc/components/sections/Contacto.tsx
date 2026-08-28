@@ -458,7 +458,7 @@ function SubmitButton({ loading }: { loading: boolean }) {
         aria-hidden
         className="pointer-events-none absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]"
       />
-      <span className="relative">{loading ? "Enviando…" : "Solicitar demostración"}</span>
+      <span className="relative">{loading ? "Enviando…" : "Enviar solicitud"}</span>
       {loading ? (
         <Loader2 size={18} className="relative animate-spin" />
       ) : (
@@ -494,7 +494,7 @@ function ExitoEstado({ onReset }: { onReset: () => void }) {
       </span>
       <h3 className="mt-6 font-display text-2xl font-semibold tracking-tight">Gracias, te contactaremos pronto</h3>
       <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-[#5b6680]">
-        Recibimos tu solicitud. Nuestro equipo se pondrá en contacto para coordinar la demostración.
+        Recibimos tu solicitud. Nuestro equipo se pondrá en contacto a la brevedad.
       </p>
       <button
         type="button"
