@@ -25,7 +25,6 @@ type FormData = {
   email: string;
   telefono: string;
   asunto: string;
-  asuntoOtro: string;
   mensaje: string;
 };
 
@@ -109,7 +108,6 @@ const EMPTY_FORM: FormData = {
   email: "",
   telefono: "",
   asunto: ASUNTOS[0],
-  asuntoOtro: "",
   mensaje: "",
 };
 
@@ -132,8 +130,7 @@ export function Contacto() {
     e.preventDefault();
     if (loading) return;
 
-    const esOtro = form.asunto === "Otro";
-    if (URL_RE.test(form.mensaje) || (esOtro && URL_RE.test(form.asuntoOtro))) {
+    if (URL_RE.test(form.mensaje)) {
       setEstado("error");
       setErrorMsg("Por seguridad, no puedes incluir enlaces (links). Escríbenos el detalle y te contactamos.");
       return;
@@ -152,7 +149,6 @@ export function Contacto() {
           email: form.email,
           telefono: form.telefono,
           asunto: form.asunto,
-          asunto_otro: esOtro ? form.asuntoOtro : "",
           mensaje: form.mensaje,
         }),
       });
@@ -254,7 +250,7 @@ function FormularioContacto({ form, estado, errorMsg, loading, onUpdate, onSubmi
           <CampoInput key={campo.id} campo={campo} value={form[campo.id]} onChange={onUpdate} />
         ))}
 
-        <CampoAsunto value={form.asunto} otro={form.asuntoOtro} onChange={onUpdate} />
+        <CampoAsunto value={form.asunto} onChange={onUpdate} />
 
         <div className="sm:col-span-2">
           <CampoMensaje value={form.mensaje} onChange={onUpdate} />
@@ -351,61 +347,33 @@ function CampoInput({
 
 function CampoAsunto({
   value,
-  otro,
   onChange,
 }: {
   value: string;
-  otro: string;
   onChange: (field: keyof FormData, value: string) => void;
 }) {
-  const esOtro = value === "Otro";
   return (
-    <>
-      <div className={esOtro ? "" : "sm:col-span-2"}>
-        <label htmlFor="asunto" className="mb-1.5 block text-sm font-semibold text-[#0b1020]">
-          Asunto
-          <span className="ml-1 text-[#0a0c77]">*</span>
-        </label>
-        <div className="relative">
-          <select
-            id="asunto"
-            name="asunto"
-            required
-            value={value}
-            onChange={(e) => {
-              const v = e.target.value;
-              onChange("asunto", v);
-              if (v !== "Otro") onChange("asuntoOtro", ""); // no arrastrar texto oculto
-            }}
-            className="min-h-[48px] w-full cursor-pointer appearance-none rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 pr-11 text-base text-[#0b1020] transition-all duration-200 hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
-          >
-            {ASUNTOS.map((a) => (
-              <option key={a} value={a}>{a}</option>
-            ))}
-          </select>
-          <span aria-hidden className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#7b879d]">▾</span>
-        </div>
+    <div className="sm:col-span-2">
+      <label htmlFor="asunto" className="mb-1.5 block text-sm font-semibold text-[#0b1020]">
+        Asunto
+        <span className="ml-1 text-[#0a0c77]">*</span>
+      </label>
+      <div className="relative">
+        <select
+          id="asunto"
+          name="asunto"
+          required
+          value={value}
+          onChange={(e) => onChange("asunto", e.target.value)}
+          className="min-h-[48px] w-full cursor-pointer appearance-none rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 pr-11 text-base text-[#0b1020] transition-all duration-200 hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
+        >
+          {ASUNTOS.map((a) => (
+            <option key={a} value={a}>{a}</option>
+          ))}
+        </select>
+        <span aria-hidden className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#7b879d]">▾</span>
       </div>
-      {esOtro && (
-        <div>
-          <label htmlFor="asuntoOtro" className="mb-1.5 block text-sm font-semibold text-[#0b1020]">
-            Especifica el asunto
-            <span className="ml-1 text-[#0a0c77]">*</span>
-          </label>
-          <input
-            id="asuntoOtro"
-            name="asuntoOtro"
-            type="text"
-            required
-            maxLength={100}
-            value={otro}
-            onChange={(e) => onChange("asuntoOtro", e.target.value)}
-            placeholder="Cuéntanos el tema (sin enlaces)"
-            className="min-h-[48px] w-full rounded-[var(--radius-pill)] border border-transparent bg-[#f3f5f8] px-4 py-3 text-base text-[#0b1020] transition-all duration-200 placeholder:text-[#8793a8] hover:bg-[#eef2f7] focus-visible:border-[#0a0c77] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/20"
-          />
-        </div>
-      )}
-    </>
+    </div>
   );
 }
 
