@@ -215,3 +215,29 @@
   }
   .reveal { opacity: 1 !important; transform: none !important; }
 }
+
+/* ===================== Transición suave entre páginas ===================== */
+/* View Transitions cross-document: fundido corto al navegar entre páginas.
+   Navegadores sin soporte (p. ej. Firefox) navegan normal, sin romper nada. */
+@view-transition {
+  navigation: auto;
+}
+
+/* OJO: sin `html { scroll-behavior: smooth }` — rompe el scroll a anclas del
+   router de Next entre páginas. El scroll suave en la misma página lo hace
+   AnchorSuave (components/ui/AnchorSuave.tsx). */
+@media not (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root) {
+    animation: vt-salida 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-entrada 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes vt-salida {
+  to { opacity: 0; }
+}
+@keyframes vt-entrada {
+  from { opacity: 0; transform: translateY(8px); }
+}

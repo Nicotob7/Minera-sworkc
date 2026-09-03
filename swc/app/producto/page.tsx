@@ -281,7 +281,7 @@ export default function ProductoPage() {
       <RelatedLinks
         items={[
           { title: "Nosotros", desc: "Quiénes somos y cómo implementamos sworkc por etapas.", href: "/nosotros" },
-          { title: "Preguntas frecuentes", desc: "Dudas comunes sobre alcance, alertas y reportes.", href: "/#faq" },
+          { title: "Preguntas frecuentes", desc: "Dudas comunes sobre alcance, alertas y reportes.", href: "/recursos#faq" },
           { title: "Contacto", desc: "Agenda una demostración enfocada en tu operación.", href: "/#contacto" },
         ]}
       />

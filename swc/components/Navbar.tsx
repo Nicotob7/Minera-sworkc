@@ -4,7 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Menu, X } from "./ui/icons";
-import { NAV_GROUPS } from "./site/nav";
+import { NAV_CONTACTO, NAV_GROUPS, NAV_INICIO } from "./site/nav";
+
+/* Ítem plano del menú de escritorio, con el mismo estilo que los disparadores. */
+const plainDesktopLink =
+  "inline-flex items-center rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium text-[#3a4256] transition-colors duration-200 hover:text-[#0b1020] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30";
 
 /**
  * Navbar blanco flotante tipo pill con mega-menú agrupado.
@@ -77,6 +81,11 @@ export function Navbar() {
 
         {/* Menú de escritorio */}
         <ul className="hidden items-center gap-1 lg:flex">
+          <li>
+            <Link href={NAV_INICIO.href} onClick={closeAll} className={plainDesktopLink}>
+              {NAV_INICIO.label}
+            </Link>
+          </li>
           {NAV_GROUPS.map((group) => {
             const open = activeGroup === group.id;
             const panelId = `menu-${group.id}`;
@@ -136,6 +145,11 @@ export function Navbar() {
               </li>
             );
           })}
+          <li>
+            <Link href={NAV_CONTACTO.href} onClick={closeAll} className={plainDesktopLink}>
+              {NAV_CONTACTO.label}
+            </Link>
+          </li>
         </ul>
 
         <div className="flex items-center gap-2">
@@ -166,6 +180,15 @@ export function Navbar() {
           className="animate-fade-down mx-auto mt-2 max-h-[76vh] max-w-7xl overflow-y-auto rounded-[var(--radius-lg)] border border-black/[0.06] bg-white p-3 shadow-[var(--shadow-lg)] lg:hidden"
         >
           <ul className="flex flex-col">
+            <li className="border-b border-black/[0.05]">
+              <Link
+                href={NAV_INICIO.href}
+                onClick={closeAll}
+                className="flex min-h-[48px] w-full items-center rounded-[var(--radius-sm)] px-4 py-3 text-sm font-semibold text-[#0b1020] hover:bg-black/[0.03] focus-visible:bg-black/[0.03] focus-visible:outline-none"
+              >
+                {NAV_INICIO.label}
+              </Link>
+            </li>
             {NAV_GROUPS.map((group) => {
               const open = mobileGroup === group.id;
               const panelId = `mobile-menu-${group.id}`;
@@ -202,6 +225,15 @@ export function Navbar() {
                 </li>
               );
             })}
+            <li className="border-b border-black/[0.05]">
+              <Link
+                href={NAV_CONTACTO.href}
+                onClick={closeAll}
+                className="flex min-h-[48px] w-full items-center rounded-[var(--radius-sm)] px-4 py-3 text-sm font-semibold text-[#0b1020] hover:bg-black/[0.03] focus-visible:bg-black/[0.03] focus-visible:outline-none"
+              >
+                {NAV_CONTACTO.label}
+              </Link>
+            </li>
             <li className="mt-2 px-1">
               <Link
                 href="/#contacto"

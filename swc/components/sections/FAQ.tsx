@@ -59,7 +59,7 @@ export function FAQ() {
   const right = withIndex.slice(3);
 
   return (
-    <section id="faq" className="relative bg-white py-16 sm:py-24">
+    <section id="faq" className="relative scroll-mt-28 bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         {/* Encabezado centrado, normal */}
         <div className="text-center">

@@ -43,9 +43,10 @@ export function Typewriter({
     } else if (deleting && sub > 0) {
       t = setTimeout(() => setSub(sub - 1), deleteSpeed);
     } else {
-      setDeleting(false);
-      setIndex((i) => (i + 1) % words.length);
-      return;
+      t = setTimeout(() => {
+        setDeleting(false);
+        setIndex((i) => (i + 1) % words.length);
+      }, 0);
     }
     return () => clearTimeout(t);
   }, [sub, deleting, index, words, reduced, typeSpeed, deleteSpeed, pause]);

@@ -43,8 +43,8 @@ export function useInViewport(
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") {
-      setInView(true);
-      return;
+      const id = setTimeout(() => setInView(true), 0);
+      return () => clearTimeout(id);
     }
     const observer = new IntersectionObserver((entries) => {
       setInView(entries[0]?.isIntersecting ?? false);

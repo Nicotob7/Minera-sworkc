@@ -3,8 +3,9 @@ import Link from "next/link";
 import { PageHero } from "../../components/site/PageHero";
 import { RelatedLinks } from "../../components/site/RelatedLinks";
 import { CTAFinal } from "../../components/site/CTAFinal";
+import { FAQ } from "../../components/sections/FAQ";
 import { Reveal } from "../../components/ui/Reveal";
-import { ArrowUpRight } from "../../components/ui/icons";
+import { ArrowRight } from "../../components/ui/icons";
 
 export const metadata: Metadata = {
   title: "Guías y recursos",
@@ -51,10 +52,10 @@ export default function RecursosPage() {
             <p className="font-mono text-xs text-muted-foreground">DISPONIBLES · 1 / EN PREPARACIÓN · 6</p>
           </Reveal>
 
-          {/* Disponible hoy (real): la FAQ del producto */}
+          {/* Disponible hoy (real): la FAQ, más abajo en esta misma página */}
           <Reveal variant="up" as="div" className="mt-10">
             <Link
-              href="/#faq"
+              href="#faq"
               className="group grid gap-x-8 gap-y-1 rounded-lg border border-[#0a0c77]/25 bg-[#f6f8fc] px-5 py-5 transition-colors hover:border-[#0a0c77] sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:items-center"
             >
               <span className="font-mono text-sm font-medium text-[#0a0c77]">FAQ</span>
@@ -67,8 +68,8 @@ export default function RecursosPage() {
                 </span>
               </span>
               <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[#0a0c77]">
-                Disponible
-                <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                Disponible aquí abajo
+                <ArrowRight size={15} className="rotate-90 transition-transform group-hover:translate-y-0.5" />
               </span>
             </Link>
           </Reveal>
@@ -104,6 +105,11 @@ export default function RecursosPage() {
           </Reveal>
         </div>
       </section>
+
+      {/* ── El recurso disponible, en la misma página: preguntas frecuentes ── */}
+      <div className="border-t border-border">
+        <FAQ />
+      </div>
 
       <RelatedLinks
         items={[

@@ -14,6 +14,10 @@ export type NavGroup = {
   links: NavLink[];
 };
 
+/** Ítems planos del navbar (sin desplegable), a los costados de los grupos. */
+export const NAV_INICIO: NavLink = { label: "Inicio", href: "/" };
+export const NAV_CONTACTO: NavLink = { label: "Contacto", href: "/#contacto" };
+
 export const NAV_GROUPS: NavGroup[] = [
   {
     id: "producto",
@@ -40,9 +44,9 @@ export const NAV_GROUPS: NavGroup[] = [
     id: "recursos",
     label: "Recursos",
     links: [
-      { label: "Novedades", href: "/novedades", desc: "Anuncios y notas del producto" },
       { label: "Guías y recursos", href: "/recursos", desc: "Documentación y material de apoyo" },
-      { label: "Preguntas frecuentes", href: "/#faq", desc: "Dudas comunes sobre sworkc" },
+      { label: "Preguntas frecuentes", href: "/recursos#faq", desc: "Dudas comunes sobre sworkc" },
+      { label: "Novedades", href: "/novedades", desc: "Anuncios y notas del producto" },
     ],
   },
 ];
@@ -67,9 +71,9 @@ export const FOOTER_COLUMNS: { title: string; links: NavLink[] }[] = [
   {
     title: "Recursos",
     links: [
-      { label: "Novedades", href: "/novedades" },
       { label: "Guías y recursos", href: "/recursos" },
-      { label: "Preguntas frecuentes", href: "/#faq" },
+      { label: "Preguntas frecuentes", href: "/recursos#faq" },
+      { label: "Novedades", href: "/novedades" },
     ],
   },
 ];

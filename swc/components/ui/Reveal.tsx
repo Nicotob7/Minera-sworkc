@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement, useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
+import { createElement, useEffect, useState, type ElementType, type ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
@@ -9,7 +9,7 @@ type RevealProps = {
   delay?: number; // ms
   className?: string;
   threshold?: number;
-};
+} & Record<string, unknown>; // props extra (id, aria-*) se reenvían al elemento
 
 /**
  * Anima la entrada al entrar en viewport. VISIBLE POR DEFECTO: el HTML servido
@@ -24,13 +24,14 @@ export function Reveal({
   delay = 0,
   className = "",
   threshold = 0.15,
+  ...rest
 }: RevealProps) {
   const Tag: ElementType = as || "div";
-  const ref = useRef<HTMLElement | null>(null);
+  const [element, setElement] = useState<HTMLElement | null>(null);
   const [visible, setVisible] = useState(true); // SSR: visible
 
   useEffect(() => {
-    const el = ref.current;
+    const el = element;
     if (!el) return;
     if (typeof IntersectionObserver === "undefined") return; // queda visible
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -39,7 +40,7 @@ export function Reveal({
     // Ya está (total o parcialmente) en pantalla: no ocultar, no animar.
     if (rect.top < window.innerHeight * 0.92) return;
 
-    setVisible(false);
+    const hideId = setTimeout(() => setVisible(false), 0);
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -52,13 +53,17 @@ export function Reveal({
       { threshold, rootMargin: "0px 0px -8% 0px" },
     );
     io.observe(el);
-    return () => io.disconnect();
-  }, [threshold]);
+    return () => {
+      clearTimeout(hideId);
+      io.disconnect();
+    };
+  }, [element, threshold]);
 
   return createElement(
     Tag,
     {
-      ref,
+      ...rest,
+      ref: setElement,
       className: `reveal reveal-${variant} ${visible ? "is-visible" : ""} ${className}`,
       style: delay ? { transitionDelay: `${delay}ms` } : undefined,
     },
