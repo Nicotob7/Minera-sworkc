@@ -26,6 +26,10 @@ import {
   IconShieldExclamation,
   IconPlus,
   IconTool,
+  IconChevronDown,
+  IconQrcode,
+  IconWifiOff,
+  IconBuildingCommunity,
 } from "@tabler/icons-react";
 
 /** Tipo de componente de icono (reemplaza a LucideIcon). */
@@ -54,4 +58,8 @@ export {
   IconShieldExclamation as ShieldAlert,
   IconPlus as Plus,
   IconTool as Tool,
+  IconChevronDown as ChevronDown,
+  IconQrcode as QrCode,
+  IconWifiOff as WifiOff,
+  IconBuildingCommunity as BuildingCommunity,
 };

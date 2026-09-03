@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/sections/Footer";
 
 const SITE_URL = "https://sworkc.cl";
 
@@ -189,7 +191,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
