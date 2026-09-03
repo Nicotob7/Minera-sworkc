@@ -140,22 +140,21 @@ export default function ProductoPage() {
             <p className="font-mono text-xs text-cyan-300">PANTALLA REAL · DATOS DEMO</p>
           </Reveal>
           <p className="mt-4 max-w-[58ch] text-base font-light leading-relaxed text-white/80">
-            Estado de la flota por tipo, equipos operativos, mantenciones y órdenes de trabajo
-            activas en una sola vista. Lo que ves aquí es el panel real de sworkc con datos de
-            demostración.
+            Indicadores de flota, distribución de estados y OTs prioritarias en una sola vista.
+            Lo que ves aquí es el panel real de sworkc con datos de demostración.
           </p>
 
           <Reveal variant="up" delay={100} as="div" className="mt-10">
             <div className="overflow-hidden rounded-xl border border-white/15 bg-[#0b1020] shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5 font-mono text-[11px] text-white/50">
                 <span className="h-2 w-2 rounded-full bg-cyan-400" aria-hidden />
-                visión operativa — flota · estados · OTs
+                visión operativa — flota · estados · OTs prioritarias
               </div>
               <Image
                 src="/img/producto/panel-operacional.jpg"
-                alt="Panel operacional de sworkc: indicadores de flota, equipos operativos, mantenciones y OTs activas con datos de demostración"
+                alt="Panel operacional de sworkc: indicadores de flota, distribución de estados y OTs prioritarias con datos de demostración"
                 width={2000}
-                height={1309}
+                height={1156}
                 className="w-full"
               />
             </div>
@@ -173,15 +172,15 @@ export default function ProductoPage() {
             <p className="font-mono text-xs text-muted-foreground">KPIS · 4 / PERÍODOS · 7-30-90 D</p>
           </Reveal>
 
-          <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-stretch lg:gap-14">
+          <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-14">
             <Reveal variant="left" as="div" className="flex flex-col">
-              <div className="flex-1 overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
+              <div className="overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
                 <Image
                   src="/img/producto/ede.jpg"
                   alt="Expediente Digital del Equipo en sworkc: KPIs de disponibilidad, MTTR, MTBF y MTBS, últimas detenciones, repuestos e historial de cambios"
                   width={2000}
-                  height={1723}
-                  className="h-full w-full object-cover object-top"
+                  height={1901}
+                  className="w-full"
                 />
               </div>
               <p className="mt-3 font-mono text-[11px] text-muted-foreground">
