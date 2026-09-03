@@ -6,12 +6,19 @@ export const dynamic = "force-static";
 const SITE_URL = "https://sworkc.cl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: SITE_URL,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
+  const lastModified = new Date();
+  const routes: { path: string; priority: number }[] = [
+    { path: "/", priority: 1 },
+    { path: "/producto", priority: 0.9 },
+    { path: "/nosotros", priority: 0.7 },
+    { path: "/recursos", priority: 0.5 },
+    { path: "/novedades", priority: 0.5 },
   ];
+
+  return routes.map(({ path, priority }) => ({
+    url: path === "/" ? SITE_URL : `${SITE_URL}${path}`,
+    lastModified,
+    changeFrequency: "monthly",
+    priority,
+  }));
 }
