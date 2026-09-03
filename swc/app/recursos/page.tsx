@@ -1,103 +1,107 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "../../components/site/PageHero";
-import { ComingSoonCard } from "../../components/site/ComingSoonCard";
 import { RelatedLinks } from "../../components/site/RelatedLinks";
 import { CTAFinal } from "../../components/site/CTAFinal";
 import { Reveal } from "../../components/ui/Reveal";
 import { ArrowUpRight } from "../../components/ui/icons";
 
 export const metadata: Metadata = {
-  title: "Recursos",
+  title: "Guías y recursos",
   description:
-    "Guías, documentación y material de apoyo sobre sworkc. Contenido en preparación; mientras tanto, revisa las preguntas frecuentes o escríbenos.",
+    "Material de apoyo para operar sworkc: guías de implementación, referencia de módulos y buenas prácticas de mantención. En preparación.",
   alternates: { canonical: "https://sworkc.cl/recursos" },
 };
 
-/* Categorías de recursos previstas (aún sin contenido publicado). */
-const RECURSOS = [
-  {
-    category: "Implementación",
-    title: "Guía de puesta en marcha",
-    note: "Cómo se implementa sworkc por etapas: levantamiento, configuración, capacitación y puesta en marcha.",
-  },
-  {
-    category: "Uso del sistema",
-    title: "Referencia de módulos",
-    note: "Cómo operar órdenes de trabajo, estados de equipo, turnos, insumos y reportes en el día a día.",
-  },
-  {
-    category: "Mantención",
-    title: "Alertas y mantención preventiva",
-    note: "Cómo configurar avisos por horas de uso, fechas y criticidad para anticipar detenciones.",
-  },
-  {
-    category: "Confiabilidad",
-    title: "Indicadores del equipo",
-    note: "Cómo leer disponibilidad, MTTR, MTBF y MTBS en el Expediente Digital del Equipo.",
-  },
-  {
-    category: "Terreno",
-    title: "Uso con QR y modo offline",
-    note: "Buenas prácticas para el registro en terreno con código QR y trabajo sin conexión.",
-  },
-  {
-    category: "Administración",
-    title: "Roles y configuración",
-    note: "Cómo definir usuarios, permisos y flujos según la estructura de tu operación.",
-  },
+/* Recursos previstos. SIN contenido inventado: estado real "en preparación". */
+const EN_PREPARACION = [
+  { code: "IMP", title: "Guía de puesta en marcha", desc: "Cómo se implementa sworkc por etapas: levantamiento, configuración, capacitación y puesta en marcha." },
+  { code: "MOD", title: "Referencia de módulos", desc: "Cómo operar órdenes de trabajo, estados de equipo, turnos, insumos y reportes en el día a día." },
+  { code: "MNT", title: "Alertas y mantención preventiva", desc: "Cómo configurar avisos por horas de uso, fechas y criticidad para anticipar detenciones." },
+  { code: "KPI", title: "Indicadores del equipo", desc: "Cómo leer disponibilidad, MTTR, MTBF y MTBS en el Expediente Digital del Equipo." },
+  { code: "TER", title: "Uso con QR y modo offline", desc: "Buenas prácticas para el registro en terreno con código QR y trabajo sin conexión." },
+  { code: "ADM", title: "Roles y configuración", desc: "Cómo definir usuarios, permisos y flujos según la estructura de tu operación." },
 ];
 
 export default function RecursosPage() {
   return (
     <main id="contenido" className="flex-1">
       <PageHero
-        eyebrow="Recursos"
+        path="recursos"
         title="Guías y documentación"
-        intro="Estamos preparando material de apoyo para sacar el máximo provecho de sworkc: guías de implementación, referencia de módulos y buenas prácticas de mantención."
+        intro="Estamos preparando material de apoyo para sacar el máximo provecho de sworkc. Si necesitas un recurso con prioridad, escríbenos y lo coordinamos."
+        readouts={[
+          { label: "Disponibles", value: "1" },
+          { label: "En preparación", value: "6" },
+        ]}
+        img={{
+          src: "/img/faena/pala-electrica.jpg",
+          alt: "Pala eléctrica de cable P&H 4100 cargando material en una faena minera",
+          credit: "Pala P&H 4100 · foto Sansumaria · CC BY-SA 3.0",
+        }}
       />
 
-      <section className="bg-surface-2 py-16 sm:py-24">
+      {/* ── Índice de recursos: bitácora con estado real ── */}
+      <section className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
-          {/* Recurso real ya disponible: FAQ del home */}
-          <Reveal variant="up" as="div">
+          <Reveal variant="up" as="div" className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[#0a0c77] pb-5">
+            <h2 className="font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
+              Índice de recursos
+            </h2>
+            <p className="font-mono text-xs text-muted-foreground">DISPONIBLES · 1 / EN PREPARACIÓN · 6</p>
+          </Reveal>
+
+          {/* Disponible hoy (real): la FAQ del producto */}
+          <Reveal variant="up" as="div" className="mt-10">
             <Link
               href="/#faq"
-              className="group flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-400 hover:shadow-[var(--shadow-md)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30 sm:flex-row sm:items-center"
+              className="group grid gap-x-8 gap-y-1 rounded-lg border border-[#0a0c77]/25 bg-[#f6f8fc] px-5 py-5 transition-colors hover:border-[#0a0c77] sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:items-center"
             >
+              <span className="font-mono text-sm font-medium text-[#0a0c77]">FAQ</span>
               <span>
-                <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-brand-50 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-900">
-                  Disponible
-                </span>
-                <h2 className="mt-3 font-display text-lg font-bold tracking-tight text-ink">
+                <span className="font-display text-lg font-semibold tracking-tight text-ink">
                   Preguntas frecuentes
-                </h2>
-                <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+                </span>
+                <span className="mt-0.5 block text-sm leading-relaxed text-ink-soft">
                   Respuestas breves sobre alcance, alertas, turnos y reportes de sworkc.
-                </p>
+                </span>
               </span>
-              <ArrowUpRight
-                size={22}
-                className="shrink-0 text-muted-foreground transition-colors group-hover:text-brand-900"
-              />
+              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[#0a0c77]">
+                Disponible
+                <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
             </Link>
           </Reveal>
 
-          {/* En preparación */}
-          <div className="mt-12">
-            <h2 className="font-display text-2xl font-bold tracking-tight text-ink">En preparación</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-soft">
-              Estos recursos estarán disponibles próximamente. Si necesitas alguno con prioridad,
-              escríbenos y lo coordinamos.
-            </p>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {RECURSOS.map((r, i) => (
-                <Reveal key={r.title} variant="up" delay={(i % 3) * 70} as="div" className="h-full">
-                  <ComingSoonCard category={r.category} title={r.title} note={r.note} />
-                </Reveal>
-              ))}
-            </div>
+          {/* En preparación (honesto, sin placeholders decorativos) */}
+          <div className="mt-8">
+            {EN_PREPARACION.map((r, i) => (
+              <Reveal
+                key={r.code}
+                variant="up"
+                delay={Math.min(i, 4) * 40}
+                as="div"
+                className="grid gap-x-8 gap-y-1 border-b border-border py-5 sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:items-center"
+              >
+                <span className="font-mono text-sm text-muted-foreground">{r.code}</span>
+                <div>
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-ink">{r.title}</h3>
+                  <p className="mt-0.5 max-w-[62ch] text-sm leading-relaxed text-ink-soft">{r.desc}</p>
+                </div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                  En preparación
+                </p>
+              </Reveal>
+            ))}
           </div>
+
+          <Reveal variant="up" as="p" className="mt-8 max-w-[60ch] text-sm leading-relaxed text-ink-soft">
+            ¿Necesitas alguno de estos materiales con urgencia?{" "}
+            <Link href="/#contacto" className="font-semibold text-[#0a0c77] underline-offset-4 hover:underline">
+              Escríbenos
+            </Link>{" "}
+            y lo preparamos según tu operación.
+          </Reveal>
         </div>
       </section>
 

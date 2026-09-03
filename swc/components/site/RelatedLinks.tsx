@@ -9,8 +9,8 @@ export type RelatedItem = {
 };
 
 /**
- * Bloque "Contenido relacionado": enlaces cruzados entre páginas hermanas para
- * que el sitio se sienta interconectado. Mismo estilo de tarjeta del sitio.
+ * "Contenido relacionado": enlaces cruzados entre páginas hermanas, en el
+ * lenguaje de bitácora del sitio (hairlines, sin tarjetas).
  */
 export function RelatedLinks({
   items,
@@ -20,29 +20,33 @@ export function RelatedLinks({
   title?: string;
 }) {
   return (
-    <section className="border-t border-border bg-surface-2 py-14 sm:py-16">
+    <section className="border-t border-border bg-[#f6f8fc] py-14 sm:py-16">
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
-        <Reveal variant="up" as="h2" className="font-display text-2xl font-bold tracking-tight text-ink">
-          {title}
+        <Reveal variant="up" as="div" className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 className="font-display text-2xl font-bold tracking-[-0.01em] text-ink">{title}</h2>
+          <p className="font-mono text-xs text-muted-foreground">ENLACES · {items.length}</p>
         </Reveal>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group flex h-full flex-col rounded-[var(--radius-lg)] border border-border bg-white p-5 shadow-[var(--shadow-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-400 hover:shadow-[var(--shadow-md)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30"
-            >
-              <span className="flex items-start justify-between gap-3">
-                <h3 className="font-display text-base font-bold tracking-tight text-ink">
-                  {item.title}
-                </h3>
-                <ArrowUpRight
-                  size={18}
-                  className="mt-0.5 shrink-0 text-muted-foreground transition-colors group-hover:text-brand-900"
-                />
-              </span>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{item.desc}</p>
-            </Link>
+        <div className="mt-6 grid gap-x-10 gap-y-6 sm:grid-cols-3">
+          {items.map((item, i) => (
+            <Reveal key={item.href} variant="up" delay={i * 60} as="div">
+              <Link
+                href={item.href}
+                className="group block border-t-2 border-[#0a0c77]/25 pt-4 transition-colors hover:border-[#0a0c77] focus-visible:border-[#0a0c77] focus-visible:outline-none"
+              >
+                <span className="flex items-center justify-between gap-3">
+                  <span className="font-display text-base font-semibold tracking-tight text-ink">
+                    {item.title}
+                  </span>
+                  <ArrowUpRight
+                    size={17}
+                    className="shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#0a0c77]"
+                  />
+                </span>
+                <span className="mt-1.5 block max-w-[40ch] text-sm leading-relaxed text-ink-soft">
+                  {item.desc}
+                </span>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </div>

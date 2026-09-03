@@ -11,7 +11,12 @@ type RevealProps = {
   threshold?: number;
 };
 
-/** Anima la entrada al entrar en viewport (IntersectionObserver). Coherente en todo el sitio. */
+/**
+ * Anima la entrada al entrar en viewport. VISIBLE POR DEFECTO: el HTML servido
+ * ya muestra el contenido (SEO, sin-JS, capturas). Al hidratar, solo lo que
+ * está BAJO el viewport se oculta y se anima cuando entra (IntersectionObserver);
+ * lo que ya está en pantalla nunca parpadea.
+ */
 export function Reveal({
   children,
   as,
@@ -22,15 +27,19 @@ export function Reveal({
 }: RevealProps) {
   const Tag: ElementType = as || "div";
   const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true); // SSR: visible
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
-    }
+    if (typeof IntersectionObserver === "undefined") return; // queda visible
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const rect = el.getBoundingClientRect();
+    // Ya está (total o parcialmente) en pantalla: no ocultar, no animar.
+    if (rect.top < window.innerHeight * 0.92) return;
+
+    setVisible(false);
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
