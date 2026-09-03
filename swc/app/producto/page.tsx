@@ -140,21 +140,22 @@ export default function ProductoPage() {
             <p className="font-mono text-xs text-cyan-300">PANTALLA REAL · DATOS DEMO</p>
           </Reveal>
           <p className="mt-4 max-w-[58ch] text-base font-light leading-relaxed text-white/80">
-            Disponibilidad de flota, equipos críticos y OTs prioritarias en una sola vista.
-            Lo que ves aquí es el panel real de sworkc con datos de demostración.
+            Estado de la flota por tipo, equipos operativos, mantenciones y órdenes de trabajo
+            activas en una sola vista. Lo que ves aquí es el panel real de sworkc con datos de
+            demostración.
           </p>
 
           <Reveal variant="up" delay={100} as="div" className="mt-10">
             <div className="overflow-hidden rounded-xl border border-white/15 bg-[#0b1020] shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5 font-mono text-[11px] text-white/50">
                 <span className="h-2 w-2 rounded-full bg-cyan-400" aria-hidden />
-                panel operacional — flota · alertas · OTs
+                visión operativa — flota · estados · OTs
               </div>
               <Image
                 src="/img/producto/panel-operacional.jpg"
-                alt="Panel operacional de sworkc: equipos críticos, OTs prioritarias y disponibilidad de flota con datos de demostración"
-                width={1800}
-                height={830}
+                alt="Panel operacional de sworkc: indicadores de flota, equipos operativos, mantenciones y OTs activas con datos de demostración"
+                width={2000}
+                height={1309}
                 className="w-full"
               />
             </div>
@@ -172,19 +173,19 @@ export default function ProductoPage() {
             <p className="font-mono text-xs text-muted-foreground">KPIS · 4 / PERÍODOS · 7-30-90 D</p>
           </Reveal>
 
-          <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-14">
-            <Reveal variant="left" as="div">
-              <div className="overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
+          <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-stretch lg:gap-14">
+            <Reveal variant="left" as="div" className="flex flex-col">
+              <div className="flex-1 overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
                 <Image
                   src="/img/producto/ede.jpg"
-                  alt="Expediente Digital del Equipo en sworkc: KPIs de disponibilidad, MTTR, MTBF y MTBS, últimas detenciones e historial de cambios"
-                  width={1800}
-                  height={1400}
-                  className="w-full"
+                  alt="Expediente Digital del Equipo en sworkc: KPIs de disponibilidad, MTTR, MTBF y MTBS, últimas detenciones, repuestos e historial de cambios"
+                  width={2000}
+                  height={1723}
+                  className="h-full w-full object-cover object-top"
                 />
               </div>
               <p className="mt-3 font-mono text-[11px] text-muted-foreground">
-                EDE de un cargador frontal · datos de demostración
+                EDE de un cargador frontal · período 90 días · datos de demostración
               </p>
             </Reveal>
 
@@ -216,31 +217,64 @@ export default function ProductoPage() {
         </div>
       </section>
 
-      {/* ── Terreno: QR / offline / multiempresa como ficha técnica ── */}
+      {/* ── Terreno: pantalla real de teléfono + bitácora QR / offline / multiempresa ── */}
       <section className="border-t border-border bg-[#f6f8fc] py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
-          <Reveal variant="up" as="h2" className="max-w-[26ch] font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
-            Hecho para el terreno, no para la oficina
+          <Reveal variant="up" as="div" className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[#0a0c77] pb-5">
+            <h2 className="max-w-[26ch] font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
+              Hecho para el terreno, no para la oficina
+            </h2>
+            <p className="font-mono text-xs text-muted-foreground">PANTALLA REAL · ANDROID</p>
           </Reveal>
 
-          <div className="mt-12 grid gap-12 lg:grid-cols-3 lg:gap-8">
-            {TERRENO.map((t, i) => (
-              <Reveal key={t.id} variant="up" delay={i * 90} as="article" className="scroll-mt-28" {...{ id: t.id }}>
-                <p className="font-mono text-sm font-medium text-[#0a0c77]">{t.code}</p>
-                <h3 className="mt-2 font-display text-xl font-semibold tracking-tight text-ink">
-                  {t.title}
-                </h3>
-                <p className="mt-3 max-w-[44ch] text-sm leading-relaxed text-ink-soft">{t.desc}</p>
-                <dl className="mt-5 border-t border-[#0a0c77]/20">
-                  {t.spec.map(([k, v]) => (
-                    <div key={k} className="grid grid-cols-[110px_minmax(0,1fr)] gap-3 border-b border-border py-2.5">
-                      <dt className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">{k}</dt>
-                      <dd className="text-sm text-ink">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </Reveal>
-            ))}
+          <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-16">
+            {/* Teléfono con la pantalla real de Escanear QR */}
+            <Reveal variant="left" as="div" className="order-last lg:order-first">
+              <div className="mx-auto w-[270px] max-w-full lg:sticky lg:top-28">
+                <div className="overflow-hidden rounded-[2.1rem] border-[7px] border-[#060733] bg-[#060733] shadow-[0_35px_90px_rgba(6,7,51,0.35)]">
+                  <Image
+                    src="/img/producto/escanear-qr.jpg"
+                    alt="Pantalla Escanear QR de sworkc en un teléfono: abrir cámara, elegir equipo sin QR y pasos de cómo funciona"
+                    width={900}
+                    height={1948}
+                    className="w-full"
+                  />
+                </div>
+                <p className="mt-3 text-center font-mono text-[11px] text-muted-foreground">
+                  Registro por QR en terreno · pantalla real
+                </p>
+              </div>
+            </Reveal>
+
+            {/* Bitácora de capacidades de terreno */}
+            <div>
+              {TERRENO.map((t, i) => (
+                <Reveal
+                  key={t.id}
+                  variant="up"
+                  delay={i * 80}
+                  as="article"
+                  className={`scroll-mt-28 grid gap-x-8 gap-y-3 py-8 first:pt-0 last:pb-0 sm:grid-cols-[64px_minmax(0,1fr)] ${i > 0 ? "border-t border-border" : ""}`}
+                  {...{ id: t.id }}
+                >
+                  <p className="font-mono text-sm font-medium text-[#0a0c77]">{t.code}</p>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold tracking-tight text-ink">
+                      {t.title}
+                    </h3>
+                    <p className="mt-2 max-w-[58ch] text-sm leading-relaxed text-ink-soft">{t.desc}</p>
+                    <dl className="mt-4">
+                      {t.spec.map(([k, v]) => (
+                        <div key={k} className="grid grid-cols-[130px_minmax(0,1fr)] gap-3 border-t border-border py-2">
+                          <dt className="font-mono text-[11px] uppercase tracking-[0.1em] leading-relaxed text-muted-foreground">{k}</dt>
+                          <dd className="text-sm text-ink">{v}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>

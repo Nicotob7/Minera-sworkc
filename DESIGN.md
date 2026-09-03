@@ -24,6 +24,7 @@ Estrategia **Committed**: el azul de marca carga 30–60% de la superficie.
 - **Bitácora / spec-ledger**: filas `grid [código-mono | título+desc | capacidades-mono]` separadas por hairlines (`border-border`), heading con `border-b-2` azul y contador mono a la derecha. Reemplaza toda grilla de tarjetas.
 - **Ficha técnica** (`<dl>` clave/valor): filas `[etiqueta-mono-uppercase | valor]` con hairlines. Usada en terreno, dónde-estamos.
 - **Banda de producto real**: fondo #060733, marco de "monitor" (borde blanco/15, barra superior mono con punto cyan), captura REAL del sistema rotulada `PANTALLA REAL · DATOS DEMO`.
+- **Marco de teléfono**: borde grueso navy `border-[7px] border-[#060733] rounded-[2.1rem]`, captura móvil REAL (390px @3x), caption mono centrado debajo. Usado en la sección terreno de /producto; en desktop va `sticky top-28` junto a la bitácora.
 - **RelatedLinks**: enlaces con `border-t-2` azul que se enciende al hover; sin tarjetas.
 - **Reveal**: visible por defecto en SSR (SEO/sin-JS); JS oculta y anima solo lo que está bajo el viewport; respeta `prefers-reduced-motion`.
 
