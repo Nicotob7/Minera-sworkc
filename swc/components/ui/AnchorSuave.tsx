@@ -45,9 +45,10 @@ export function AnchorSuave() {
         el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
         history.pushState(null, "", href);
       } else {
-        // navegación a otra página con #ancla: armar el re-anclaje
-        setTimeout(arm, 250);
-        setTimeout(arm, 900);
+        // Navegación a otra página con #ancla: armar el re-anclaje de inmediato.
+        // No se lee location.hash aquí (la ruta aún no cambió); reanclar() lo lee
+        // al momento de cada ajuste, cuando la página nueva ya aterrizó.
+        ventana = Date.now() + 4000;
       }
     };
 
