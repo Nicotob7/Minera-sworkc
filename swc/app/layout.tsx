@@ -143,7 +143,7 @@ const jsonLd = {
           name: "¿Se pueden generar reportes?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Sí. Reportes de OT, HH, fallas, insumos, mantenciones y estados de equipos.",
+            text: "Sí. Cada OT se descarga en PDF y el reporte de cierre de turno se envía por correo en Excel y PDF, con el estado de la flota, las OTs de la jornada y las fotos de evidencia.",
           },
         },
         {

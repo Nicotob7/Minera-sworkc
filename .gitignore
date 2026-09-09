@@ -1,0 +1,6 @@
+# Variables de entorno. El .env de la raíz guarda credenciales SMTP reales
+# (SMTP_PASS) para el formulario de contacto: nunca debe llegar al repo.
+# swc/.gitignore ya cubre las suyas, pero esa regla no alcanza a la raíz.
+.env
+.env.*
+!.env.example

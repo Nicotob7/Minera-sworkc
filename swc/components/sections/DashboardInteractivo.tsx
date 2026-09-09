@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   Clock,
   Gauge,
-  Radio,
   ShieldAlert,
   SlidersHorizontal,
   Tool,
@@ -49,19 +48,19 @@ const RANGES: { key: RangeKey; label: string }[] = [
 const KPI_DATA: Record<RangeKey, Kpi[]> = {
   hoy: [
     { id: "disp", label: "Disponibilidad", value: "98,6", unit: "%", delta: "+0,4", up: true, icon: Gauge },
-    { id: "online", label: "Equipos en línea", value: "48", unit: "/50", delta: "+2", up: true, icon: Radio },
+    { id: "operativos", label: "Equipos operativos", value: "48", unit: "/50", delta: "+2", up: true, icon: CheckCircle2 },
     { id: "ot", label: "OT abiertas", value: "27", delta: "-5", up: true, icon: Tool },
     { id: "mant", label: "Mantenciones próximas", value: "9", delta: "+1", up: false, icon: Clock },
   ],
   "7d": [
     { id: "disp", label: "Disponibilidad", value: "97,9", unit: "%", delta: "+1,1", up: true, icon: Gauge },
-    { id: "online", label: "Equipos en línea", value: "47", unit: "/50", delta: "+3", up: true, icon: Radio },
+    { id: "operativos", label: "Equipos operativos", value: "47", unit: "/50", delta: "+3", up: true, icon: CheckCircle2 },
     { id: "ot", label: "OT abiertas", value: "142", delta: "-18", up: true, icon: Tool },
     { id: "mant", label: "Mantenciones próximas", value: "31", delta: "+4", up: false, icon: Clock },
   ],
   "30d": [
     { id: "disp", label: "Disponibilidad", value: "98,1", unit: "%", delta: "+2,3", up: true, icon: Gauge },
-    { id: "online", label: "Equipos en línea", value: "49", unit: "/50", delta: "+6", up: true, icon: Radio },
+    { id: "operativos", label: "Equipos operativos", value: "49", unit: "/50", delta: "+6", up: true, icon: CheckCircle2 },
     { id: "ot", label: "OT abiertas", value: "584", delta: "-63", up: true, icon: Tool },
     { id: "mant", label: "Mantenciones próximas", value: "112", delta: "+12", up: false, icon: Clock },
   ],
@@ -69,22 +68,22 @@ const KPI_DATA: Record<RangeKey, Kpi[]> = {
 
 const ALERTS: Record<Shift, AlertItem[]> = {
   "Turno A": [
-    { id: "a1", level: "crit", equipo: "CAEX-214", msg: "Temperatura de motor sobre umbral", time: "00:42" },
-    { id: "a2", level: "warn", equipo: "PALA-07", msg: "Presión hidráulica al límite", time: "01:15" },
-    { id: "a3", level: "ok", equipo: "CAEX-188", msg: "Mantención preventiva completada", time: "02:03" },
-    { id: "a4", level: "warn", equipo: "PERF-31", msg: "Vibración elevada en husillo", time: "02:51" },
+    { id: "a1", level: "crit", equipo: "CAEX-214", msg: "Detención no programada registrada en terreno", time: "00:42" },
+    { id: "a2", level: "warn", equipo: "PALA-07", msg: "Checklist pre-uso con observación: fuga hidráulica", time: "01:15" },
+    { id: "a3", level: "ok", equipo: "CAEX-188", msg: "OT de mantención preventiva cerrada con evidencia", time: "02:03" },
+    { id: "a4", level: "warn", equipo: "PERF-31", msg: "Horómetro a 40 h de la próxima mantención", time: "02:51" },
   ],
   "Turno B": [
-    { id: "b1", level: "warn", equipo: "CAEX-176", msg: "Nivel de combustible bajo", time: "08:11" },
-    { id: "b2", level: "ok", equipo: "PALA-03", msg: "Ciclo de carga dentro de rango", time: "09:04" },
-    { id: "b3", level: "crit", equipo: "CARG-12", msg: "Falla de freno detectada", time: "09:48" },
+    { id: "b1", level: "warn", equipo: "CAEX-176", msg: "OT abierta por falla reportada por el operador", time: "08:11" },
+    { id: "b2", level: "ok", equipo: "PALA-03", msg: "Checklist pre-uso conforme", time: "09:04" },
+    { id: "b3", level: "crit", equipo: "CARG-12", msg: "Equipo marcado como DETENIDO por el supervisor", time: "09:48" },
     { id: "b4", level: "ok", equipo: "CAEX-209", msg: "OT cerrada por cuadrilla 2", time: "10:32" },
   ],
   "Turno C": [
-    { id: "c1", level: "ok", equipo: "CAEX-233", msg: "Telemetría estable últimas 4 h", time: "16:25" },
-    { id: "c2", level: "crit", equipo: "PALA-07", msg: "Detención no programada", time: "17:02" },
-    { id: "c3", level: "warn", equipo: "CAEX-190", msg: "Neumático con baja presión", time: "17:44" },
-    { id: "c4", level: "ok", equipo: "CARG-08", msg: "Recarga de fluidos finalizada", time: "18:30" },
+    { id: "c1", level: "ok", equipo: "CAEX-233", msg: "Uso registrado con QR: 8,5 h de operación", time: "16:25" },
+    { id: "c2", level: "crit", equipo: "PALA-07", msg: "Detención no programada, causa por confirmar", time: "17:02" },
+    { id: "c3", level: "warn", equipo: "CAEX-190", msg: "Pendiente heredado del turno anterior", time: "17:44" },
+    { id: "c4", level: "ok", equipo: "CARG-08", msg: "Materiales de la intervención registrados", time: "18:30" },
   ],
 };
 
@@ -198,11 +197,7 @@ export function DashboardInteractivo() {
               </div>
             </div>
             <span className="inline-flex w-fit items-center gap-2 rounded-[var(--radius-pill)] border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white">
-              <span className="relative flex h-2 w-2">
-                <span className="live-ping absolute inline-flex h-full w-full rounded-full bg-success" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
-              </span>
-              En vivo
+              Datos demo
             </span>
           </div>
 
@@ -300,8 +295,8 @@ export function DashboardInteractivo() {
         </div>
 
         <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-white/85">
-          Lo que ves aquí es una muestra con datos demostrativos. En producción, sworkc
-          centraliza tus OT, turnos y planificación, y puede integrarse con fuentes de telemetría.
+          Lo que ves aquí es una muestra con datos demostrativos. En sworkc, estos indicadores
+          se calculan con lo que tu equipo registra: OT, usos, checklists y cierres de turno.
         </p>
       </div>
     </section>

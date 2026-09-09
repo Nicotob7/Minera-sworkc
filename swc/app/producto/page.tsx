@@ -8,22 +8,22 @@ import { Reveal } from "../../components/ui/Reveal";
 export const metadata: Metadata = {
   title: "Producto",
   description:
-    "sworkc en profundidad: módulos operacionales (OT, horas, mantención, turnos, insumos y reportes), Expediente Digital del Equipo con KPIs, uso con QR en terreno, modo offline y multiempresa.",
+    "sworkc en profundidad: módulos operacionales (OT, horas, mantención, turnos, materiales y reportes), Expediente Digital del Equipo con KPIs, uso con QR en terreno, modo offline y multiempresa.",
   alternates: { canonical: "https://sworkc.cl/producto" },
 };
 
 /* ── Módulos reales del sistema: bitácora de especificación, no tarjetas ── */
 const MODULOS = [
   { code: "OT", title: "Órdenes de trabajo digitales", desc: "Cada OT se crea, asigna, ejecuta y cierra con evidencia, responsable e historial trazable.", points: ["Asignación por equipo", "Cierre con evidencia", "Historial trazable"] },
-  { code: "HRS", title: "Horas de funcionamiento", desc: "Control de horas operativas por maquinaria para anticipar mantenciones y proyectar carga.", points: ["Conteo por equipo", "Umbrales configurables", "Proyección de uso"] },
+  { code: "HRS", title: "Horas de funcionamiento", desc: "Control del horómetro de cada máquina para anticipar la próxima mantención.", points: ["Conteo por equipo", "Umbrales configurables", "Horas hasta la mantención"] },
   { code: "MNT", title: "Mantenciones y alertas", desc: "Avisos por horas, fechas, criticidad o condiciones que amenazan la continuidad.", points: ["Prioridad por criticidad", "Aviso a responsables", "Reglas por operación"] },
-  { code: "EST", title: "Estados de maquinaria", desc: "Equipos disponibles, detenidos, en reparación o inspección, actualizados en el momento.", points: ["Estado en vivo", "Detenciones registradas", "Pendientes priorizados"] },
+  { code: "EST", title: "Estados de maquinaria", desc: "Equipos disponibles, detenidos, en reparación o inspección, actualizados apenas se registran en terreno.", points: ["Estado por equipo", "Detenciones registradas", "Pendientes priorizados"] },
   { code: "TRN", title: "Gestión de turnos", desc: "Pendientes, fallas y observaciones se entregan al turno siguiente sin depender de memoria.", points: ["Resumen de cierre", "Pendientes heredados", "Contexto entre turnos"] },
   { code: "FLL", title: "Estadísticas de fallas", desc: "Frecuencia, reincidencias y tiempos de detención para decidir con datos reales.", points: ["Fallas por equipo", "Tiempos de reparación", "Patrones repetitivos"] },
-  { code: "HH", title: "Control de horas-hombre", desc: "Registro de HH por reparación, inspección y mantención para comparar productividad.", points: ["HH por actividad", "Comparativa por equipo", "Costo de intervención"] },
-  { code: "INS", title: "Control de insumos", desc: "Traza repuestos, materiales y consumibles usados en cada intervención.", points: ["Consumo por reparación", "Stock de repuestos", "Alertas de quiebre"] },
+  { code: "HH", title: "Control de horas-hombre", desc: "Registro de HH por reparación, inspección y mantención para comparar productividad.", points: ["HH por actividad", "Comparativa por equipo", "HH estimadas vs reales"] },
+  { code: "MAT", title: "Materiales y repuestos por OT", desc: "Traza repuestos, materiales y consumibles usados en cada intervención.", points: ["Consumo por reparación", "Planificado vs utilizado", "Repuestos por equipo en el EDE"] },
   { code: "PAN", title: "Panel operacional", desc: "Disponibilidad, alertas, estados y productividad reunidos en una vista de mando.", points: ["Indicadores clave", "Tendencias visuales", "Alertas centralizadas"] },
-  { code: "REP", title: "Reportabilidad", desc: "Información descargable para supervisión, planificación, mantenimiento y administración.", points: ["Informes descargables", "Datos consolidados", "Por área o equipo"] },
+  { code: "REP", title: "Reportabilidad", desc: "Cada OT se descarga en PDF y el reporte de cierre de turno se envía por correo en Excel y PDF.", points: ["OT en PDF descargable", "Cierre de turno por correo (Excel y PDF)", "Datos consolidados"] },
 ];
 
 /* KPIs reales del EDE: definiciones, sin cifras inventadas. */
@@ -77,7 +77,7 @@ export default function ProductoPage() {
       <PageHero
         path="producto"
         title="Toda la operación minera, en un solo sistema"
-        intro="Lo que se registra en la máquina se convierte en información trazable y en decisiones. sworkc conecta terreno, turnos, mantenimiento, insumos e indicadores."
+        intro="Lo que se registra en la máquina se convierte en información trazable y en decisiones. sworkc conecta terreno, turnos, mantenimiento, materiales e indicadores."
         readouts={[
           { label: "Módulos", value: "10" },
           { label: "KPIs por equipo", value: "4" },

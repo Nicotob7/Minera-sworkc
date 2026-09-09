@@ -27,8 +27,8 @@ const FAQS: FaqItem[] = [
   },
   {
     q: "¿Se pueden generar reportes?",
-    a: "Sí. Reportes de OT, HH, fallas, insumos, mantenciones y estados de equipos.",
-    extra: "Descargables para supervisión, planificación, mantenimiento y administración.",
+    a: "Sí. Cada OT se descarga en PDF y el reporte de cierre de turno se envía por correo en Excel y PDF, con el estado de la flota, las OTs de la jornada y las fotos de evidencia.",
+    extra: "Los indicadores de disponibilidad, MTTR, MTBF y MTBS se consultan en pantalla, por equipo y por período.",
   },
   {
     q: "¿El sistema puede adaptarse a distintos procesos?",

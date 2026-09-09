@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 /* Recursos previstos. SIN contenido inventado: estado real "en preparación". */
 const EN_PREPARACION = [
   { code: "IMP", title: "Guía de puesta en marcha", desc: "Cómo se implementa sworkc por etapas: levantamiento, configuración, capacitación y puesta en marcha." },
-  { code: "MOD", title: "Referencia de módulos", desc: "Cómo operar órdenes de trabajo, estados de equipo, turnos, insumos y reportes en el día a día." },
+  { code: "MOD", title: "Referencia de módulos", desc: "Cómo operar órdenes de trabajo, estados de equipo, turnos, materiales y reportes en el día a día." },
   { code: "MNT", title: "Alertas y mantención preventiva", desc: "Cómo configurar avisos por horas de uso, fechas y criticidad para anticipar detenciones." },
   { code: "KPI", title: "Indicadores del equipo", desc: "Cómo leer disponibilidad, MTTR, MTBF y MTBS en el Expediente Digital del Equipo." },
   { code: "TER", title: "Uso con QR y modo offline", desc: "Buenas prácticas para el registro en terreno con código QR y trabajo sin conexión." },

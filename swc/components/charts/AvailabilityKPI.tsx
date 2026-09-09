@@ -6,7 +6,7 @@ import { useReducedMotion, useInterval, useInViewport } from "../hooks";
 const BASE = 98.6;
 const HISTORY = [98.1, 98.4, 98.2, 98.7, 98.5, 98.9, 98.6, 98.8];
 
-/** KPI de disponibilidad: cuenta hacia arriba al montar y fluctúa en vivo con sparkline. */
+/** KPI de disponibilidad (demo): cuenta hacia arriba al montar y fluctúa con sparkline. */
 export function AvailabilityKPI() {
   const reduced = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,7 @@ export function AvailabilityKPI() {
     return () => cancelAnimationFrame(raf);
   }, [reduced]);
 
-  // Fluctuación en vivo
+  // Fluctuación de la muestra demo
   useInterval(
     () => {
       const v = +(98.1 + Math.random() * 1.2).toFixed(1);
@@ -75,11 +75,7 @@ export function AvailabilityKPI() {
           Disponibilidad
         </p>
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-soft">
-          <span className="relative flex h-2 w-2">
-            <span className="live-ping absolute inline-flex h-full w-full rounded-full bg-success" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
-          </span>
-          en vivo
+          demo
         </span>
       </div>
       <div className="mt-1 flex items-baseline gap-1">

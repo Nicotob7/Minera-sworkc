@@ -25,7 +25,7 @@ export const NAV_GROUPS: NavGroup[] = [
     wide: true,
     links: [
       { label: "Visión general", href: "/producto", desc: "El sistema de continuidad operacional, en profundidad" },
-      { label: "Módulos operacionales", href: "/producto#modulos", desc: "OT, horas, mantención, turnos, insumos y reportes" },
+      { label: "Módulos operacionales", href: "/producto#modulos", desc: "OT, horas, mantención, turnos, materiales y reportes" },
       { label: "Expediente del equipo (EDE)", href: "/producto#ede", desc: "Historial y KPIs por máquina" },
       { label: "Uso con QR en terreno", href: "/producto#qr", desc: "Registro sin fricción desde el equipo" },
       { label: "Modo offline", href: "/producto#offline", desc: "Funciona sin señal y sincroniza al reconectar" },

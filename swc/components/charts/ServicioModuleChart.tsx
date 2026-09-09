@@ -219,41 +219,28 @@ const CHARTS: Record<ModuleChartId, ChartConfig> = {
     caption: "Carga por actividad",
   },
   insumos: {
-    type: "radialBar",
-    series: [76],
-    options: baseOptions({
-      labels: ["Stock disponible"],
-      colors: [palette.cyan],
-      plotOptions: {
-        radialBar: {
-          hollow: { size: "58%" },
-          track: { background: "#eef2f8" },
-          dataLabels: {
-            name: { color: palette.muted, fontSize: "13px" },
-            value: { color: palette.ink, fontSize: "30px", fontWeight: 700 },
-          },
-        },
-      },
-    }),
-    title: "Stock operacional",
-    caption: "Disponibilidad de insumos",
+    type: "bar",
+    series: [{ name: "Cantidad utilizada", data: [14, 9, 6, 11] }],
+    options: barOptions(["Filtros", "Aceites", "Mangueras", "Sellos"], true),
+    title: "Materiales por intervención",
+    caption: "Consumo registrado en las OT",
   },
   dashboard: {
     type: "line",
     series: [
       { name: "Disponibilidad", data: [87, 89, 91, 90, 94, 96, 98] },
-      { name: "Cumplimiento", data: [62, 66, 68, 71, 73, 76, 79] },
+      { name: "OT cerradas", data: [12, 15, 14, 18, 17, 21, 19] },
     ],
     options: axisOptions(["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]),
     title: "Indicadores clave",
-    caption: "Disponibilidad vs cumplimiento",
+    caption: "Disponibilidad y OT cerradas",
   },
   reportes: {
     type: "bar",
-    series: [{ name: "Reportes", data: [12, 19, 15, 24, 31] }],
-    options: barOptions(["OT", "HH", "Fallas", "Insumos", "Turnos"]),
+    series: [{ name: "Documentos", data: [38, 12] }],
+    options: barOptions(["OT en PDF", "Cierre de turno"]),
     title: "Reportabilidad",
-    caption: "Informes por dominio",
+    caption: "Documentos generados en el período",
   },
 };
 
@@ -279,7 +266,7 @@ export function ServicioModuleChart({ id, compact = false }: { id: ModuleChartId
           <p className="mt-0.5 text-xs text-muted-foreground">{config.caption}</p>
         </div>
         <span className="rounded-[var(--radius-pill)] border border-[#dce6f2] bg-white px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-brand-900">
-          En vivo
+          Datos demo
         </span>
       </div>
       <div role="img" aria-label={`${config.title}: ${config.caption}`}>

@@ -37,7 +37,7 @@ const MODULES: Module[] = [
     title: "Órdenes de trabajo digitales",
     icon: ClipboardCheckIcon,
     tag: "Operación",
-    stat: "4 estados",
+    stat: "6 etapas",
     desc: "Cada OT queda creada, asignada, ejecutada y cerrada con evidencia, responsable e historial.",
     points: ["Asignación por equipo", "Cierre con evidencia", "Historial trazable"],
   },
@@ -47,8 +47,8 @@ const MODULES: Module[] = [
     icon: ClockIcon,
     tag: "Monitoreo",
     stat: "uso real",
-    desc: "Controla horas operativas por maquinaria para anticipar mantenciones y proyectar carga.",
-    points: ["Conteo por equipo", "Umbrales configurables", "Proyección de uso"],
+    desc: "Controla el horómetro de cada máquina para anticipar la próxima mantención.",
+    points: ["Conteo por equipo", "Umbrales configurables", "Horas hasta la mantención"],
   },
   {
     id: "alertas",
@@ -66,7 +66,7 @@ const MODULES: Module[] = [
     tag: "Disponibilidad",
     stat: "flota viva",
     desc: "Visualiza equipos disponibles, detenidos, en reparación, inspección o pendientes.",
-    points: ["Estado en vivo", "Detenciones registradas", "Pendientes priorizados"],
+    points: ["Estado por equipo", "Detenciones registradas", "Pendientes priorizados"],
   },
   {
     id: "turnos",
@@ -93,23 +93,23 @@ const MODULES: Module[] = [
     tag: "Productividad",
     stat: "HH medidas",
     desc: "Registra horas hombre por reparación, inspección y mantención para comparar productividad.",
-    points: ["HH por actividad", "Comparativa por equipo", "Costo de intervención"],
+    points: ["HH por actividad", "Comparativa por equipo", "HH estimadas vs reales"],
   },
   {
     id: "insumos",
-    title: "Control de insumos",
+    title: "Materiales y repuestos por OT",
     icon: BoxesIcon,
-    tag: "Inventario",
-    stat: "stock visible",
+    tag: "Materiales",
+    stat: "por OT",
     desc: "Traza repuestos, materiales y consumibles usados por cada intervención o mantención.",
-    points: ["Consumo por reparación", "Stock de repuestos", "Alertas de quiebre"],
+    points: ["Consumo por reparación", "Planificado vs utilizado", "Repuestos por equipo en el EDE"],
   },
   {
     id: "dashboard",
     title: "Panel operacional",
     icon: LayoutGridIcon,
     tag: "Control",
-    stat: "KPIs en vivo",
+    stat: "KPIs por período",
     desc: "Reúne disponibilidad, alertas, estados y productividad en una vista de mando operacional.",
     points: ["Indicadores clave", "Tendencias visuales", "Alertas centralizadas"],
   },
@@ -118,9 +118,9 @@ const MODULES: Module[] = [
     title: "Reportabilidad",
     icon: FileChartLineIcon,
     tag: "Gestión",
-    stat: "datos listos",
-    desc: "Genera información descargable para supervisión, planificación, mantenimiento y administración.",
-    points: ["Informes descargables", "Plantillas por área", "Datos consolidados"],
+    stat: "OT y turno",
+    desc: "Cada OT se descarga en PDF y el reporte de cierre de turno se envía por correo en Excel y PDF.",
+    points: ["OT en PDF descargable", "Cierre de turno por correo (Excel y PDF)", "Datos consolidados"],
   },
 ];
 
@@ -282,7 +282,7 @@ export function Servicios() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/78 sm:text-lg">
             Sworkc conecta cada pieza de la operación en un solo mapa: terreno, turnos,
-            mantenimiento, insumos, reportes e indicadores.
+            mantenimiento, materiales, reportes e indicadores.
           </p>
         </div>
 
