@@ -31,28 +31,39 @@ aws cloudfront list-distributions --profile sworkc --query "DistributionList.Ite
 
 Landing Next.js **exportada como sitio estático** (`output: "export"` en `swc/next.config.ts`)
 → `s3://sworkc-apex` → CloudFront con OAC (origen REST `sworkc-apex.s3.sa-east-1.amazonaws.com`,
-`DefaultRootObject = index.html`). **No hay Amplify, no hay SSR, no hay servidor corriendo.**
-El formulario de contacto es un `mailto:contacto@sworkc.cl`, no un endpoint.
+`DefaultRootObject = index.html`). **No hay Amplify, no hay SSR, no hay servidor corriendo
+para servir las páginas.**
 
-## ⚠️ El código que sirve producción NO está en `origin`
+El formulario de contacto **sí llama a un backend**: hace `POST` a
+`https://api.sworkc.cl/api/v1/contacto` (`swc/components/sections/Contacto.tsx:143`, con
+`NEXT_PUBLIC_API_URL` como override y esa URL por defecto). El `mailto:contacto@sworkc.cl`
+que aparece en la tarjeta de contacto es sólo un enlace, no el envío. Importa para
+diagnosticar: **si el formulario deja de andar, el problema no está en S3 ni en CloudFront**,
+sino en `api.sworkc.cl`, en el endpoint `/api/v1/contacto` o en el CORS del origen apex.
 
-En `origin` sólo existe `main`, y el `swc/next.config.ts` de `main` **no** tiene
-`output: "export"` (tiene además la API route SSR `swc/app/api/contact/`). El export estático
-entró en el commit `938ce5e`, que hoy sólo vive en ramas **locales sin push**
-(`fix/ortografia-landing`, `feat/sitio-multipagina`); y las páginas que el sitio sirve hoy
-(`/producto/`, `/nosotros/`, `/novedades/`, `/recursos/`, todas HTTP 200) vienen de esa segunda
-rama. **Si se pierde ese clon, producción no se puede reconstruir.** Pushear esas ramas es
-prioritario y es independiente de este runbook.
+```bash
+# El backend tiene que aceptar el origen del sitio público:
+curl -sI -X OPTIONS https://api.sworkc.cl/api/v1/contacto \
+  -H 'Origin: https://sworkc.cl' -H 'Access-Control-Request-Method: POST' \
+  | grep -i access-control-allow-origin
+# esperado: access-control-allow-origin: https://sworkc.cl
+```
 
-Consecuencia práctica: **antes de desplegar, verificá en qué checkout estás.**
+## Antes de desplegar: verificá en qué checkout estás
+
+El `swc/next.config.ts` de `main` **no** tiene `output: "export"` (y conserva la API route SSR
+`swc/app/api/contact/`). El export estático entró en el commit `938ce5e`, que vive en
+`feat/sitio-multipagina` — **ya pusheada a `origin`** (verificado 2026-09-09), igual que las
+páginas que el sitio sirve hoy (`/producto/`, `/nosotros/`, `/novedades/`, `/recursos/`).
+Desplegar desde `main` sube un sitio distinto del que está en producción.
 
 ```bash
 grep -n 'output' swc/next.config.ts   # tiene que aparecer  output: "export"
 ```
 
-Si no aparece, `npm run build` genera `.next/` (SSR) y **no** `out/`, y el paso 2 no tendrá
-qué subir. (Además el build falla: en el árbol de `main`, `/robots.txt` no es exportable sin
-`export const dynamic = "force-static"`.)
+Si no aparece, estás en el checkout equivocado: `npm run build` termina bien pero genera
+`.next/` (SSR) en vez de `out/`, así que el paso 2 no tiene qué subir. **El build verde no
+confirma que estés en la rama correcta**; lo único que lo confirma es el `grep` de arriba.
 
 ## Desplegar
 
