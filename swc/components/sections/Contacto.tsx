@@ -289,8 +289,8 @@ function ContactoCard({ item }: { item: ContactoItem }) {
         <Icon size={18} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-white/60">{item.label}</span>
-        <span className="mt-1 block truncate font-mono text-sm font-semibold">{item.value}</span>
+        <span className="block text-xs font-semibold text-white/60">{item.label}</span>
+        <span className="mt-1 block truncate text-sm font-semibold">{item.value}</span>
       </span>
       {item.href && <ArrowUpRight size={16} className="shrink-0 text-white/55 transition-colors group-hover:text-white" />}
     </span>
@@ -422,10 +422,6 @@ function SubmitButton({ loading }: { loading: boolean }) {
       onFocus={() => sendIconRef.current?.startAnimation()}
       className="group relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-pill)] bg-[#0a0c77] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_16px_42px_rgba(10,12,119,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#14188a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:translate-y-0"
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]"
-      />
       <span className="relative">{loading ? "Enviando…" : "Enviar solicitud"}</span>
       {loading ? (
         <Loader2 size={18} className="relative animate-spin" />

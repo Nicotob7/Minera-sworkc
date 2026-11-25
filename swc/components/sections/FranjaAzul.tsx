@@ -8,7 +8,7 @@ export function FranjaAzul() {
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="border-y border-black/10 py-10 sm:py-12">
           {/* Eyebrow simple, en negro */}
-          <p className="text-center font-mono text-xs font-semibold uppercase tracking-[0.3em] text-[#0b1020]/75">
+          <p className="text-center text-xs font-semibold text-[#0b1020]/75">
             ¿Sabías que...?
           </p>
 

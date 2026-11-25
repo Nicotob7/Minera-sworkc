@@ -59,7 +59,7 @@ export function FAQ() {
   const right = withIndex.slice(3);
 
   return (
-    <section id="faq" className="relative scroll-mt-28 bg-white py-16 sm:py-24">
+    <section id="faq" className="relative bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-6 sm:px-10">
         {/* Encabezado centrado, normal */}
         <div className="text-center">
@@ -153,7 +153,7 @@ function FaqRow({
             onClick={onToggle}
             aria-expanded={open}
             aria-label={`${open ? "Leer menos" : "Leer más"}: ${item.q}`}
-            className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded py-2 text-xs font-bold uppercase tracking-[0.08em] text-[#0a0c77] transition-colors hover:text-[#1c239e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30"
+            className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded py-2 text-xs font-bold text-[#0a0c77] transition-colors hover:text-[#1c239e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30"
           >
             {open ? "Leer menos" : "Leer más"}
             <Plus size={13} className={`transition-transform duration-300 ${open ? "rotate-45" : ""}`} />

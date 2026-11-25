@@ -69,14 +69,25 @@ export function Navbar() {
   };
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:pt-5">
+    <header
+      ref={headerRef}
+      className={`fixed inset-x-0 top-0 z-50 px-4 transition-[padding] duration-200 ease-out ${scrolled ? "pt-2 sm:pt-2.5" : "pt-4 sm:pt-5"}`}
+    >
+      {/* Al bajar, el menú se compacta (margen, alto y logo) para tapar menos contenido. */}
       <nav
-        className={`animate-fade-down mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-[var(--radius-pill)] border border-black/[0.06] bg-white py-2.5 pl-6 pr-3 transition-shadow duration-300 ${
-          scrolled ? "shadow-[var(--shadow-lg)]" : "shadow-[var(--shadow-sm)]"
+        className={`animate-fade-down mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-[var(--radius-pill)] border border-black/[0.06] bg-white pl-6 pr-3 transition-[box-shadow,padding] duration-200 ease-out ${
+          scrolled ? "py-1.5 shadow-[var(--shadow-lg)]" : "py-2.5 shadow-[var(--shadow-sm)]"
         }`}
       >
         <Link href="/" className="flex shrink-0 items-center" aria-label="SWORKC — inicio" onClick={closeAll}>
-          <Image src="/logo-swc.png" alt="SWORKC Technologies" width={166} height={50} priority />
+          <Image
+            src="/logo-swc.png"
+            alt="SWORKC Technologies"
+            width={166}
+            height={50}
+            priority
+            className={`w-auto transition-[height] duration-200 ease-out ${scrolled ? "h-9" : "h-[50px]"}`}
+          />
         </Link>
 
         {/* Menú de escritorio */}

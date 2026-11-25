@@ -100,7 +100,8 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* Toda ancla queda bajo el menú flotante (alto del menú + aire). Reemplaza los scroll-mt sueltos. */
+    scroll-padding-top: 7rem;
   }
 
   body {
@@ -133,7 +134,6 @@
 /* ===================== Keyframes ===================== */
 @keyframes swc-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes swc-fade-down { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
-@keyframes swc-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes swc-ping { 0% { transform: scale(1); opacity: 0.55; } 70%, 100% { transform: scale(2.4); opacity: 0; } }
 @keyframes swc-kenburns { from { transform: scale(1.06); } to { transform: scale(1.14); } }
 @keyframes swc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
@@ -149,7 +149,6 @@
 .animate-fade-up { opacity: 0; animation: swc-fade-up 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
 .animate-fade-down { opacity: 0; animation: swc-fade-down 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
 
-.tw-caret { color: currentColor; font-weight: 300; animation: swc-caret 1s step-end infinite; }
 .live-ping { animation: swc-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
 .kenburns { animation: swc-kenburns 20s ease-out forwards alternate; }
 .float-slow { animation: swc-float 7s ease-in-out infinite; }
@@ -162,18 +161,6 @@
 @keyframes swc-bob-r { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
 .bob-l { animation: swc-bob-l 1.8s ease-in-out infinite; }
 .bob-r { animation: swc-bob-r 1.8s ease-in-out infinite; }
-
-/* Reveal al hacer scroll (lo activa el componente Reveal con .is-visible) */
-.reveal {
-  opacity: 0;
-  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-  /* will-change eliminado: evita mantener capas de composición vivas de forma permanente. */
-}
-.reveal-up { transform: translateY(30px); }
-.reveal-left { transform: translateX(-36px); }
-.reveal-right { transform: translateX(36px); }
-.reveal-scale { transform: scale(0.93); }
-.reveal.is-visible { opacity: 1; transform: none; }
 
 /* ===================== Decorativos técnicos ===================== */
 .tech-grid {
@@ -213,7 +200,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal { opacity: 1 !important; transform: none !important; }
 }
 
 /* ===================== Transición suave entre páginas ===================== */

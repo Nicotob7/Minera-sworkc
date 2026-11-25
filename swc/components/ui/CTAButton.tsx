@@ -26,16 +26,8 @@ export function CTAButton({ href, children, variant = "primary", icon = true, cl
   const bg =
     variant === "primary" ? "var(--gradient-cta)" : variant === "cyan" ? "var(--gradient-cyan)" : undefined;
 
-  const filled = variant === "primary" || variant === "cyan";
-
   return (
     <a href={href} className={`${base} ${styleByVariant[variant]} ${className}`} style={bg ? { background: bg } : undefined}>
-      {filled && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/35 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]"
-        />
-      )}
       <span className="relative">{children}</span>
       {icon && <ArrowRight size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />}
     </a>

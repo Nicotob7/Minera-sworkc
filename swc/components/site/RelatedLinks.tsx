@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowUpRight } from "../ui/icons";
-import { Reveal } from "../ui/Reveal";
 
 export type RelatedItem = {
   title: string;
@@ -22,13 +21,12 @@ export function RelatedLinks({
   return (
     <section className="border-t border-border bg-[#f6f8fc] py-14 sm:py-16">
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
-        <Reveal variant="up" as="div" className="flex flex-wrap items-baseline justify-between gap-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="font-display text-2xl font-bold tracking-[-0.01em] text-ink">{title}</h2>
-          <p className="font-mono text-xs text-muted-foreground">ENLACES · {items.length}</p>
-        </Reveal>
+        </div>
         <div className="mt-6 grid gap-x-10 gap-y-6 sm:grid-cols-3">
-          {items.map((item, i) => (
-            <Reveal key={item.href} variant="up" delay={i * 60} as="div">
+          {items.map((item) => (
+            <div key={item.href}>
               <Link
                 href={item.href}
                 className="group block border-t-2 border-[#0a0c77]/25 pt-4 transition-colors hover:border-[#0a0c77] focus-visible:border-[#0a0c77] focus-visible:outline-none"
@@ -46,7 +44,7 @@ export function RelatedLinks({
                   {item.desc}
                 </span>
               </Link>
-            </Reveal>
+            </div>
           ))}
         </div>
       </div>
