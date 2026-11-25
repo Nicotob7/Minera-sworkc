@@ -32,12 +32,12 @@ swc/
 ├── components/
 │   ├── Hero.tsx            # hero full-bleed
 │   ├── Navbar.tsx          # navbar blanco flotante
-│   ├── Typewriter.tsx      # efecto de escritura del hero
-│   ├── hooks.ts            # useReducedMotion, useInterval, useInViewport
+│   ├── hooks.ts            # useReducedMotion
+│   ├── demo/               # pantallas del sistema redibujadas (SVG, datos de lib/demo.ts)
 │   ├── ui/                 # primitivas + iconos
 │   ├── charts/             # gráficos (SVG propio + ApexCharts)
 │   └── sections/           # las 7 secciones de contenido
-├── public/                 # imágenes (hero/final.png, logo-swc.png) y svg
+├── public/                 # imágenes (hero/portada.jpg, og.jpg, logo-swc.png) y svg
 ├── design-system/MASTER.md # sistema de diseño (paleta, tipografía, tokens)
 └── docs/                   # esta documentación
 ```

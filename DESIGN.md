@@ -8,31 +8,40 @@ Estrategia **Committed**: el azul de marca carga 30–60% de la superficie.
 
 - `--color-brand` **#0a0c77** (azul profundo, identidad; ramp brand-50…950 en `swc/app/globals.css`)
 - `--color-cyan` **#00a6d6** (SOLO señal de dato/acción: valores de readouts, links vivos; nunca decoración)
-- Tinta navy **#060733** (brand-950) para bandas oscuras y footer
+- Tinta navy **#060733** (brand-950) para bandas oscuras (incluida la del panel interactivo del inicio) y footer. Sin grises fuera de paleta.
 - Superficies claras: blanco + `#f6f8fc` (neutro tintado hacia el azul de marca)
 - Fotografía de faena SIEMPRE bajo veladura azul (gradiente 100° desde rgba(6,7,51,.96) → rgba(10,12,119,.45)); la foto respira a la derecha
 
 ## Tipografía
 
-- **Geologica** (única familia; variable `--font-geologica`) — pesos con contraste comprometido: 300 (declaraciones), 600–800 (títulos). Display tracking `-0.02em`, `text-wrap: balance` en h1–h3.
-- **JetBrains Mono** — exclusivo para *readouts*: rótulos con dato real (conteos, unidades, estados, rutas `sworkc / producto`, créditos de foto). Un rótulo sin dato no se escribe.
+- **Geologica** (única familia; variable `--font-geologica`) — pesos con contraste comprometido: 300 (declaraciones), 600–800 (títulos). Display tracking `-0.02em`, `text-wrap: balance` en h1–h3. Los rótulos pequeños van en Geologica `text-xs` (12 px mínimo), en minúsculas normales: sin `uppercase` ni tracking ancho.
+- **JetBrains Mono** — SOLO para cifras y códigos (valores numéricos, horómetros, `OT-2026-0xx`, códigos de equipo). Nunca como disfraz "técnico" de rótulos, rutas ni créditos.
+- Sin rótulos sobre los títulos (eyebrows) ni contadores de andamiaje ("MÓDULOS · 10 / 10", "ENLACES · 3").
 - Escala hero: `clamp(2.4rem, 6vw, 4.25rem)`.
 
 ## Componentes / patrones
 
-- **PageHero** (`components/site/PageHero.tsx`): foto de faena + veladura azul + ruta mono + título + fila de readouts `<dl>` con hairline superior + crédito CC en esquina (mono 10px).
-- **Bitácora / spec-ledger**: filas `grid [código-mono | título+desc | capacidades-mono]` separadas por hairlines (`border-border`), heading con `border-b-2` azul y contador mono a la derecha. Reemplaza toda grilla de tarjetas.
-- **Ficha técnica** (`<dl>` clave/valor): filas `[etiqueta-mono-uppercase | valor]` con hairlines. Usada en terreno, dónde-estamos.
-- **Banda de producto real**: fondo #060733, marco de "monitor" (borde blanco/15, barra superior mono con punto cyan), captura REAL del sistema rotulada `PANTALLA REAL · DATOS DEMO`.
-- **Marco de teléfono**: borde grueso navy `border-[7px] border-[#060733] rounded-[2.1rem]`, captura móvil REAL (390px @3x), caption mono centrado debajo. Usado en la sección terreno de /producto; en desktop va `sticky top-28` junto a la bitácora.
+- **PageHero** (`components/site/PageHero.tsx`): foto de faena + veladura azul + migas (`sworkc / producto`) + título + fila de readouts `<dl>` con dato real y hairline superior. Sin crédito sobre la foto.
+- **Bitácora / spec-ledger**: filas `grid [ícono | título+desc | capacidades]` separadas por hairlines (`border-border`), heading con `border-b-2` azul. Íconos de Tabler desde `components/ui/icons.ts` (sin círculo). Reemplaza toda grilla de tarjetas.
+- **Ficha técnica** (`<dl>` clave/valor): filas `[etiqueta | valor]` con hairlines. Usada en terreno, dónde-estamos.
+- **Banda de producto**: fondo #060733, marco de "monitor" (borde blanco/15, barra superior con punto cyan), pantalla del sistema redibujada (`components/demo/`) con el rótulo "Datos de ejemplo" dentro de la propia pantalla.
+- **Pantallas redibujadas** (`components/demo/PanelOperativoDemo.tsx`, `EdeDemo.tsx`): SVG estático con los datos de ejemplo de `lib/demo.ts` (equipos CAEX-214, PALA-07, PERF-31, CAR-012; OTs OT-2026-0xx; personas solo por rol). Nunca capturas con datos de prueba.
+- **Portada del inicio**: `public/hero/portada.jpg` (foto con la pantalla de la tablet en negro, generada por `swc/scripts/limpiar-portada.mjs`) + `PanelOperativoDemo` oscuro alineado a la pantalla desde `lg`. Título fijo, sin máquina de escribir.
+- **Marco de teléfono**: borde grueso navy `border-[7px] border-[#060733] rounded-[2.1rem]`, captura móvil real (390px @3x), sin pie de imagen. Usado en la sección terreno de /producto; en desktop va `sticky top-28` junto a la bitácora.
 - **RelatedLinks**: enlaces con `border-t-2` azul que se enciende al hover; sin tarjetas.
-- **Reveal**: visible por defecto en SSR (SEO/sin-JS); JS oculta y anima solo lo que está bajo el viewport; respeta `prefers-reduced-motion`.
+- **Menú flotante**: píldora blanca que se compacta al bajar (margen, alto y logo; 200 ms ease-out). `html { scroll-padding-top: 7rem }` deja todas las anclas bajo el menú; no usar `scroll-mt` sueltos ni `scroll-behavior: smooth` en `html`.
+
+## Movimiento
+
+- Nada aparece por hacer scroll en cada sección (se eliminó `Reveal`). El movimiento se reserva para la entrada de la portada y uno o dos momentos por página (plan de la fase 2 en `D:/nicot/Documents/sworkc-web/fase0/bosquejo.html`).
+- Las cifras de las muestras no cambian solas: un panel que se mueve sin intervención contradice la regla de no prometer "tiempo real".
+- Todo respeta `prefers-reduced-motion`.
 
 ## Imágenes
 
-- Faena: `swc/public/img/faena/` — Chuquicamata (Diego Delso, CC BY-SA 4.0), Centinela desde la ISS (Alexander Gerst, CC BY-SA 2.0), pala P&H (Sansumaria, CC BY-SA 3.0). **La atribución CC va como caption mono en la esquina de cada foto — obligatoria.**
-- Producto: `swc/public/img/producto/` — capturas reales del sistema (datos demo), siempre rotuladas como demo.
+- Faena: `swc/public/img/faena/` — Chuquicamata (Diego Delso, CC BY-SA 4.0), Centinela desde la ISS (Alexander Gerst, CC BY-SA 2.0), pala P&H 4100XPB (Sansumaria, CC BY-SA 3.0). **La atribución CC va en el pie de página**: una línea "Fotografías vía Wikimedia Commons" que despliega autor, licencia, enlace a la obra y aviso de recorte (`lib/creditos.ts`). Al agregar una foto, agregarla ahí.
+- Producto: pantallas redibujadas en `components/demo/`; la única captura vigente es `public/img/producto/escanear-qr.jpg`. Se eliminaron `panel-operacional.jpg`, `ede.jpg` y `public/hero/final.png` porque traían datos de prueba; la original de la portada se recupera del historial de git (instrucciones en `swc/scripts/limpiar-portada.mjs`).
 
 ## Prohibido (además de los bans de la skill)
 
-- Grillas de tarjetas idénticas icono+título+texto; eyebrows uppercase decorativos sobre secciones; iconos en círculo sobre títulos; cifras/valores de KPI inventados; cyan como color de relleno.
+- Grillas de tarjetas idénticas icono+título+texto; eyebrows sobre secciones; iconos en círculo sobre títulos; cifras/valores de KPI inventados presentados como resultados; cyan como color de relleno; capturas con datos de prueba o nombres de personas reales; créditos impresos sobre las fotos.
