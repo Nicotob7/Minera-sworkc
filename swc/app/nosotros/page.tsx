@@ -3,7 +3,6 @@ import Image from "next/image";
 import { PageHero } from "../../components/site/PageHero";
 import { RelatedLinks } from "../../components/site/RelatedLinks";
 import { CTAFinal } from "../../components/site/CTAFinal";
-import { Reveal } from "../../components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "Nosotros",
@@ -35,7 +34,6 @@ export default function NosotrosPage() {
         img={{
           src: "/img/faena/centinela-aereo.jpg",
           alt: "Distrito minero Centinela en el desierto de Atacama, fotografiado desde la Estación Espacial Internacional",
-          credit: "Distrito Centinela, Atacama, desde la ISS · foto Alexander Gerst · CC BY-SA 2.0",
         }}
       />
 
@@ -43,21 +41,20 @@ export default function NosotrosPage() {
       <section className="bg-white py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-16">
-            <Reveal variant="up" as="div">
-              <p className="font-mono text-[13px] text-[#0a0c77]">propósito</p>
-              <p className="mt-5 max-w-[26ch] font-display text-[clamp(1.8rem,3.6vw,2.8rem)] font-light leading-[1.18] tracking-[-0.01em] text-ink [text-wrap:balance]">
+            <div>
+              <p className="max-w-[26ch] font-display text-[clamp(1.8rem,3.6vw,2.8rem)] font-light leading-[1.18] tracking-[-0.01em] text-ink [text-wrap:balance]">
                 Que ninguna decisión operacional dependa de la{" "}
                 <strong className="font-bold text-[#0a0c77]">memoria de un turno</strong>.
               </p>
-            </Reveal>
-            <Reveal variant="up" delay={120} as="div" className="self-end">
+            </div>
+            <div className="self-end">
               <p className="max-w-[42ch] border-t border-border pt-5 text-sm leading-relaxed text-ink-soft lg:border-t-0 lg:border-l lg:pl-6 lg:pt-0">
                 En la operación minera, la continuidad se pierde cuando la información queda en
                 planillas dispersas o conversaciones informales. sworkc centraliza órdenes de
                 trabajo, estados de equipo, mantenciones e indicadores para que el relevo entre
                 turnos sea claro y cada intervención quede documentada.
               </p>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
@@ -65,26 +62,25 @@ export default function NosotrosPage() {
       {/* ── Cómo trabajamos: secuencia real de implementación ── */}
       <section className="border-t border-border bg-[#f6f8fc] py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
-          <Reveal variant="up" as="div" className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[#0a0c77] pb-5">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[#0a0c77] pb-5">
             <h2 className="font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
               Implementación por etapas
             </h2>
-            <p className="font-mono text-xs text-muted-foreground">SECUENCIA · 01→04</p>
-          </Reveal>
+          </div>
           <p className="mt-5 max-w-[56ch] text-base leading-relaxed text-ink-soft">
             La puesta en marcha es gradual, para que la adopción sea real y sostenible en el tiempo.
           </p>
 
           <ol className="mt-12 grid gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
             {ETAPAS.map((e, i) => (
-              <Reveal key={e.n} variant="up" delay={i * 90} as="li" className="relative pr-8">
+              <li key={e.n} className="relative pr-8">
                 {i < ETAPAS.length - 1 && (
                   <span aria-hidden className="absolute right-0 top-3 hidden h-px w-6 bg-[#0a0c77]/30 lg:block" />
                 )}
                 <p className="font-mono text-sm text-[#0a0c77]">{e.n}</p>
                 <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-ink">{e.title}</h3>
                 <p className="mt-2 max-w-[38ch] text-sm leading-relaxed text-ink-soft">{e.desc}</p>
-              </Reveal>
+              </li>
             ))}
           </ol>
         </div>
@@ -93,9 +89,8 @@ export default function NosotrosPage() {
       {/* ── Dónde estamos: dato real, foto real ── */}
       <section className="bg-white py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16 lg:px-10">
-          <Reveal variant="left" as="div">
-            <p className="font-mono text-[13px] text-[#0a0c77]">dónde estamos</p>
-            <h2 className="mt-4 max-w-[18ch] font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
+          <div>
+            <h2 className="max-w-[18ch] font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
               Con foco en la minería en Chile
             </h2>
             <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-ink-soft">
@@ -109,13 +104,13 @@ export default function NosotrosPage() {
                 ["Plataforma", "Web · PWA · Android"],
               ].map(([k, v]) => (
                 <div key={k} className="grid grid-cols-[110px_minmax(0,1fr)] gap-3 border-b border-border py-2.5">
-                  <dt className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">{k}</dt>
+                  <dt className="text-xs text-muted-foreground">{k}</dt>
                   <dd className="text-sm text-ink">{v}</dd>
                 </div>
               ))}
             </dl>
-          </Reveal>
-          <Reveal variant="right" as="div">
+          </div>
+          <div>
             <div className="relative overflow-hidden rounded-xl shadow-[var(--shadow-lg)]">
               <Image
                 src="/img/faena/chuquicamata-rajo.jpg"
@@ -124,18 +119,15 @@ export default function NosotrosPage() {
                 height={1400}
                 className="max-h-[520px] w-full object-cover"
               />
-              <p className="absolute bottom-2 right-3 font-mono text-[10px] text-white/60">
-                Chuquicamata · foto Diego Delso · CC BY-SA 4.0
-              </p>
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
       <RelatedLinks
         items={[
           { title: "Producto", desc: "Los módulos, el Expediente del Equipo y el uso en terreno.", href: "/producto" },
-          { title: "Novedades", desc: "Anuncios y notas del producto (en preparación).", href: "/novedades" },
+          { title: "Recursos", desc: "Video de la plataforma en uso y preguntas frecuentes.", href: "/recursos" },
           { title: "Contacto", desc: "Conversemos sobre tu operación.", href: "/#contacto" },
         ]}
       />

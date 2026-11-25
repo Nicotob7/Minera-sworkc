@@ -12,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/producto", priority: 0.9 },
     { path: "/nosotros", priority: 0.7 },
     { path: "/recursos", priority: 0.5 },
-    { path: "/novedades", priority: 0.5 },
   ];
 
   return routes.map(({ path, priority }) => ({

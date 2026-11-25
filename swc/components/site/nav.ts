@@ -44,9 +44,8 @@ export const NAV_GROUPS: NavGroup[] = [
     id: "recursos",
     label: "Recursos",
     links: [
-      { label: "Guías y recursos", href: "/recursos", desc: "Documentación y material de apoyo" },
+      { label: "Así funciona sworkc", href: "/recursos#video", desc: "Video de 1:55 con la plataforma en uso" },
       { label: "Preguntas frecuentes", href: "/recursos#faq", desc: "Dudas comunes sobre sworkc" },
-      { label: "Novedades", href: "/novedades", desc: "Anuncios y notas del producto" },
     ],
   },
 ];
@@ -71,9 +70,8 @@ export const FOOTER_COLUMNS: { title: string; links: NavLink[] }[] = [
   {
     title: "Recursos",
     links: [
-      { label: "Guías y recursos", href: "/recursos" },
+      { label: "Así funciona sworkc", href: "/recursos#video" },
       { label: "Preguntas frecuentes", href: "/recursos#faq" },
-      { label: "Novedades", href: "/novedades" },
     ],
   },
 ];
