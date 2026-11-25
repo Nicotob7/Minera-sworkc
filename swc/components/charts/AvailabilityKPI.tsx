@@ -1,29 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useReducedMotion, useInterval, useInViewport } from "../hooks";
+import { useEffect, useState } from "react";
+import { useReducedMotion } from "../hooks";
 
 const BASE = 98.6;
 const HISTORY = [98.1, 98.4, 98.2, 98.7, 98.5, 98.9, 98.6, 98.8];
+const OTS_GESTIONADAS = 1247;
 
-/** KPI de disponibilidad (demo): cuenta hacia arriba al montar y fluctúa con sparkline. */
+/** KPI de disponibilidad (muestra fija): cuenta hasta su valor al montar y no vuelve a cambiar solo. */
 export function AvailabilityKPI() {
   const reduced = useReducedMotion();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const inView = useInViewport(rootRef);
-  const [pageVisible, setPageVisible] = useState(true);
   const [pct, setPct] = useState(BASE);
-  const [hist, setHist] = useState<number[]>(HISTORY);
-  const [ot, setOt] = useState(1247);
-
-  useEffect(() => {
-    const update = () => setPageVisible(!document.hidden);
-    update();
-    document.addEventListener("visibilitychange", update);
-    return () => document.removeEventListener("visibilitychange", update);
-  }, []);
-
-  const running = !reduced && inView && pageVisible;
+  const hist = HISTORY;
+  const ot = OTS_GESTIONADAS;
 
   // Count-up al montar
   useEffect(() => {
@@ -43,19 +32,6 @@ export function AvailabilityKPI() {
     return () => cancelAnimationFrame(raf);
   }, [reduced]);
 
-  // Fluctuación de la muestra demo
-  useInterval(
-    () => {
-      const v = +(98.1 + Math.random() * 1.2).toFixed(1);
-      setPct(v);
-      setHist((h) => [...h.slice(1), v]);
-      setOt((o) =>
-        Math.max(1180, Math.min(1320, o + (Math.random() < 0.5 ? -1 : 1) * Math.floor(Math.random() * 4))),
-      );
-    },
-    running ? 3000 : null,
-  );
-
   const min = 97.6;
   const max = 99.6;
   const w = 200;
@@ -69,9 +45,9 @@ export function AvailabilityKPI() {
   const area = `${line} L${w} ${h} L0 ${h} Z`;
 
   return (
-    <div ref={rootRef} role="img" aria-label={`Disponibilidad ${pct.toFixed(1).replace(".", ",")}%`}>
+    <div role="img" aria-label={`Disponibilidad ${pct.toFixed(1).replace(".", ",")}%`}>
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <p className="text-xs font-medium text-muted-foreground">
           Disponibilidad
         </p>
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-soft">

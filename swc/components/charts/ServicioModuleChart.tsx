@@ -265,7 +265,7 @@ export function ServicioModuleChart({ id, compact = false }: { id: ModuleChartId
           <p className="font-display text-sm font-bold tracking-tight text-ink sm:text-base">{config.title}</p>
           <p className="mt-0.5 text-xs text-muted-foreground">{config.caption}</p>
         </div>
-        <span className="rounded-[var(--radius-pill)] border border-[#dce6f2] bg-white px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-brand-900">
+        <span className="rounded-[var(--radius-pill)] border border-[#dce6f2] bg-white px-2.5 py-1 text-xs font-semibold text-brand-900">
           Datos demo
         </span>
       </div>

@@ -1,53 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useReducedMotion, useInterval, useInViewport } from "../hooks";
-
 const R = 52;
 const C = 2 * Math.PI * R;
 const LABELS = ["Operativos", "Mantención", "Detenidos"];
 const COLORS = ["var(--color-success)", "var(--color-warning)", "var(--color-danger)"];
+const DATA = [42, 6, 2];
 
-/** Anillo de estado de flota. Mueve una unidad entre estados cada ciclo (efecto "en vivo"). */
+/** Anillo de estado de flota (muestra fija: los valores no cambian solos). */
 export function FleetDonut() {
-  const reduced = useReducedMotion();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const inView = useInViewport(rootRef);
-  const [pageVisible, setPageVisible] = useState(true);
-  const [data, setData] = useState<number[]>([42, 6, 2]);
+  const data = DATA;
   const total = data.reduce((a, b) => a + b, 0);
   const lengths = data.map((v) => (total > 0 ? (v / total) * C : 0));
   const offsets = lengths.map((_, idx) => lengths.slice(0, idx).reduce((sum, len) => sum + len, 0));
 
-  useEffect(() => {
-    const update = () => setPageVisible(!document.hidden);
-    update();
-    document.addEventListener("visibilitychange", update);
-    return () => document.removeEventListener("visibilitychange", update);
-  }, []);
-
-  const running = !reduced && inView && pageVisible;
-
-  useInterval(
-    () => {
-      setData((d) => {
-        const next = [...d];
-        const i = Math.floor(Math.random() * 3);
-        let j = Math.floor(Math.random() * 3);
-        if (j === i) j = (j + 1) % 3;
-        if (next[i] > 1) {
-          next[i] -= 1;
-          next[j] += 1;
-        }
-        return next;
-      });
-    },
-    running ? 3200 : null,
-  );
-
   return (
     <div
-      ref={rootRef}
       className="flex items-center gap-4"
       role="img"
       aria-label={`Flota: ${data[0]} operativos, ${data[1]} en mantención, ${data[2]} detenidos`}
@@ -66,17 +33,12 @@ export function FleetDonut() {
               strokeWidth="13"
               strokeDasharray={`${len} ${C - len}`}
               strokeDashoffset={-offsets[idx]}
-              style={
-                reduced
-                  ? undefined
-                  : { transition: "stroke-dasharray .8s ease, stroke-dashoffset .8s ease" }
-              }
             />
           ))}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="font-mono text-2xl font-medium tabular-nums text-ink">{total}</span>
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">equipos</span>
+          <span className="text-xs text-muted-foreground">equipos</span>
         </div>
       </div>
       <ul className="flex flex-col gap-2">

@@ -137,7 +137,7 @@ export function DashboardInteractivo() {
       id="dashboard"
       aria-labelledby="dashboard-title"
       className="relative overflow-hidden py-14 text-white sm:py-16 lg:py-20"
-      style={{ backgroundColor: "#505861" }}
+      style={{ backgroundColor: "#060733" }}
     >
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
@@ -191,12 +191,12 @@ export function DashboardInteractivo() {
                 <h3 className="font-display text-base font-semibold tracking-tight text-white sm:text-lg">
                   Centro de control operacional
                 </h3>
-                <p className="font-mono text-[11px] uppercase tracking-wide text-white/85">
+                <p className="text-xs text-white/85">
                   sworkc · faena norte
                 </p>
               </div>
             </div>
-            <span className="inline-flex w-fit items-center gap-2 rounded-[var(--radius-pill)] border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white">
+            <span className="inline-flex w-fit items-center gap-2 rounded-[var(--radius-pill)] border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">
               Datos demo
             </span>
           </div>
@@ -234,7 +234,7 @@ export function DashboardInteractivo() {
             </article>
 
             <article className={`${CARD_BASE} p-4 lg:col-span-4`} style={LIGHT_CARD_VARS}>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#6b7892]">Estado de flota</p>
+              <p className="mb-3 text-xs font-semibold text-[#6b7892]">Estado de flota</p>
               <FleetDonut />
             </article>
 
@@ -245,8 +245,8 @@ export function DashboardInteractivo() {
             <article className={`${CARD_BASE} p-4 lg:col-span-12`} style={LIGHT_CARD_VARS}>
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#6b7892]">Registro de alertas</p>
-                  <span className="font-mono text-[11px] text-[#6b7892]">· {shift}</span>
+                  <p className="text-xs font-semibold text-[#6b7892]">Registro de alertas</p>
+                  <span className="text-xs text-[#6b7892]">· {shift}</span>
                 </div>
                 <span className="inline-flex items-center gap-2 rounded-[var(--radius-pill)] bg-danger-bg px-2.5 py-1 text-[11px] font-semibold text-danger-fg">
                   <span className="relative flex h-2 w-2">
@@ -308,7 +308,7 @@ type ChipOption = { key: string; label: string };
 function FilterGroup({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-2 rounded-[var(--radius)] border border-white/10 bg-white/10 p-2 sm:flex-row sm:items-center">
-      <div className="flex min-w-20 items-center gap-2 px-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/85">
+      <div className="flex min-w-20 items-center gap-2 px-1 text-xs font-semibold text-white/85">
         <SlidersHorizontal size={13} />
         {label}
       </div>

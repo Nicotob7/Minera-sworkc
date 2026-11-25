@@ -184,7 +184,7 @@ function ModuleNode({
         </span>
         <span className="min-w-0 flex-1">
           <span
-            className={`block font-mono text-[10px] font-semibold uppercase tracking-[0.15em] ${
+            className={`block text-xs font-semibold ${
               active ? "text-white" : "text-white/70"
             }`}
           >
@@ -194,7 +194,7 @@ function ModuleNode({
             {module.title}
           </span>
           <span
-            className={`mt-2 inline-flex rounded-[var(--radius-pill)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] ${
+            className={`mt-2 inline-flex rounded-[var(--radius-pill)] px-2.5 py-1 text-xs ${
               active ? "bg-white/16 text-white" : "bg-white/10 text-white/76"
             }`}
           >
@@ -221,7 +221,7 @@ function ActiveDetail({
       style={{ animation: "swc-fade-up 0.18s ease-out both" }}
     >
       <div className={`${compact ? "p-4" : "p-5"} border-b border-border`}>
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-900">
+        <p className="text-xs font-semibold text-brand-900">
           {module.tag}
         </p>
         <h3 className={`${compact ? "text-lg" : "text-xl"} mt-2 font-display font-bold tracking-tight text-ink`}>
@@ -321,7 +321,8 @@ export function Servicios() {
         </div>
         ) : (
         <div className="relative mt-10">
-          <div className="mx-auto grid w-full max-w-md gap-4">
+          {/* minmax(0,1fr): sin esto la columna implícita toma el ancho fijo del gráfico (300 px) y desborda a 320 px. */}
+          <div className="mx-auto grid w-full max-w-md grid-cols-[minmax(0,1fr)] gap-4">
             {MODULES.map((module) => {
               const Icon = module.icon;
               const active = activeId === module.id;
@@ -348,7 +349,7 @@ export function Servicios() {
                       <Icon size={20} />
                     </span>
                     <span className="min-w-0 flex-1">
-                    <span className={`block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] ${active ? "text-white" : "text-white/70"}`}>
+                    <span className={`block text-xs font-semibold ${active ? "text-white" : "text-white/70"}`}>
                         {module.tag}
                       </span>
                       <span className="mt-1 block font-display text-base font-bold leading-tight">
