@@ -1,6 +1,9 @@
 import Image from "next/image";
-import { Typewriter } from "./Typewriter";
 import { CTAButton } from "./ui/CTAButton";
+import { PanelOperativoDemo } from "./demo/PanelOperativoDemo";
+import { PORTADA } from "../lib/demo";
+
+const { ancho, alto, pantalla } = PORTADA;
 
 /**
  * Hero full-bleed con la foto final (tablet + faena).
@@ -15,13 +18,33 @@ export function Hero() {
     >
       {/* Imagen de fondo, esquina a esquina */}
       <Image
-        src="/hero/final.png"
-        alt="Tablet mostrando el dashboard de sworkc (Visión Operativa) en una faena minera al atardecer"
+        src="/hero/portada.jpg"
+        alt="Tablet en una faena minera al atardecer"
         fill
         priority
         sizes="100vw"
         className="object-cover object-[center_42%] lg:object-center"
       />
+
+      {/* Panel limpio sobre la pantalla de la tablet (desde lg, donde la foto va centrada).
+          La caja replica object-cover con unidades de contenedor para quedar alineada a la foto. */}
+      <div className="absolute inset-0 hidden [container-type:size] lg:block">
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ width: `max(100cqw, calc(100cqh * ${ancho} / ${alto}))`, aspectRatio: `${ancho} / ${alto}` }}
+        >
+          <div
+            className="absolute overflow-hidden rounded-[0.6%]"
+            style={{
+              left: `${(pantalla.x / ancho) * 100}%`,
+              top: `${(pantalla.y / alto) * 100}%`,
+              width: `${(pantalla.w / ancho) * 100}%`,
+            }}
+          >
+            <PanelOperativoDemo tema="oscuro" />
+          </div>
+        </div>
+      </div>
 
       {/* Tinte sutil + degradado IZQUIERDO (oscurece el paisaje para el texto; deja la tablet limpia) */}
       <div aria-hidden className="absolute inset-0" style={{ background: "rgba(9,13,34,0.2)" }} />
@@ -41,16 +64,10 @@ export function Hero() {
             className="animate-fade-up font-display text-[2.6rem] font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)] sm:text-5xl"
             style={{ animationDelay: "0.1s" }}
           >
-            <span className="block">Continuidad operacional minera</span>
-            <span className="mt-1 block">
-              <Typewriter
-                reserve
-                words={["con trazabilidad total", "conectada entre turnos", "con la información en un solo lugar"]}
-                typeSpeed={95}
-                deleteSpeed={45}
-                pause={2400}
-              />
-            </span>
+            {/* Cortes fijos desde lg (ritmo de la portada); en móvil corta natural. */}
+            <span className="lg:block">Continuidad operacional</span>{" "}
+            <span className="lg:block">minera conectada</span>{" "}
+            <span className="lg:block">entre turnos</span>
           </h1>
 
           <p
