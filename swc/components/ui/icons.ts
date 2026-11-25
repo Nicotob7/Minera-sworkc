@@ -30,6 +30,15 @@ import {
   IconQrcode,
   IconWifiOff,
   IconBuildingCommunity,
+  IconClipboardCheck,
+  IconBell,
+  IconTruck,
+  IconArrowsExchange,
+  IconChartBar,
+  IconHourglass,
+  IconPackage,
+  IconLayoutDashboard,
+  IconFileText,
 } from "@tabler/icons-react";
 
 /** Tipo de componente de icono (reemplaza a LucideIcon). */
@@ -62,4 +71,13 @@ export {
   IconQrcode as QrCode,
   IconWifiOff as WifiOff,
   IconBuildingCommunity as BuildingCommunity,
+  IconClipboardCheck as ClipboardCheck,
+  IconBell as Bell,
+  IconTruck as Truck,
+  IconArrowsExchange as ArrowsExchange,
+  IconChartBar as ChartBar,
+  IconHourglass as Hourglass,
+  IconPackage as Package,
+  IconLayoutDashboard as LayoutDashboard,
+  IconFileText as FileText,
 };
