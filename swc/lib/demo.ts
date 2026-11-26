@@ -105,3 +105,18 @@ export const EDE = {
 
 /** Rectángulo de la pantalla de la tablet dentro de public/hero/portada.jpg (ver scripts/limpiar-portada.mjs). */
 export const PORTADA = { ancho: 1672, alto: 941, pantalla: { x: 683, y: 221, w: 900, h: 589 } };
+
+/** OT de ejemplo que recorre la sección «Centro de control» del inicio: terreno → panel → cierre. */
+export const RECORRIDO_OT = {
+  codigo: "OT-2026-055",
+  tipo: "NP" as const,
+  equipo: "CAEX-221",
+  modelo: "Camión de extracción",
+  flota: "Flota extracción",
+  falla: "Corte en manguera hidráulica de dirección",
+  prioridad: "Alta",
+  trabajo: "Cambio de manguera hidráulica de dirección y prueba en vacío.",
+  checklist: ["Equipo bloqueado (LOTO)", "Manguera reemplazada", "Prueba de dirección conforme"],
+  reparacion: "2,4 h",
+  cerradaPor: "Mecánico · Turno B",
+};

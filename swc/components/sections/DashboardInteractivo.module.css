@@ -1,0 +1,173 @@
+/* Recorrido de una OT. Desde lg y sin movimiento reducido: 4 tramos de scroll con la escena fija. */
+.recorrido {
+  position: relative;
+}
+
+.escenario {
+  padding: 40px 0 48px;
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .recorrido {
+    height: 340svh;
+  }
+
+  .escenario {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    padding: 96px 0 32px;
+  }
+}
+
+.grilla {
+  display: grid;
+  gap: 40px;
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (min-width: 1024px) {
+  .grilla {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+    align-items: center;
+    gap: 48px;
+    /* La izquierda se alinea con el título de la sección (max-w-7xl + px-12); la escena
+       puede usar hasta 90rem hacia la derecha. */
+    padding: 0 48px 0 max(48px, calc(min((100% - 80rem) / 2, 5rem) + 48px));
+  }
+}
+
+/* Pasos: al recorrer, el activo queda pleno y los otros se apagan. */
+.pasos {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.paso {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 14px;
+  transition: opacity 400ms ease;
+}
+
+.numero {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: 50%;
+  color: rgb(255 255 255 / 0.85);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+
+.paso h3 {
+  margin: 4px 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.paso p {
+  color: rgb(255 255 255 / 0.75);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+:global([data-animado]) .paso {
+  opacity: 0.38;
+}
+
+:global([data-animado]:is([data-paso="0"], [data-paso="1"])) .paso:nth-child(1),
+:global([data-animado][data-paso="2"]) .paso:nth-child(2),
+:global([data-animado][data-paso="3"]) .paso:nth-child(3) {
+  opacity: 1;
+}
+
+:global([data-animado]:is([data-paso="0"], [data-paso="1"])) .paso:nth-child(1) .numero,
+:global([data-animado][data-paso="2"]) .paso:nth-child(2) .numero,
+:global([data-animado][data-paso="3"]) .paso:nth-child(3) .numero {
+  background: #fff;
+  border-color: #fff;
+  color: #060733;
+}
+
+/* Escena: monitor con el panel y el teléfono por delante, abajo a la izquierda.
+   Desde lg crece con el ancho pero sin pasarse del alto de la pantalla (escena ≈ 1,6 : 1). */
+.escena {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .escena {
+    justify-self: end;
+    width: min(100%, calc((100svh - 150px) * 1.6));
+  }
+}
+
+.monitor {
+  overflow: hidden;
+  background: #0b1020;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 12px;
+  box-shadow: 0 40px 120px rgb(0 0 0 / 0.5);
+}
+
+.monitorBarra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+  color: rgb(255 255 255 / 0.6);
+  font-size: 12px;
+}
+
+.monitorBarra span {
+  width: 8px;
+  height: 8px;
+  background: #22d3ee;
+  border-radius: 50%;
+}
+
+.telefono {
+  width: min(62%, 260px);
+  margin: 0 auto 32px;
+}
+
+@media (min-width: 1024px) {
+  .monitor {
+    margin-left: 17%;
+  }
+
+  .telefono {
+    position: absolute;
+    bottom: -7%;
+    left: 0;
+    z-index: 2;
+    width: 26%;
+    margin: 0;
+  }
+}
+
+/* Móvil: el teléfono va antes que el monitor. */
+@media (max-width: 1023px) {
+  .escena {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}

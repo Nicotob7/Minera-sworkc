@@ -417,16 +417,32 @@
   padding: calc(9 * var(--u)) calc(10 * var(--u)) calc(6 * var(--u));
 }
 
-.cifra {
+/* Cifras como contador CSS: --n es un entero registrado (@property), así cuenta al animarse.
+   --n0 es el valor normal; --n2, el valor con la OT del recorrido abierta (data-paso 2). */
+.contador {
+  --n: var(--n0);
   counter-reset: n var(--n);
+  transition: --n 700ms var(--ease);
+}
+
+.contador::after {
+  content: counter(n);
+}
+
+.pct::after {
+  content: counter(n) "%";
+}
+
+:global([data-paso="2"]) .contador {
+  --n: var(--n2, var(--n0));
+  transition-delay: 1.35s;
+}
+
+.cifra {
   font-size: calc(22 * var(--u));
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-}
-
-.cifra::after {
-  content: counter(n);
 }
 
 .kpiValor small {
@@ -644,7 +660,7 @@
   font-size: calc(13 * var(--u));
 }
 
-.cuenta span {
+.cuenta > span {
   color: var(--suave);
   font-size: calc(6.6 * var(--u));
   text-transform: uppercase;
@@ -918,6 +934,72 @@
   width: calc(4.5 * var(--u));
   height: calc(4.5 * var(--u));
   border-radius: 50%;
+}
+
+/* ── Recorrido de una OT (sección del inicio): la fila aparece cuando llega la tarjeta que viaja
+   desde el teléfono (paso 2) y queda cerrada en el paso 3. ── */
+.nuevaFila {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 450ms var(--ease),
+    opacity 250ms ease;
+}
+
+.nuevaFila > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+:global([data-paso="2"]) .nuevaFila,
+:global([data-paso="3"]) .nuevaFila {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+:global([data-paso="2"]) .nuevaFila {
+  transition-delay: 1.2s;
+}
+
+.siCerrada,
+:global([data-paso="3"]) .noCerrada {
+  display: none;
+}
+
+:global([data-paso="3"]) .siCerrada {
+  display: revert;
+}
+
+:global([data-paso="3"]) .prioridad.siCerrada {
+  display: flex;
+}
+
+.prioridad svg {
+  width: calc(9 * var(--u));
+  height: calc(9 * var(--u));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global([data-animado][data-paso="2"]) .nuevaFila > div {
+    animation: resaltar 1800ms ease-out 1.25s backwards;
+  }
+
+  :global([data-animado][data-paso="3"]) .nuevaFila > div {
+    animation: resaltarCierre 1600ms ease-out 0.2s backwards;
+  }
+}
+
+@keyframes resaltar {
+  from {
+    background: #fde68a;
+  }
+}
+
+@keyframes resaltarCierre {
+  from {
+    background: #bbf7d0;
+  }
 }
 
 /*

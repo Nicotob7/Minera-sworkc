@@ -25,6 +25,7 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 
 | Componente | Tipo | Rol |
 |---|---|---|
+| `TelefonoDemo.tsx` | S | La app en un teléfono (4 pantallas según `data-paso`); estilos en `TelefonoDemo.module.css`. |
 | `PanelOperativoDemo.tsx` | S | Réplica HTML de «Visión Operativa» (diseño 1280 × 838, escala con `cqw`; estilos en `PanelOperativoDemo.module.css`). `encender` anima el arranque una vez. Datos de `lib/demo.ts`. |
 | `EdeDemo.tsx` | S | Expediente Digital del Equipo en SVG para /producto. Datos de `lib/demo.ts`. |
 
@@ -54,7 +55,8 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 |---|---|---|
 | `QuienesSomos.tsx` | C | Texto editorial + gráfico de tendencia. |
 | `Servicios.tsx` | C | Los 10 módulos como mapa/panel interactivo (desktop) / acordeón (móvil), con icono animado, detalle y mini-gráfico por módulo. |
-| `DashboardInteractivo.tsx` | C | "Centro de control operacional": fila de KPIs, filtros (Rango/Turno), charts en vivo (FleetDonut/FailureBars/AvailabilityKPI) y feed de alertas. |
+| `DashboardInteractivo.tsx` | S | Centro de control: recorrido de una OT (terreno → panel → cierre) con `TelefonoDemo` y `PanelOperativoDemo recorrido`; estilos en `DashboardInteractivo.module.css`. |
+| `RecorridoOT.tsx` | C | Desde lg y sin movimiento reducido fija la escena, elige el paso (data-paso 0–3) según el scroll y hace viajar la tarjeta de la OT del teléfono al panel. |
 | `FranjaAzul.tsx` | S | Franja blanca tipográfica "¿Sabías que…?" (dato de alto impacto). |
 | `Contacto.tsx` | C | Full-bleed: panel de imagen (trabajador) + formulario premium → `POST /api/contact`, con estados loading/success/error. |
 | `FAQ.tsx` | C | Cronograma en 2 columnas: 6 preguntas numeradas con acordeón ("Leer más"). |

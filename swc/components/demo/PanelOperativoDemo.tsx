@@ -10,6 +10,7 @@ import {
   FLOTA_POR_GRUPO,
   OTS,
   OTS_PRIORITARIAS,
+  RECORRIDO_OT,
   type TipoEvento,
 } from "../../lib/demo";
 import {
@@ -19,6 +20,7 @@ import {
   Bell,
   Calendar,
   ChartDonut,
+  Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -62,24 +64,30 @@ const MENU: { label: string; icon: IconType; activo?: boolean; sub?: boolean }[]
   { label: "Configuración", icon: Settings },
 ];
 
+/** Texto con cifras que cuentan: [valor normal, valor con la OT del recorrido abierta]. */
+type Parte = string | [number, number];
+
 const KPIS: {
   label: string;
   sub: string;
   icon: IconType;
   valor: number;
-  detalle: string;
+  detalle: string | Parte[];
   color: string;
   frac: number;
-  pct?: string;
+  /** Porcentaje de la esquina; los *2 son los valores con la OT del recorrido abierta (data-paso 2). */
+  pctN?: number;
+  valor2?: number;
+  pctN2?: number;
   alerta?: boolean;
 }[] = [
-  { label: "Total activos", sub: "Inventario", icon: Truck, valor: FLOTA.total, detalle: "equipos", color: GRIS, frac: 1, pct: "100%" },
-  { label: "Disponibles", sub: "Operación", icon: ShieldCheck, valor: FLOTA.operativo, detalle: `de ${FLOTA.total} equipos`, color: COLOR_ESTADO.operativo, frac: FLOTA.operativo / FLOTA.total, pct: `${pct(FLOTA.operativo)}%` },
-  { label: "En mantención", sub: "Seguimiento", icon: Tool, valor: FLOTA.mantencion, detalle: "por OT abierta", color: COLOR_ESTADO.mantencion, frac: FLOTA.mantencion / FLOTA.total, pct: `${pct(FLOTA.mantencion)}%` },
-  { label: "Detenidos", sub: "Parada", icon: Ban, valor: FLOTA.detenido, detalle: `de ${FLOTA.total}`, color: COLOR_DETENIDO, frac: FLOTA.detenido / FLOTA.total, pct: `${pct(FLOTA.detenido)}%` },
-  { label: "Fuera de servicio", sub: "Crítico", icon: AlertTriangle, valor: FLOTA.fuera, detalle: `de ${FLOTA.total}`, color: COLOR_ESTADO.fuera, frac: FLOTA.fuera / FLOTA.total, pct: `${pct(FLOTA.fuera)}%` },
-  { label: "OTs activas", sub: "Trabajo", icon: ClipboardCheck, valor: OTS.abiertas, detalle: `${OTS.noPlanificadas} NP · ${OTS.correctivas} CC · ${OTS.planificadas} PL`, color: AZUL_OT, frac: 1 },
-  { label: "OTs NP abiertas", sub: "No planif.", icon: Gauge, valor: OTS.noPlanificadas, detalle: `de ${OTS.abiertas} activas`, color: COLOR_ESTADO.fuera, frac: OTS.noPlanificadas / OTS.abiertas, pct: `${Math.round((OTS.noPlanificadas / OTS.abiertas) * 100)}%`, alerta: true },
+  { label: "Total activos", sub: "Inventario", icon: Truck, valor: FLOTA.total, detalle: "equipos", color: GRIS, frac: 1, pctN: 100 },
+  { label: "Disponibles", sub: "Operación", icon: ShieldCheck, valor: FLOTA.operativo, detalle: `de ${FLOTA.total} equipos`, color: COLOR_ESTADO.operativo, frac: FLOTA.operativo / FLOTA.total, pctN: pct(FLOTA.operativo) },
+  { label: "En mantención", sub: "Seguimiento", icon: Tool, valor: FLOTA.mantencion, detalle: "por OT abierta", color: COLOR_ESTADO.mantencion, frac: FLOTA.mantencion / FLOTA.total, pctN: pct(FLOTA.mantencion) },
+  { label: "Detenidos", sub: "Parada", icon: Ban, valor: FLOTA.detenido, detalle: `de ${FLOTA.total}`, color: COLOR_DETENIDO, frac: FLOTA.detenido / FLOTA.total, pctN: pct(FLOTA.detenido) },
+  { label: "Fuera de servicio", sub: "Crítico", icon: AlertTriangle, valor: FLOTA.fuera, detalle: `de ${FLOTA.total}`, color: COLOR_ESTADO.fuera, frac: FLOTA.fuera / FLOTA.total, pctN: pct(FLOTA.fuera) },
+  { label: "OTs activas", sub: "Trabajo", icon: ClipboardCheck, valor: OTS.abiertas, detalle: [[OTS.noPlanificadas, OTS.noPlanificadas + 1], ` NP · ${OTS.correctivas} CC · ${OTS.planificadas} PL`], color: AZUL_OT, frac: 1, valor2: OTS.abiertas + 1 },
+  { label: "OTs NP abiertas", sub: "No planif.", icon: Gauge, valor: OTS.noPlanificadas, detalle: ["de ", [OTS.abiertas, OTS.abiertas + 1], " activas"], color: COLOR_ESTADO.fuera, frac: OTS.noPlanificadas / OTS.abiertas, pctN: Math.round((OTS.noPlanificadas / OTS.abiertas) * 100), valor2: OTS.noPlanificadas + 1, pctN2: Math.round(((OTS.noPlanificadas + 1) / (OTS.abiertas + 1)) * 100), alerta: true },
 ];
 
 /** Colores de las etiquetas, los mismos tonos del producto. */
@@ -101,7 +109,7 @@ const CUENTAS = [
   { n: FLOTA.mantencion, label: "Mant.", color: COLOR_ESTADO.mantencion },
   { n: FLOTA.fuera, label: "F/S", color: COLOR_ESTADO.fuera },
   { n: FLOTA.mantencionVencida, label: "Venc.", color: COLOR_ESTADO.mantencion },
-  { n: OTS.abiertas, label: "OT", color: "#6366f1" },
+  { n: OTS.abiertas, n2: OTS.abiertas + 1, label: "OT", color: "#6366f1" },
 ];
 
 const DISTRIBUCION = [
@@ -119,6 +127,23 @@ for (let i = 0, ini = 0; i < DISTRIBUCION.length; i++) {
   ini += largo;
 }
 
+/** Número que cuenta hacia su valor del paso 2 cuando el panel está en modo recorrido. */
+function Contador({ n0, n2, recorrido, className }: { n0: number; n2?: number; recorrido: boolean; className?: string }) {
+  return (
+    <span
+      className={`${s.contador} ${className ?? ""}`}
+      style={{ "--n0": n0, "--n2": recorrido ? n2 : undefined } as CSSProperties}
+    />
+  );
+}
+
+function Texto({ partes, recorrido }: { partes: string | Parte[]; recorrido: boolean }) {
+  if (typeof partes === "string") return partes;
+  return partes.map((p, i) =>
+    typeof p === "string" ? <span key={i}>{p}</span> : <Contador key={i} n0={p[0]} n2={p[1]} recorrido={recorrido} />,
+  );
+}
+
 function Cabecera({ icon: I, titulo, children }: { icon: IconType; titulo: string; children?: React.ReactNode }) {
   return (
     <div className={s.panelCab}>
@@ -134,8 +159,11 @@ function Cabecera({ icon: I, titulo, children }: { icon: IconType; titulo: strin
  * Se diseña a 1280 × 838 y escala con el ancho del contenedor (unidades cqw), así sirve igual
  * dentro de la tablet de la portada que a pantalla completa. `encender` reproduce una sola vez
  * el arranque del panel; las cifras no cambian después.
+ * `recorrido` agrega la OT de RECORRIDO_OT (fila en Eventos y en OTs prioritarias) y la hace
+ * aparecer y cerrarse según el data-paso de un ancestro (2 abierta, 3 cerrada); los contadores
+ * cuentan hacia su nuevo valor (ver .contador en el CSS).
  */
-export function PanelOperativoDemo({ encender = false }: { encender?: boolean }) {
+export function PanelOperativoDemo({ encender = false, recorrido = false }: { encender?: boolean; recorrido?: boolean }) {
   return (
     <div
       className={s.marco}
@@ -217,11 +245,21 @@ export function PanelOperativoDemo({ encender = false }: { encender?: boolean })
                       <b>{k.label}</b>
                       <span>{k.sub}</span>
                     </div>
-                    {k.pct && <em style={{ color: k.color }}>{k.pct}</em>}
+                    {k.pctN !== undefined && (
+                      <em
+                        className={`${s.contador} ${s.pct}`}
+                        style={{ color: k.color, "--n0": k.pctN, "--n2": recorrido ? k.pctN2 : undefined } as CSSProperties}
+                      />
+                    )}
                   </div>
                   <div className={s.kpiValor}>
-                    <span className={s.cifra} style={{ "--n": k.valor, color: k.alerta ? COLOR_ESTADO.fuera : undefined } as CSSProperties} />
-                    <small>{k.detalle}</small>
+                    <span
+                      className={`${s.contador} ${s.cifra}`}
+                      style={{ "--n0": k.valor, "--n2": recorrido ? k.valor2 : undefined, color: k.alerta ? COLOR_ESTADO.fuera : undefined } as CSSProperties}
+                    />
+                    <small>
+                      <Texto partes={k.detalle} recorrido={recorrido} />
+                    </small>
                   </div>
                   <div className={s.kpiBarra}>
                     <i style={{ width: `${k.frac * 100}%`, background: k.color }} />
@@ -259,6 +297,21 @@ export function PanelOperativoDemo({ encender = false }: { encender?: boolean })
               <section className={`${s.panel} ${s.areaEventos}`} style={d(1)}>
                 <Cabecera icon={History} titulo="Eventos" />
                 <ul className={s.eventos}>
+                  {recorrido && (
+                    <li className={s.nuevaFila}>
+                      <div>
+                        <div className={s.evento}>
+                          <span className={s.punto} style={{ background: TONO.NP.punto }} />
+                          <b>
+                            <span className={s.noCerrada}>{RECORRIDO_OT.codigo} — Creada</span>
+                            <span className={s.siCerrada}>{RECORRIDO_OT.codigo} — Cerrada</span>
+                          </b>
+                          <span className={s.etiqueta} style={{ background: TONO.NP.fondo, color: TONO.NP.texto }}>NP</span>
+                          <span className={s.hace}>ahora</span>
+                        </div>
+                      </div>
+                    </li>
+                  )}
                   {EVENTOS.map((e, i) => (
                     <li key={e.texto} className={s.evento} style={d(i)}>
                       <span className={s.punto} style={{ background: TONO[e.tipo].punto }} />
@@ -279,7 +332,9 @@ export function PanelOperativoDemo({ encender = false }: { encender?: boolean })
                   <div className={s.cuentas}>
                     {CUENTAS.map((c) => (
                       <div key={c.label} className={s.cuenta} style={{ borderColor: c.color }}>
-                        <b>{c.n}</b>
+                        <b>
+                          <Contador n0={c.n} n2={"n2" in c ? c.n2 : undefined} recorrido={recorrido} />
+                        </b>
                         <span>{c.label}</span>
                       </div>
                     ))}
@@ -371,9 +426,33 @@ export function PanelOperativoDemo({ encender = false }: { encender?: boolean })
 
               <section className={`${s.panel} ${s.areaPrioritarias}`} style={d(4)}>
                 <Cabecera icon={Tool} titulo="OTs prioritarias">
-                  <span className={s.badge}>{OTS.prioritarias}</span>
+                  <span
+                    className={`${s.badge} ${s.contador}`}
+                    style={{ "--n0": OTS.prioritarias, "--n2": recorrido ? OTS.prioritarias + 1 : undefined } as CSSProperties}
+                  />
                 </Cabecera>
                 <ul className={s.ots}>
+                  {recorrido && (
+                    <li className={s.nuevaFila}>
+                      <div>
+                        <div className={s.ot} data-vuelo-destino>
+                          <span className={s.etiqueta} style={{ background: TONO.NP.fondo, color: TONO.NP.texto }}>NP</span>
+                          <div>
+                            <b>{RECORRIDO_OT.codigo}</b> <small className={s.equipo}>{RECORRIDO_OT.equipo}</small>
+                            <small>{RECORRIDO_OT.falla}</small>
+                          </div>
+                          <span className={`${s.prioridad} ${s.noCerrada}`} style={{ color: COLOR_ESTADO.fuera }}>
+                            <i style={{ background: COLOR_ESTADO.fuera }} />
+                            {RECORRIDO_OT.prioridad}
+                          </span>
+                          <span className={`${s.prioridad} ${s.siCerrada}`} style={{ color: "#15803d" }}>
+                            <Check stroke={2.6} />
+                            Cerrada
+                          </span>
+                        </div>
+                      </div>
+                    </li>
+                  )}
                   {OTS_PRIORITARIAS.map((ot, i) => (
                     <li key={ot.codigo} className={s.ot} style={d(i)}>
                       <span className={s.etiqueta} style={{ background: TONO[ot.tipo].fondo, color: TONO[ot.tipo].texto }}>

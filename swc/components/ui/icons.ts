@@ -57,6 +57,13 @@ import {
   IconScan,
   IconHistory,
   IconChartDonut,
+  IconAntennaBars5,
+  IconAntennaBarsOff,
+  IconBattery3,
+  IconArrowLeft,
+  IconCheck,
+  IconCloudCheck,
+  IconCamera,
 } from "@tabler/icons-react";
 
 /** Tipo de componente de icono (reemplaza a LucideIcon). */
@@ -116,4 +123,11 @@ export {
   IconScan as Scan,
   IconHistory as History,
   IconChartDonut as ChartDonut,
+  IconAntennaBars5 as AntennaBars,
+  IconAntennaBarsOff as AntennaBarsOff,
+  IconBattery3 as Battery,
+  IconArrowLeft as ArrowLeft,
+  IconCheck as Check,
+  IconCloudCheck as CloudCheck,
+  IconCamera as Camera,
 };
