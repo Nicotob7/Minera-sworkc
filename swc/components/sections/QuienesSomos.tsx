@@ -15,7 +15,7 @@ export function QuienesSomos() {
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-20">
           <div>
-            <h2 className="max-w-[24ch] font-display text-[clamp(1.9rem,3.8vw,2.9rem)] font-light leading-[1.16] tracking-[-0.01em] text-ink [text-wrap:balance]">
+            <h2 className="max-w-[24ch] font-display text-[clamp(1.9rem,3.2vw,2.5rem)] font-light leading-[1.16] tracking-[-0.01em] text-ink [text-wrap:balance]">
               Informática que{" "}
               <strong className="font-bold text-[#0a0c77]">sostiene la operación minera</strong>
             </h2>

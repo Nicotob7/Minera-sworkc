@@ -8,7 +8,7 @@ import { NAV_CONTACTO, NAV_GROUPS, NAV_INICIO } from "./site/nav";
 
 /* Ítem plano del menú de escritorio, con el mismo estilo que los disparadores. */
 const plainDesktopLink =
-  "inline-flex items-center rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium text-[#3a4256] transition-colors duration-200 hover:text-[#0b1020] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30";
+  "inline-flex items-center rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium text-[#3a4256] transition-colors duration-200 hover:text-[#0b1020] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/60";
 
 /**
  * Navbar blanco flotante tipo pill con mega-menú agrupado.
@@ -114,7 +114,7 @@ export function Navbar() {
                   aria-controls={panelId}
                   onClick={() => setActiveGroup((cur) => (cur === group.id ? null : group.id))}
                   onFocus={() => setActiveGroup(group.id)}
-                  className={`inline-flex items-center gap-1 rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30 ${
+                  className={`inline-flex items-center gap-1 rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/60 ${
                     open ? "text-[#0b1020]" : "text-[#3a4256] hover:text-[#0b1020]"
                   }`}
                 >
@@ -140,7 +140,7 @@ export function Navbar() {
                           key={link.href}
                           href={link.href}
                           onClick={closeAll}
-                          className="group/link block rounded-[var(--radius)] px-3.5 py-2.5 transition-colors duration-150 hover:bg-[#f3f5f8] focus-visible:bg-[#f3f5f8] focus-visible:outline-none"
+                          className="group/link block rounded-[var(--radius)] px-3.5 py-2.5 transition-colors duration-150 hover:bg-[#f3f5f8] focus-visible:bg-[#f3f5f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/60"
                         >
                           <span className="block text-sm font-semibold text-[#0b1020]">{link.label}</span>
                           {link.desc && (
