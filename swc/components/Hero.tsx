@@ -90,20 +90,31 @@ export function Hero() {
           <div aria-hidden className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[#060733] lg:hidden" />
         </div>
 
-        {/* Pantallas anchas: guía a la izquierda del panel acercado, sincronizada con el cursor (HeroDolly
-            la muestra solo si sobra ancho y marca el paso activo con data-guia-activo). */}
-        <div data-dolly="guia" aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden items-center opacity-0 transition-opacity duration-500 lg:flex">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#060733]/92 via-[#060733]/70 to-transparent" />
-          <div className="relative ml-12 mr-6 max-w-[21rem] pt-16">
-            <p className="text-sm font-semibold text-white/60">Así se usa el panel</p>
-            <ol className="mt-5 space-y-5">
+        {/* Pantallas anchas: guía junto al panel acercado. Cada paso es un botón que lleva al cursor a
+            esa acción; HeroDolly la muestra solo si sobra ancho y marca el activo (data-guia-activo). */}
+        <div data-dolly="guia" className="pointer-events-none invisible absolute inset-y-0 left-0 z-10 hidden items-center opacity-0 transition-[opacity,visibility] duration-500 lg:flex">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060733]/40 via-[#060733]/80 to-[#060733]/90" />
+          <div className="pointer-events-auto relative ml-auto mr-10 w-[21rem] pt-16">
+            <p className="font-display text-xl font-semibold text-white">Así se usa el panel</p>
+            <p className="mt-1 text-sm text-white/65">Elige un paso para verlo en la pantalla.</p>
+            <ol className="mt-5 space-y-2">
               {GUIA.map((g, i) => (
-                <li key={g.titulo} data-guia={i + 1} className="guia-paso grid grid-cols-[28px_minmax(0,1fr)] gap-3">
-                  <span className="grid h-7 w-7 place-items-center rounded-full border border-white/35 font-mono text-xs text-white/85">{i + 1}</span>
-                  <div>
-                    <p className="font-display text-base font-semibold text-white">{g.titulo}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-white/70">{g.texto}</p>
-                  </div>
+                <li key={g.titulo}>
+                  <button
+                    type="button"
+                    data-guia={i + 1}
+                    data-guia-ir={i + 1}
+                    className="guia-paso grid w-full grid-cols-[28px_minmax(0,1fr)] gap-3 rounded-xl px-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                  >
+                    <span className="guia-num grid h-7 w-7 place-items-center rounded-full border border-white/35 font-mono text-xs text-white/85">{i + 1}</span>
+                    <span>
+                      <span className="block font-display text-base font-semibold text-white">{g.titulo}</span>
+                      <span className="mt-1 block text-sm leading-relaxed text-white/70">{g.texto}</span>
+                      <span aria-hidden className="guia-barra mt-2 block h-0.5 overflow-hidden rounded-full bg-white/10">
+                        <span className="block h-full origin-left rounded-full bg-white/70" />
+                      </span>
+                    </span>
+                  </button>
                 </li>
               ))}
             </ol>

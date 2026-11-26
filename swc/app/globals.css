@@ -148,12 +148,28 @@
 @keyframes swc-viaje-inv { from { transform: translateX(34px); opacity: 1; } to { transform: translateX(0); opacity: 0; } }
 @keyframes swc-aparecer { from { opacity: 0; transform: translateY(6px); } }
 
-/* Portada: guía del recorrido del cursor. El paso activo queda pleno; al terminar, todos. */
-.guia-paso { opacity: 0.4; transition: opacity 300ms ease, transform 350ms cubic-bezier(0.23, 1, 0.32, 1); }
+/* Portada: guía del recorrido del cursor. El paso activo es una tarjeta con número relleno y una
+   barra que avanza mientras el cursor lo muestra (--guia-ms la pone HeroDolly); al terminar, todos plenos. */
+.guia-paso { opacity: 0.55; transition: opacity 300ms ease, background-color 300ms ease, box-shadow 300ms ease; }
+.guia-paso:hover { opacity: 0.85; background: rgb(255 255 255 / 0.05); }
+.guia-num { transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease; }
+.guia-barra { opacity: 0; transition: opacity 200ms ease; }
 [data-guia-activo="1"] [data-guia="1"],
 [data-guia-activo="2"] [data-guia="2"],
 [data-guia-activo="3"] [data-guia="3"],
-[data-guia-activo="4"] [data-guia="4"] { opacity: 1; transform: translateX(6px); }
+[data-guia-activo="4"] [data-guia="4"] { opacity: 1; background: rgb(255 255 255 / 0.09); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16); }
+[data-guia-activo="1"] [data-guia="1"] .guia-num,
+[data-guia-activo="2"] [data-guia="2"] .guia-num,
+[data-guia-activo="3"] [data-guia="3"] .guia-num,
+[data-guia-activo="4"] [data-guia="4"] .guia-num { background: #fff; border-color: #fff; color: #060733; }
+[data-guia-activo="1"] [data-guia="1"] .guia-barra,
+[data-guia-activo="2"] [data-guia="2"] .guia-barra,
+[data-guia-activo="3"] [data-guia="3"] .guia-barra,
+[data-guia-activo="4"] [data-guia="4"] .guia-barra { opacity: 1; }
+[data-guia-activo="1"] [data-guia="1"] .guia-barra > span,
+[data-guia-activo="2"] [data-guia="2"] .guia-barra > span,
+[data-guia-activo="3"] [data-guia="3"] .guia-barra > span,
+[data-guia-activo="4"] [data-guia="4"] .guia-barra > span { animation: swc-progreso var(--guia-ms, 2200ms) linear both; }
 [data-guia-activo="fin"] .guia-paso { opacity: 1; }
 @keyframes swc-dash { to { stroke-dashoffset: 0; } }
 @keyframes swc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

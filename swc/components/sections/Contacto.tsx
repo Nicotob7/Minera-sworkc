@@ -188,9 +188,9 @@ export function Contacto() {
   return (
     <section id="contacto" aria-labelledby="contacto-title" className="relative overflow-hidden bg-[#070b1c] text-white">
       <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
-          {/* Columna azul: qué pasa después de escribir, datos de contacto y el trabajador junto al formulario. */}
+          {/* Columna azul: el trabajador a la izquierda y, junto al formulario, qué pasa después de escribir y los datos de contacto. */}
           <div className={`${s.panel} relative overflow-hidden bg-[#070b1c] px-6 pt-12 sm:px-8 lg:px-12 lg:pt-16`}>
-            <div className="relative z-10 max-w-sm lg:max-w-[22rem]">
+            <div className="relative z-10 max-w-sm lg:ml-auto lg:max-w-[19rem] 2xl:max-w-[22rem]">
               <h3 className="font-display text-2xl font-semibold tracking-tight text-white">
                 Qué pasa después de escribirnos
               </h3>
@@ -215,22 +215,23 @@ export function Contacto() {
                 ))}
               </ul>
             </div>
-            <div className={`${s.trabajador} relative -mr-6 ml-auto mt-8 w-[70%] max-w-[320px] sm:-mr-8 lg:absolute lg:mr-0 lg:bottom-0 lg:right-0 lg:mt-0 lg:w-[36%] lg:max-w-[440px] xl:w-[46%]`}>
+            <div className={`${s.trabajador} relative -ml-6 mt-8 w-[70%] max-w-[320px] sm:-ml-8 lg:hidden xl:absolute xl:bottom-0 xl:left-0 xl:ml-0 xl:mt-0 xl:block xl:w-[36%] xl:max-w-[440px] 2xl:w-[40%]`}>
               <div className="absolute inset-x-8 bottom-0 h-16 rounded-full bg-black/30 blur-2xl" aria-hidden />
-              {/* La foto viene recortada en su borde izquierdo: espejada, ese corte queda pegado al
-                  borde con el formulario (y en móvil al borde de la pantalla) y no se ve. */}
+              {/* La foto viene recortada en su borde izquierdo: pegada al borde izquierdo de la sección
+                  (y en móvil al de la pantalla) el corte no se ve. Entre 1024 y 1279 px no hay espacio
+                  para ella junto al texto y se oculta. */}
               <Image
                 src="/img/contact.png"
                 alt="Trabajador minero mostrando sworkc en una tablet"
                 width={447}
                 height={558}
                 priority={false}
-                className="relative z-10 h-auto w-full -scale-x-100 object-contain object-right-bottom drop-shadow-[0_18px_36px_rgba(0,0,0,0.32)]"
+                className="relative z-10 h-auto w-full object-contain object-left-bottom drop-shadow-[0_18px_36px_rgba(0,0,0,0.32)]"
               />
             </div>
           </div>
 
-          <div className="relative order-first flex items-center justify-center bg-white p-6 text-[#0b1020] sm:p-8 lg:order-none lg:p-12 lg:py-16">
+          <div className="relative order-first flex items-center justify-center bg-white p-6 text-[#0b1020] sm:p-8 lg:order-none lg:justify-start lg:p-12 lg:py-16 xl:pl-16">
             <FormularioContacto
               form={form}
               estado={estado}
