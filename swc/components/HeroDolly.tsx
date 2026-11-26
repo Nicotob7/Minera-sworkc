@@ -34,7 +34,8 @@ export function HeroDolly({ className, children }: { className: string; children
     const texto = pieza("texto");
     const velo = pieza("velo");
     const cursor = pieza("cursor");
-    if (!seccion || !escena || !foto || !texto || !velo || !cursor) return;
+    const guia = pieza("guia");
+    if (!seccion || !escena || !foto || !texto || !velo || !cursor || !guia) return;
 
     const activo = window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)");
     let cuadro = 0;
@@ -48,6 +49,7 @@ export function HeroDolly({ className, children }: { className: string; children
       cursor.style.opacity = "0";
       delete foto.dataset.demo;
       delete foto.dataset.equipo;
+      delete guia.dataset.guiaActivo;
     };
 
     const correrDemo = async (d: { cancelado: boolean }) => {
@@ -82,19 +84,30 @@ export function HeroDolly({ className, children }: { className: string; children
       cursor.style.transform = ubicar(pos);
       await cursor.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: "forwards" }).finished.catch(() => {});
       await mover(punto("kpi-np", 0.55, 0.45), 850);
-      await paso(() => (foto.dataset.demo = "kpi"), 1300);
+      await paso(() => {
+        foto.dataset.demo = "kpi";
+        guia.dataset.guiaActivo = "1";
+      }, 1300);
       await mover(punto("tab-caex", 0.45, 0.6), 900);
       await clic();
       await paso(() => {
         delete foto.dataset.demo;
         foto.dataset.equipo = "caex";
+        guia.dataset.guiaActivo = "2";
       }, 1500);
       await mover(punto("dona-mant", 0.35, 0.5), 950);
-      await paso(() => (foto.dataset.demo = "dona"), 1400);
+      await paso(() => {
+        foto.dataset.demo = "dona";
+        guia.dataset.guiaActivo = "3";
+      }, 1400);
       await mover(punto("evento", 0.3, 0.5), 850);
-      await paso(() => (foto.dataset.demo = "eventos"), 1400);
+      await paso(() => {
+        foto.dataset.demo = "eventos";
+        guia.dataset.guiaActivo = "4";
+      }, 1400);
       if (d.cancelado) return;
       delete foto.dataset.demo;
+      guia.dataset.guiaActivo = "fin";
       await cursor.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" }).finished.catch(() => {});
     };
 
@@ -103,6 +116,7 @@ export function HeroDolly({ className, children }: { className: string; children
       cuadro = 0;
       if (!activo.matches) {
         detenerDemo();
+        guia.style.removeProperty("opacity");
         for (const el of [foto, texto, velo]) {
           for (const prop of ["transform", "transform-origin", "opacity", "visibility"]) el.style.removeProperty(prop);
         }
@@ -123,7 +137,11 @@ export function HeroDolly({ className, children }: { className: string; children
       const y0 = (h - H) / 2 + cy;
       // Destino: centrado bajo el menú, pero sin destapar bordes de la foto (lineal en t: si cubre
       // al principio y al final, cubre en todo el tramo).
-      const fx = Math.min(Math.max(w / 2, w - (W - cx) * escala), cx * escala);
+      // Si sobra ancho a la izquierda (pantallas anchas y bajas), el panel se corre a la derecha y
+      // ese espacio lo ocupa la guía del recorrido; si no, queda centrado.
+      const anchoFinal = anchoPantalla * escala;
+      const conGuia = w - anchoFinal >= 420;
+      const fx = Math.min(Math.max(conGuia ? w - 40 - anchoFinal / 2 : w / 2, w - (W - cx) * escala), cx * escala);
       const fy = Math.min(Math.max((h + 70) / 2, h - (H - cy) * escala), cy * escala);
       const dx = fx - x0;
       const dy = fy - y0;
@@ -150,6 +168,9 @@ export function HeroDolly({ className, children }: { className: string; children
       } else if (t < 0.9 && demo) {
         detenerDemo();
       }
+      // Después de decidir el recorrido: la guía se ve mientras corre o terminó, si hay espacio.
+      guia.style.width = `${Math.max(0, w - anchoFinal - 40)}px`;
+      guia.style.opacity = conGuia && demo && t >= 0.999 ? "1" : "0";
     };
 
     const pedir = () => {

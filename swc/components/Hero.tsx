@@ -8,6 +8,14 @@ import { PORTADA } from "../lib/demo";
 const { ancho, alto, pantalla } = PORTADA;
 const porc = (v: number, total: number) => `${(v / total) * 100}%`;
 
+/** Los cuatro pasos del cursor sobre el panel (mismo orden que HeroDolly). */
+const GUIA = [
+  { titulo: "OTs no planificadas", texto: "Las órdenes que nadie programó, a la vista apenas entras." },
+  { titulo: "Ficha del equipo", texto: "Un clic en el CAEX-214: horómetro, OTs abiertas y prioridad." },
+  { titulo: "Estado de la flota", texto: "Cuántos equipos están operativos, en mantención o fuera de servicio." },
+  { titulo: "Eventos del turno", texto: "Lo último que pasó: OTs creadas, cerradas y cambios de estado." },
+];
+
 /**
  * Portada: foto de la tablet en faena con el panel de sworkc (HTML, datos de ejemplo) en su pantalla.
  * - Móvil y tablet: texto sobre fondo navy y, debajo, la foto recortada a la tablet.
@@ -80,6 +88,26 @@ export function Hero() {
           </div>
           {/* Móvil: la foto nace del navy del texto */}
           <div aria-hidden className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[#060733] lg:hidden" />
+        </div>
+
+        {/* Pantallas anchas: guía a la izquierda del panel acercado, sincronizada con el cursor (HeroDolly
+            la muestra solo si sobra ancho y marca el paso activo con data-guia-activo). */}
+        <div data-dolly="guia" aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden items-center opacity-0 transition-opacity duration-500 lg:flex">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060733]/92 via-[#060733]/70 to-transparent" />
+          <div className="relative ml-12 mr-6 max-w-[21rem] pt-16">
+            <p className="text-sm font-semibold text-white/60">Así se usa el panel</p>
+            <ol className="mt-5 space-y-5">
+              {GUIA.map((g, i) => (
+                <li key={g.titulo} data-guia={i + 1} className="guia-paso grid grid-cols-[28px_minmax(0,1fr)] gap-3">
+                  <span className="grid h-7 w-7 place-items-center rounded-full border border-white/35 font-mono text-xs text-white/85">{i + 1}</span>
+                  <div>
+                    <p className="font-display text-base font-semibold text-white">{g.titulo}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-white/70">{g.texto}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
 
         {/* lg: cursor que recorre el panel cuando la cámara termina de acercarse (lo mueve HeroDolly) */}

@@ -1,0 +1,50 @@
+/*
+ * Columna azul de Contacto: los pasos entran en orden y el trabajador sube desde abajo al
+ * aparecer la sección (view-timeline nativo, sin JS). Sin soporte o con movimiento reducido,
+ * todo se ve quieto y completo.
+ */
+.panel {
+  view-timeline-name: --contacto;
+}
+
+@media (min-width: 1024px) {
+  .panel {
+    min-height: 640px;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .paso {
+      animation: entrar linear both;
+      animation-timeline: --contacto;
+      animation-range: entry calc(15% + var(--i) * 12%) cover calc(25% + var(--i) * 6%);
+    }
+
+    .datos {
+      animation: entrar linear both;
+      animation-timeline: --contacto;
+      animation-range: entry 55% cover 42%;
+    }
+
+    .trabajador {
+      animation: subir linear both;
+      animation-timeline: --contacto;
+      animation-range: entry 5% cover 40%;
+    }
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+}
