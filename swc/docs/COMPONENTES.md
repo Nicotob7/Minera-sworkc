@@ -25,6 +25,7 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 
 | Componente | Tipo | Rol |
 |---|---|---|
+| `ModuloDemo.tsx` | S | Recorte de la pantalla de sworkc por módulo de «Cómo funciona» (OT, ficha, notificaciones, flota, cierre de turno, confiabilidad, HH, materiales, dashboard, reportes); filas en cascada al montar. |
 | `TelefonoDemo.tsx` | S | La app en un teléfono (4 pantallas según `data-paso`); estilos en `TelefonoDemo.module.css`. |
 | `PanelOperativoDemo.tsx` | S | Réplica HTML de «Visión Operativa» (diseño 1280 × 838, escala con `cqw`; estilos en `PanelOperativoDemo.module.css`). `encender` anima el arranque una vez. Datos de `lib/demo.ts`. |
 | `EdeDemo.tsx` | S | Expediente Digital del Equipo en SVG para /producto. Datos de `lib/demo.ts`. |
@@ -47,14 +48,14 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 | `FailureBars.tsx` | C | Barras de fallas por turno (SVG propio), feed que avanza. Pausa fuera de viewport + `role="img"`. |
 | `AvailabilityKPI.tsx` | C | KPI de disponibilidad con **count-up** (`requestAnimationFrame`) + sparkline (SVG). Pausa fuera de viewport. |
 | `QuienesSomosChart.tsx` | C | Área chart de Quiénes Somos (**ApexCharts**, `dynamic ssr:false`). Respeta reduced-motion. |
-| `ServicioModuleChart.tsx` | C | Mini-gráficos por módulo (**ApexCharts**), 10 variantes generadas con un factory `baseOptions/axisOptions/palette`. |
+| `ServicioModuleChart.tsx` | C | **Sin uso desde la fase 2** (lo reemplazó `ModuloDemo`); igual que `AvailabilityKPI`, `FailureBars` y `FleetDonut`. Pendiente borrarlos con OK del dueño. |
 
 ## `components/sections/`
 
 | Sección | Tipo | Rol |
 |---|---|---|
 | `QuienesSomos.tsx` | C | Texto editorial + gráfico de tendencia. |
-| `Servicios.tsx` | C | Los 10 módulos como mapa/panel interactivo (desktop) / acordeón (móvil), con icono animado, detalle y mini-gráfico por módulo. |
+| `Servicios.tsx` | C | Los 10 módulos como mapa/panel interactivo (desktop: clic o mouse con pausa de 140 ms) / acordeón (móvil), con icono animado, detalle y el recorte de pantalla del módulo (`ModuloDemo`). |
 | `DashboardInteractivo.tsx` | S | Centro de control: recorrido de una OT (terreno → panel → cierre) con `TelefonoDemo` y `PanelOperativoDemo recorrido`; estilos en `DashboardInteractivo.module.css`. |
 | `RecorridoOT.tsx` | C | Desde lg y sin movimiento reducido fija la escena, elige el paso (data-paso 0–3) según el scroll y hace viajar la tarjeta de la OT del teléfono al panel. |
 | `FranjaAzul.tsx` | S | Franja blanca tipográfica "¿Sabías que…?" (dato de alto impacto). |

@@ -1,13 +1,10 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import type { ComponentType } from "react";
 import { CheckCircle2, Plus } from "../ui/icons";
 import { TechGrid } from "../ui/TechGrid";
-import {
-  ServicioModuleChart,
-  type ModuleChartId,
-} from "../charts/ServicioModuleChart";
+import { ModuloDemo, type ModuloId } from "../demo/ModuloDemo";
 import { BellIcon } from "../ui/bell";
 import { BoxesIcon } from "../ui/boxes";
 import { ChartLineIcon } from "../ui/chart-line";
@@ -22,7 +19,7 @@ import { WrenchIcon } from "../ui/wrench";
 type AnimatedIcon = ComponentType<{ size?: number; className?: string }>;
 
 type Module = {
-  id: ModuleChartId;
+  id: ModuloId;
   title: string;
   icon: AnimatedIcon;
   tag: string;
@@ -146,11 +143,13 @@ function ModuleNode({
   active,
   side,
   onSelect,
+  onHover,
 }: {
   module: Module;
   active: boolean;
   side: "left" | "right";
-  onSelect: (id: ModuleChartId) => void;
+  onSelect: (id: ModuloId) => void;
+  onHover: (id: ModuloId | null) => void;
 }) {
   const Icon = module.icon;
 
@@ -165,6 +164,8 @@ function ModuleNode({
       <button
         type="button"
         onClick={() => onSelect(module.id)}
+        onPointerEnter={(e) => e.pointerType === "mouse" && onHover(module.id)}
+        onPointerLeave={() => onHover(null)}
         aria-pressed={active}
         aria-expanded={active}
         className={`group relative flex h-full min-h-[78px] w-full items-center gap-3 rounded-[var(--radius)] border p-3 text-left shadow-[var(--shadow-md)] transition-all duration-150 hover:-translate-y-0.5 ${
@@ -240,18 +241,26 @@ function ActiveDetail({
         </ul>
       </div>
       <div className={`${compact ? "p-3" : "p-4"} ${className.includes("h-full") ? "min-h-0 flex-1" : ""}`}>
-        <ServicioModuleChart id={module.id} compact={compact} />
+        {/* key: al cambiar de módulo el recorte se vuelve a montar y sus filas entran de nuevo. */}
+        <ModuloDemo key={module.id} modulo={module.id} />
       </div>
     </div>
   );
 }
 
 export function Servicios() {
-  const [activeId, setActiveId] = useState<ModuleChartId | null>("ot");
+  const [activeId, setActiveId] = useState<ModuloId | null>("ot");
   const isDesktop = useIsDesktop();
   const activeModule = MODULES.find((module) => module.id === activeId) ?? null;
-  const toggleModule = (id: ModuleChartId) => {
+  const toggleModule = (id: ModuloId) => {
     setActiveId((current) => (current === id ? null : id));
+  };
+  // Escritorio: pasar el mouse elige el módulo tras una pausa corta, para que recorrer la
+  // columna no dispare un cambio por cada botón que se cruza.
+  const pausaHover = useRef(0);
+  const hoverModule = (id: ModuloId | null) => {
+    window.clearTimeout(pausaHover.current);
+    if (id) pausaHover.current = window.setTimeout(() => setActiveId(id), 140);
   };
 
   return (
@@ -263,15 +272,6 @@ export function Servicios() {
       <TechGrid
         variant="dark"
         className="opacity-20 [mask-image:linear-gradient(180deg,black,transparent_82%)]"
-      />
-
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-52 top-16 h-72 w-[44rem] rotate-[-12deg] rounded-[999px] border border-white/10"
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -left-56 bottom-20 h-64 w-[38rem] rotate-[10deg] rounded-[999px] border border-white/10"
       />
 
       <div className="relative mx-auto w-full max-w-7xl px-6">
@@ -296,7 +296,8 @@ export function Servicios() {
                 module={module}
                 active={activeId === module.id}
                 side="left"
-                onSelect={toggleModule}
+                onSelect={setActiveId}
+                onHover={hoverModule}
               />
             ))}
           </ul>
@@ -314,7 +315,8 @@ export function Servicios() {
                 module={module}
                 active={activeId === module.id}
                 side="right"
-                onSelect={toggleModule}
+                onSelect={setActiveId}
+                onHover={hoverModule}
               />
             ))}
           </ul>
