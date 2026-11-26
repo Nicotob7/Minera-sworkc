@@ -1,0 +1,107 @@
+/*
+ * Revelados atados al scroll de una sección (pedido del dueño, 26/11). La sección lleva .seccion
+ * (línea de tiempo nativa view-timeline, sin JavaScript) y adentro:
+ * - .palabra: el título sube palabra por palabra mientras la sección entra (con <Palabras>);
+ * - .leer: el párrafo se enciende palabra por palabra al leerlo;
+ * - .linea: una línea azul que se traza (ficha de datos);
+ * - .fila: filas que entran en orden (--i);
+ * - .via / .viaLlena: una vía horizontal que se llena al recorrer una secuencia (etapas).
+ * Sin soporte de scroll-timeline o con movimiento reducido, todo se ve quieto y completo.
+ * Lo usan Quiénes somos (inicio) y Nosotros.
+ */
+.seccion {
+  view-timeline-name: --revelado;
+}
+
+.linea {
+  position: relative;
+  padding-top: 2px;
+}
+
+.linea::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: #0a0c77;
+  transform-origin: left;
+}
+
+.via {
+  position: absolute;
+  top: 0.6rem;
+  right: 0;
+  left: 0;
+  height: 2px;
+  overflow: hidden;
+  background: rgb(10 12 119 / 0.12);
+  border-radius: 99px;
+}
+
+.viaLlena {
+  display: block;
+  height: 100%;
+  background: #0a0c77;
+  transform-origin: left;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .palabra {
+      display: inline-block;
+      animation: subir linear both;
+      animation-timeline: --revelado;
+      animation-range: entry calc(10% + var(--i) * 5%) entry calc(55% + var(--i) * 5%);
+    }
+
+    .leer {
+      animation: encender linear both;
+      animation-timeline: --revelado;
+      animation-range: cover calc(16% + var(--i) * 1.1%) cover calc(24% + var(--i) * 1.1%);
+    }
+
+    .linea::before {
+      animation: trazar linear both;
+      animation-timeline: --revelado;
+      animation-range: entry 35% cover 38%;
+    }
+
+    .fila {
+      animation: entrar linear both;
+      animation-timeline: --revelado;
+      animation-range: entry calc(45% + var(--i) * 10%) cover calc(30% + var(--i) * 4%);
+    }
+
+    .viaLlena {
+      animation: trazar linear both;
+      animation-timeline: --revelado;
+      animation-range: entry 60% cover 55%;
+    }
+  }
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+}
+
+@keyframes encender {
+  from {
+    opacity: 0.16;
+  }
+}
+
+@keyframes trazar {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}

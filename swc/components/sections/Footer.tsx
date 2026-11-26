@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { Reveal } from "../ui/Reveal";
 import { FOOTER_COLUMNS } from "../site/nav";
+import { CREDITOS_FOTOS } from "../../lib/creditos";
 
 /* FOOTER — azul oscuro con marca, navegación por columnas y copyright. */
 export function Footer() {
   return (
     <footer className="text-white" style={{ background: "#0a0e20" }}>
       <div className="mx-auto max-w-6xl px-5 pb-10 pt-14 sm:px-8 sm:pt-16">
-        <Reveal variant="up" as="div">
+        <div>
           <div className="grid gap-10 lg:grid-cols-[1.2fr_2fr]">
             {/* Marca + descripción breve */}
             <div className="max-w-sm">
@@ -30,7 +30,7 @@ export function Footer() {
             <nav aria-label="Navegación del pie de página" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
               {FOOTER_COLUMNS.map((col) => (
                 <div key={col.title}>
-                  <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+                  <h2 className="text-xs font-semibold text-white/50">
                     {col.title}
                   </h2>
                   <ul className="mt-4 space-y-2.5">
@@ -53,11 +53,30 @@ export function Footer() {
           {/* Separador tenue */}
           <span aria-hidden className="mt-12 block h-px w-full bg-white/10" />
 
-          {/* Copyright */}
-          <p className="mt-7 font-mono text-xs tracking-tight text-white/55">
-            &copy; 2026 Sworkc Technologies. Todos los derechos reservados.
-          </p>
-        </Reveal>
+          {/* Copyright + créditos de fotos (una línea; la lista se despliega con <details>, sin JS) */}
+          <div className="mt-7 flex flex-col gap-3 text-xs text-white/60 sm:flex-row sm:items-start sm:justify-between">
+            <p>&copy; 2026 Sworkc Technologies. Todos los derechos reservados.</p>
+            <details className="group sm:max-w-md sm:text-right">
+              <summary className="inline-flex min-h-[44px] cursor-pointer list-none items-center underline decoration-white/30 underline-offset-4 hover:text-white focus-visible:text-white focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+                Fotografías vía Wikimedia Commons
+              </summary>
+              <ul className="mt-2 space-y-2 text-left leading-relaxed">
+                {CREDITOS_FOTOS.map((c) => (
+                  <li key={c.obraUrl}>
+                    <a href={c.obraUrl} target="_blank" rel="noopener noreferrer" className="underline decoration-white/30 underline-offset-2 hover:text-white">
+                      {c.titulo}
+                    </a>
+                    , {c.autor},{" "}
+                    <a href={c.licenciaUrl} target="_blank" rel="noopener noreferrer" className="underline decoration-white/30 underline-offset-2 hover:text-white">
+                      {c.licencia}
+                    </a>
+                  </li>
+                ))}
+                <li className="text-white/45">Imágenes recortadas y redimensionadas para este sitio.</li>
+              </ul>
+            </details>
+          </div>
+        </div>
       </div>
     </footer>
   );

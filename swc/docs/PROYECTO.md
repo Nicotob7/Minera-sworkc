@@ -32,12 +32,12 @@ swc/
 ├── components/
 │   ├── Hero.tsx            # hero full-bleed
 │   ├── Navbar.tsx          # navbar blanco flotante
-│   ├── Typewriter.tsx      # efecto de escritura del hero
-│   ├── hooks.ts            # useReducedMotion, useInterval, useInViewport
+│   ├── hooks.ts            # useReducedMotion
+│   ├── demo/               # pantallas del sistema redibujadas (SVG, datos de lib/demo.ts)
 │   ├── ui/                 # primitivas + iconos
 │   ├── charts/             # gráficos (SVG propio + ApexCharts)
 │   └── sections/           # las 7 secciones de contenido
-├── public/                 # imágenes (hero/final.png, logo-swc.png) y svg
+├── public/                 # imágenes (hero/portada.jpg, og.jpg, logo-swc.png) y svg
 ├── design-system/MASTER.md # sistema de diseño (paleta, tipografía, tokens)
 └── docs/                   # esta documentación
 ```
@@ -57,7 +57,7 @@ npm run lint     # eslint
 
 ## 5. Secciones de la página (orden)
 
-1. **Hero** — imagen de faena full-bleed + titular con efecto de escritura.
+1. **Hero** — foto de faena con el panel de sworkc en la tablet; se enciende al cargar y, desde lg, la cámara se acerca a la pantalla al bajar.
 2. **Quiénes Somos** — texto + gráfico (ApexCharts).
 3. **Servicios** — los 10 módulos como panel interactivo (acordeón en móvil) con mini-gráficos.
 4. **Franja "¿Sabías que…?"** — banda blanca tipográfica de alto impacto.

@@ -1,0 +1,585 @@
+/*
+ * Teléfono con la app de sworkc. La pantalla de la app se diseña a 390 × 844 y todo se mide en
+ * --u (1 px del diseño). Estilo del producto (fuente del sistema, ámbar, mayúsculas), no del sitio.
+ * Qué pantalla se ve lo decide el data-paso de un ancestro; data-animado habilita los detalles
+ * que solo tienen sentido al recorrerlo (firma que se traza, checklist en cascada).
+ */
+.telefono {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.cuerpo {
+  padding: 3cqw;
+  background: linear-gradient(150deg, #2b2e38, #0c0d12 60%);
+  border-radius: 14cqw;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.14),
+    0 40px 90px rgb(0 0 0 / 0.55);
+}
+
+.vidrio {
+  --u: calc(94cqw / 390);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  aspect-ratio: 390 / 844;
+  overflow: hidden;
+  background: #eef0f4;
+  border-radius: 11.5cqw;
+  color: #111827;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: calc(14 * var(--u));
+  line-height: 1.35;
+  text-align: left;
+  user-select: none;
+}
+
+.vidrio svg {
+  flex: none;
+}
+
+.isla {
+  position: absolute;
+  top: calc(11 * var(--u));
+  left: 50%;
+  z-index: 3;
+  width: calc(112 * var(--u));
+  height: calc(32 * var(--u));
+  background: #0c0d12;
+  border-radius: 99px;
+  translate: -50% 0;
+}
+
+/* ── Pantallas: entran desde la derecha y salen hacia la izquierda, como la navegación de la app ── */
+.pantalla {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #eef0f4;
+  opacity: 0;
+  transform: translateX(12%);
+  visibility: hidden;
+  transition:
+    opacity 300ms ease,
+    transform 450ms var(--ease),
+    visibility 0s linear 450ms;
+}
+
+:global([data-paso="0"]) .p0,
+:global([data-paso="1"]) .p1,
+:global([data-paso="2"]) .p2,
+:global([data-paso="3"]) .p3 {
+  z-index: 1;
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition:
+    opacity 300ms ease,
+    transform 450ms var(--ease);
+}
+
+:global([data-paso="1"]) .p0,
+:global([data-paso="2"]) :is(.p0, .p1),
+:global([data-paso="3"]) :is(.p0, .p1, .p2) {
+  transform: translateX(-12%);
+}
+
+.estado {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(46 * var(--u));
+  padding: 0 calc(30 * var(--u));
+  background: #fff;
+  font-size: calc(14.5 * var(--u));
+  font-weight: 700;
+}
+
+.estadoIconos {
+  display: flex;
+  gap: calc(5 * var(--u));
+}
+
+.estadoIconos svg {
+  width: calc(17 * var(--u));
+  height: calc(17 * var(--u));
+}
+
+.captura {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: top;
+}
+
+.barra {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: calc(12 * var(--u));
+  height: calc(54 * var(--u));
+  padding: 0 calc(18 * var(--u));
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: calc(14.5 * var(--u));
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.barra > svg {
+  width: calc(20 * var(--u));
+  height: calc(20 * var(--u));
+}
+
+.barra > span:nth-child(2) {
+  flex: 1;
+}
+
+.campana {
+  display: grid;
+  place-items: center;
+  width: calc(34 * var(--u));
+  height: calc(34 * var(--u));
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+}
+
+.campana svg {
+  width: calc(17 * var(--u));
+  height: calc(17 * var(--u));
+}
+
+.cerrada {
+  padding: calc(4 * var(--u)) calc(9 * var(--u));
+  background: #dcfce7;
+  border-radius: calc(6 * var(--u));
+  color: #15803d;
+  font-size: calc(10.5 * var(--u));
+  letter-spacing: 0.08em;
+}
+
+.contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(7 * var(--u));
+  min-height: 0;
+  padding: calc(14 * var(--u)) calc(16 * var(--u));
+  overflow: hidden;
+}
+
+.centrado {
+  align-items: center;
+  gap: calc(8 * var(--u));
+  padding-top: calc(34 * var(--u));
+  text-align: center;
+}
+
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(8 * var(--u));
+  padding: calc(9 * var(--u)) calc(11 * var(--u));
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: calc(12 * var(--u));
+  color: #92400e;
+  font-size: calc(11.5 * var(--u));
+}
+
+.aviso svg {
+  width: calc(16 * var(--u));
+  height: calc(16 * var(--u));
+  margin-top: calc(1 * var(--u));
+}
+
+.equipo {
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--u));
+  padding: calc(10 * var(--u)) calc(12 * var(--u));
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: calc(14 * var(--u));
+}
+
+.equipoIcono {
+  display: grid;
+  place-items: center;
+  width: calc(36 * var(--u));
+  height: calc(36 * var(--u));
+  background: #fef3c7;
+  border-radius: calc(10 * var(--u));
+  color: #b45309;
+}
+
+.equipoIcono svg {
+  width: calc(20 * var(--u));
+  height: calc(20 * var(--u));
+}
+
+.equipo div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.equipo b {
+  font-size: calc(15 * var(--u));
+}
+
+.equipo div span {
+  color: #6b7280;
+  font-size: calc(11 * var(--u));
+}
+
+.porQR {
+  padding: calc(3 * var(--u)) calc(7 * var(--u));
+  background: #dcfce7;
+  border-radius: calc(6 * var(--u));
+  color: #15803d;
+  font-size: calc(10 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rotulo {
+  margin-top: calc(4 * var(--u));
+  color: #6b7280;
+  font-size: calc(10.5 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.segmentado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(6 * var(--u));
+}
+
+.segmentado span {
+  padding: calc(8 * var(--u)) 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: calc(10 * var(--u));
+  color: #6b7280;
+  font-size: calc(12.5 * var(--u));
+  font-weight: 700;
+  text-align: center;
+}
+
+.segmentado .segActivoRojo {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.campo {
+  padding: calc(10 * var(--u)) calc(12 * var(--u));
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: calc(12 * var(--u));
+  color: #1f2937;
+  font-size: calc(12.5 * var(--u));
+}
+
+.fotos {
+  display: flex;
+  gap: calc(8 * var(--u));
+}
+
+.fotos img {
+  width: calc(108 * var(--u));
+  height: calc(72 * var(--u));
+  object-fit: cover;
+  border-radius: calc(10 * var(--u));
+}
+
+.fotos .fotoDetalle {
+  object-position: 72% 30%;
+}
+
+.fotoMas {
+  display: grid;
+  place-items: center;
+  width: calc(72 * var(--u));
+  height: calc(72 * var(--u));
+  border: 1.5px dashed #d1d5db;
+  border-radius: calc(10 * var(--u));
+  color: #9ca3af;
+}
+
+.fotoMas svg {
+  width: calc(22 * var(--u));
+  height: calc(22 * var(--u));
+}
+
+.boton {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--u));
+  margin: 0 calc(16 * var(--u)) calc(24 * var(--u));
+  padding: calc(14 * var(--u));
+  background: #fbbf24;
+  border-radius: calc(14 * var(--u));
+  box-shadow: 0 calc(4 * var(--u)) calc(10 * var(--u)) rgb(0 0 0 / 0.08);
+  color: #1f2937;
+  font-size: calc(14 * var(--u));
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.boton svg {
+  width: calc(18 * var(--u));
+  height: calc(18 * var(--u));
+}
+
+.botonSecundario {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: none;
+}
+
+.botonListo {
+  background: #16a34a;
+  color: #fff;
+}
+
+.exito {
+  display: grid;
+  place-items: center;
+  width: calc(58 * var(--u));
+  height: calc(58 * var(--u));
+  background: #dcfce7;
+  border-radius: 50%;
+  color: #16a34a;
+}
+
+.exito svg {
+  width: calc(30 * var(--u));
+  height: calc(30 * var(--u));
+}
+
+.exitoTitulo {
+  font-size: calc(17 * var(--u));
+}
+
+.exitoTexto {
+  margin-bottom: calc(8 * var(--u));
+  color: #6b7280;
+  font-size: calc(12.5 * var(--u));
+}
+
+/* Tarjeta de la OT: lleva su propia fuente y medidas porque se clona fuera del teléfono. */
+.tarjetaOT {
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--u));
+  width: 100%;
+  padding: calc(12 * var(--u)) calc(13 * var(--u));
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: calc(14 * var(--u));
+  box-shadow: 0 calc(6 * var(--u)) calc(18 * var(--u)) rgb(17 24 39 / 0.08);
+  color: #111827;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: calc(14 * var(--u));
+  line-height: 1.35;
+  text-align: left;
+}
+
+.tarjetaCab {
+  display: flex;
+  align-items: center;
+  gap: calc(8 * var(--u));
+}
+
+.tarjetaCab b {
+  font-size: calc(15 * var(--u));
+}
+
+.np {
+  padding: calc(2 * var(--u)) calc(6 * var(--u));
+  background: #fee2e2;
+  border-radius: calc(5 * var(--u));
+  color: #b91c1c;
+  font-size: calc(10.5 * var(--u));
+  font-weight: 800;
+}
+
+.alta {
+  display: flex;
+  align-items: center;
+  gap: calc(4 * var(--u));
+  margin-left: auto;
+  color: #dc2626;
+  font-size: calc(11 * var(--u));
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.alta i {
+  width: calc(6 * var(--u));
+  height: calc(6 * var(--u));
+  background: #dc2626;
+  border-radius: 50%;
+}
+
+.tarjetaEquipo {
+  font-size: calc(12 * var(--u));
+  font-weight: 600;
+}
+
+.tarjetaFalla {
+  color: #4b5563;
+  font-size: calc(12 * var(--u));
+}
+
+.tarjetaPie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: calc(4 * var(--u));
+  color: #9ca3af;
+  font-size: calc(10.5 * var(--u));
+}
+
+.pendiente {
+  padding: calc(2 * var(--u)) calc(7 * var(--u));
+  background: #fef3c7;
+  border-radius: calc(5 * var(--u));
+  color: #b45309;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sincronizada {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--u));
+  margin-top: calc(6 * var(--u));
+  color: #15803d;
+  font-size: calc(11.5 * var(--u));
+  font-weight: 600;
+}
+
+.sincronizada svg {
+  width: calc(15 * var(--u));
+  height: calc(15 * var(--u));
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 * var(--u));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  font-size: calc(12.5 * var(--u));
+}
+
+.checklist svg {
+  width: calc(18 * var(--u));
+  height: calc(18 * var(--u));
+  padding: calc(3 * var(--u));
+  background: #16a34a;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.firma {
+  padding: calc(6 * var(--u)) calc(12 * var(--u)) calc(8 * var(--u));
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: calc(12 * var(--u));
+}
+
+.firma svg {
+  display: block;
+  width: 100%;
+  height: calc(50 * var(--u));
+}
+
+.firma span {
+  display: block;
+  padding-top: calc(4 * var(--u));
+  border-top: 1px dashed #d1d5db;
+  color: #6b7280;
+  font-size: calc(10.5 * var(--u));
+}
+
+.trazo {
+  fill: none;
+  stroke: #1e293b;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+}
+
+.resumen {
+  display: flex;
+  justify-content: space-between;
+  padding: calc(9 * var(--u)) calc(12 * var(--u));
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: calc(12 * var(--u));
+  font-size: calc(12.5 * var(--u));
+}
+
+/* Detalles que se ven al recorrer la sección (no en la vista estática de móvil). */
+@media (prefers-reduced-motion: no-preference) {
+  :global([data-animado][data-paso="2"]) .exito {
+    animation: pop 500ms var(--ease) 250ms both;
+  }
+
+  :global([data-animado][data-paso="3"]) .checklist li {
+    animation: marcar 380ms var(--ease) both;
+  }
+
+  :global([data-animado][data-paso="3"]) .checklist li:nth-child(1) { animation-delay: 300ms; }
+  :global([data-animado][data-paso="3"]) .checklist li:nth-child(2) { animation-delay: 420ms; }
+  :global([data-animado][data-paso="3"]) .checklist li:nth-child(3) { animation-delay: 540ms; }
+
+  :global([data-animado][data-paso="3"]) .trazo {
+    animation: firmar 1100ms ease-in-out 700ms both;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes marcar {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-6 * var(--u)));
+  }
+}
+
+@keyframes firmar {
+  from {
+    stroke-dashoffset: 1;
+  }
+}

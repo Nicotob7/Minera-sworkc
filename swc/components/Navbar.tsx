@@ -8,7 +8,7 @@ import { NAV_CONTACTO, NAV_GROUPS, NAV_INICIO } from "./site/nav";
 
 /* Ítem plano del menú de escritorio, con el mismo estilo que los disparadores. */
 const plainDesktopLink =
-  "inline-flex items-center rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium text-[#3a4256] transition-colors duration-200 hover:text-[#0b1020] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30";
+  "inline-flex items-center rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium text-[#3a4256] transition-colors duration-200 hover:text-[#0b1020] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/60";
 
 /**
  * Navbar blanco flotante tipo pill con mega-menú agrupado.
@@ -69,14 +69,25 @@ export function Navbar() {
   };
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:pt-5">
+    <header
+      ref={headerRef}
+      className={`fixed inset-x-0 top-0 z-50 px-4 transition-[padding] duration-200 ease-out ${scrolled ? "pt-2 sm:pt-2.5" : "pt-4 sm:pt-5"}`}
+    >
+      {/* Al bajar, el menú se compacta (margen, alto y logo) para tapar menos contenido. */}
       <nav
-        className={`animate-fade-down mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-[var(--radius-pill)] border border-black/[0.06] bg-white py-2.5 pl-6 pr-3 transition-shadow duration-300 ${
-          scrolled ? "shadow-[var(--shadow-lg)]" : "shadow-[var(--shadow-sm)]"
+        className={`animate-fade-down mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-[var(--radius-pill)] border border-black/[0.06] bg-white pl-6 pr-3 transition-[box-shadow,padding] duration-200 ease-out ${
+          scrolled ? "py-1.5 shadow-[var(--shadow-lg)]" : "py-2.5 shadow-[var(--shadow-sm)]"
         }`}
       >
         <Link href="/" className="flex shrink-0 items-center" aria-label="SWORKC — inicio" onClick={closeAll}>
-          <Image src="/logo-swc.png" alt="SWORKC Technologies" width={166} height={50} priority />
+          <Image
+            src="/logo-swc.png"
+            alt="SWORKC Technologies"
+            width={166}
+            height={50}
+            priority
+            className={`w-auto transition-[height] duration-200 ease-out ${scrolled ? "h-9" : "h-[50px]"}`}
+          />
         </Link>
 
         {/* Menú de escritorio */}
@@ -103,7 +114,7 @@ export function Navbar() {
                   aria-controls={panelId}
                   onClick={() => setActiveGroup((cur) => (cur === group.id ? null : group.id))}
                   onFocus={() => setActiveGroup(group.id)}
-                  className={`inline-flex items-center gap-1 rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/30 ${
+                  className={`inline-flex items-center gap-1 rounded-[var(--radius-sm)] px-3.5 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/60 ${
                     open ? "text-[#0b1020]" : "text-[#3a4256] hover:text-[#0b1020]"
                   }`}
                 >
@@ -129,7 +140,7 @@ export function Navbar() {
                           key={link.href}
                           href={link.href}
                           onClick={closeAll}
-                          className="group/link block rounded-[var(--radius)] px-3.5 py-2.5 transition-colors duration-150 hover:bg-[#f3f5f8] focus-visible:bg-[#f3f5f8] focus-visible:outline-none"
+                          className="group/link block rounded-[var(--radius)] px-3.5 py-2.5 transition-colors duration-150 hover:bg-[#f3f5f8] focus-visible:bg-[#f3f5f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77]/60"
                         >
                           <span className="block text-sm font-semibold text-[#0b1020]">{link.label}</span>
                           {link.desc && (

@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/hero/final.png",
+        url: "/og.jpg",
         width: 1672,
         height: 941,
         alt: "sworkc en faena minera",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: ["/hero/final.png"],
+    images: ["/og.jpg"],
   },
   icons: {
     icon: "/favicon.ico",

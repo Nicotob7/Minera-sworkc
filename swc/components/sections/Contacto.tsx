@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type CSSProperties, type FormEvent } from "react";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "../ui/icons";
 import { SendAnimatedIcon, type SendAnimatedIconHandle } from "../ui/send-animated";
+import s from "./Contacto.module.css";
 
 type EnvioEstado = "idle" | "loading" | "success" | "error";
 
@@ -102,6 +103,13 @@ const CONTACTO_INFO: ContactoItem[] = [
   { icon: MapPin, label: "Ubicación", value: "Chile" },
 ];
 
+/* Lo que pasa después de escribir: frases que el sitio ya promete (formulario, CTA final y Nosotros). */
+const PASOS_CONTACTO = [
+  { titulo: "Te respondemos con una propuesta de reunión", texto: "Con contexto para tu operación, a partir de lo que nos cuentes." },
+  { titulo: "Te mostramos sworkc con tus equipos", texto: "Cómo se vería la plataforma con tus máquinas, turnos y mantenciones." },
+  { titulo: "Implementamos por etapas", texto: "Cuatro etapas, desde el levantamiento hasta la puesta en marcha." },
+];
+
 const EMPTY_FORM: FormData = {
   nombre: "",
   empresa: "",
@@ -180,15 +188,38 @@ export function Contacto() {
   return (
     <section id="contacto" aria-labelledby="contacto-title" className="relative overflow-hidden bg-[#070b1c] text-white">
       <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
-          <div className="relative min-h-[360px] overflow-hidden bg-[#070b1c] p-6 pb-0 sm:p-8 sm:pb-0 lg:min-h-[600px] lg:p-12 lg:pb-0">
-            {/* glow ambiental animado detrás de la imagen */}
-            <div
-              aria-hidden
-              className="glow-pulse pointer-events-none absolute bottom-12 left-1/3 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"
-              style={{ background: "radial-gradient(circle, rgba(0,166,214,0.3), transparent 70%)" }}
-            />
-            <div className="relative z-10 mt-4 -ml-6 max-w-[460px] sm:-ml-8 lg:absolute lg:bottom-0 lg:left-2 lg:mt-0 lg:w-[500px] lg:max-w-none">
+          {/* Columna azul: el trabajador a la izquierda y, junto al formulario, qué pasa después de escribir y los datos de contacto. */}
+          <div className={`${s.panel} relative overflow-hidden bg-[#070b1c] px-6 pt-12 sm:px-8 lg:px-12 lg:pt-16`}>
+            <div className="relative z-10 max-w-sm lg:ml-auto lg:max-w-[19rem] 2xl:max-w-[22rem]">
+              <h3 className="font-display text-2xl font-semibold tracking-tight text-white">
+                Qué pasa después de escribirnos
+              </h3>
+              <ol className="mt-7 space-y-6">
+                {PASOS_CONTACTO.map((p, i) => (
+                  <li key={p.titulo} className={`${s.paso} grid grid-cols-[32px_minmax(0,1fr)] gap-3`} style={{ "--i": i } as CSSProperties}>
+                    <span className="grid h-8 w-8 place-items-center rounded-full border border-white/30 font-mono text-[13px] text-white/85">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-display text-base font-semibold text-white">{p.titulo}</p>
+                      <p className="mt-1 text-sm leading-relaxed text-white/70">{p.texto}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <ul className={`${s.datos} mt-9 max-w-[15rem] space-y-1 border-t border-white/12 pt-5`}>
+                {CONTACTO_INFO.map((item) => (
+                  <li key={item.label}>
+                    <ContactoDato item={item} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className={`${s.trabajador} relative -ml-6 mt-8 w-[70%] max-w-[320px] sm:-ml-8 lg:hidden xl:absolute xl:bottom-0 xl:left-0 xl:ml-0 xl:mt-0 xl:block xl:w-[36%] xl:max-w-[440px] 2xl:w-[40%]`}>
               <div className="absolute inset-x-8 bottom-0 h-16 rounded-full bg-black/30 blur-2xl" aria-hidden />
+              {/* La foto viene recortada en su borde izquierdo: pegada al borde izquierdo de la sección
+                  (y en móvil al de la pantalla) el corte no se ve. Entre 1024 y 1279 px no hay espacio
+                  para ella junto al texto y se oculta. */}
               <Image
                 src="/img/contact.png"
                 alt="Trabajador minero mostrando sworkc en una tablet"
@@ -200,7 +231,7 @@ export function Contacto() {
             </div>
           </div>
 
-          <div className="relative flex items-center justify-center bg-white p-6 text-[#0b1020] sm:p-8 lg:p-12 lg:py-16">
+          <div className="relative order-first flex items-center justify-center bg-white p-6 text-[#0b1020] sm:p-8 lg:order-none lg:justify-start lg:p-12 lg:py-16 xl:pl-16">
             <FormularioContacto
               form={form}
               estado={estado}
@@ -212,8 +243,6 @@ export function Contacto() {
             />
           </div>
         </div>
-
-        <BandaContacto />
     </section>
   );
 }
@@ -269,41 +298,23 @@ function FormularioContacto({ form, estado, errorMsg, loading, onUpdate, onSubmi
   );
 }
 
-function BandaContacto() {
-  return (
-    <div className="relative border-t border-white/10 bg-[#56616b] px-4 py-4 sm:px-6">
-      <div className="mx-auto grid max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {CONTACTO_INFO.map((item) => (
-          <ContactoCard key={item.label} item={item} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ContactoCard({ item }: { item: ContactoItem }) {
+/** Dato de contacto en la columna azul: ícono, rótulo y valor; enlace si se puede abrir. */
+function ContactoDato({ item }: { item: ContactoItem }) {
   const Icon = item.icon;
-  const body = (
-    <span className="group flex min-h-[72px] items-center gap-3 rounded-[var(--radius)] border border-white/12 bg-white/8 px-4 py-2.5 text-white backdrop-blur transition-all duration-300 hover:border-white/30 hover:bg-white/12">
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-white/14">
-        <Icon size={18} />
-      </span>
+  const cuerpo = (
+    <span className="group flex min-h-[44px] items-center gap-3 py-1.5 text-white">
+      <Icon size={18} className="shrink-0 text-white/70" aria-hidden />
       <span className="min-w-0 flex-1">
-        <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-white/60">{item.label}</span>
-        <span className="mt-1 block truncate font-mono text-sm font-semibold">{item.value}</span>
+        <span className="block text-xs text-white/60">{item.label}</span>
+        <span className="block truncate text-sm font-semibold">{item.value}</span>
       </span>
-      {item.href && <ArrowUpRight size={16} className="shrink-0 text-white/55 transition-colors group-hover:text-white" />}
+      {item.href && <ArrowUpRight size={15} className="shrink-0 text-white/50 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />}
     </span>
   );
-
-  if (!item.href) return body;
-
+  if (!item.href) return cuerpo;
   return (
-    <a
-      href={item.href}
-      className="block rounded-[var(--radius)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-    >
-      {body}
+    <a href={item.href} className="block rounded-[var(--radius-sm)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+      {cuerpo}
     </a>
   );
 }
@@ -422,10 +433,6 @@ function SubmitButton({ loading }: { loading: boolean }) {
       onFocus={() => sendIconRef.current?.startAnimation()}
       className="group relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-pill)] bg-[#0a0c77] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_16px_42px_rgba(10,12,119,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#14188a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a0c77] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-75 disabled:hover:translate-y-0"
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[120%]"
-      />
       <span className="relative">{loading ? "Enviando…" : "Enviar solicitud"}</span>
       {loading ? (
         <Loader2 size={18} className="relative animate-spin" />

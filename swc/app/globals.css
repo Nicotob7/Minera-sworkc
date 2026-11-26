@@ -100,7 +100,8 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* Toda ancla queda bajo el menú flotante (alto del menú + aire). Reemplaza los scroll-mt sueltos. */
+    scroll-padding-top: 7rem;
   }
 
   body {
@@ -133,7 +134,6 @@
 /* ===================== Keyframes ===================== */
 @keyframes swc-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes swc-fade-down { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
-@keyframes swc-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes swc-ping { 0% { transform: scale(1); opacity: 0.55; } 70%, 100% { transform: scale(2.4); opacity: 0; } }
 @keyframes swc-kenburns { from { transform: scale(1.06); } to { transform: scale(1.14); } }
 @keyframes swc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
@@ -142,6 +142,35 @@
 @keyframes swc-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
 @keyframes swc-scan { 0% { transform: translateY(-120%); } 100% { transform: translateY(120%); } }
 @keyframes swc-grid-pan { from { background-position: 0 0; } to { background-position: 44px 44px; } }
+/* Cómo funciona: barra de avance automático, punto que viaja por el conector y texto de la tarjeta. */
+@keyframes swc-progreso { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes swc-viaje { from { transform: translateX(0); opacity: 1; } to { transform: translateX(34px); opacity: 0; } }
+@keyframes swc-viaje-inv { from { transform: translateX(34px); opacity: 1; } to { transform: translateX(0); opacity: 0; } }
+@keyframes swc-aparecer { from { opacity: 0; transform: translateY(6px); } }
+
+/* Portada: guía del recorrido del cursor. El paso activo es una tarjeta con número relleno y una
+   barra que avanza mientras el cursor lo muestra (--guia-ms la pone HeroDolly); al terminar, todos plenos. */
+.guia-paso { opacity: 0.55; transition: opacity 300ms ease, background-color 300ms ease, box-shadow 300ms ease; }
+.guia-paso:hover { opacity: 0.85; background: rgb(255 255 255 / 0.05); }
+.guia-num { transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease; }
+.guia-barra { opacity: 0; transition: opacity 200ms ease; }
+[data-guia-activo="1"] [data-guia="1"],
+[data-guia-activo="2"] [data-guia="2"],
+[data-guia-activo="3"] [data-guia="3"],
+[data-guia-activo="4"] [data-guia="4"] { opacity: 1; background: rgb(255 255 255 / 0.09); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16); }
+[data-guia-activo="1"] [data-guia="1"] .guia-num,
+[data-guia-activo="2"] [data-guia="2"] .guia-num,
+[data-guia-activo="3"] [data-guia="3"] .guia-num,
+[data-guia-activo="4"] [data-guia="4"] .guia-num { background: #fff; border-color: #fff; color: #060733; }
+[data-guia-activo="1"] [data-guia="1"] .guia-barra,
+[data-guia-activo="2"] [data-guia="2"] .guia-barra,
+[data-guia-activo="3"] [data-guia="3"] .guia-barra,
+[data-guia-activo="4"] [data-guia="4"] .guia-barra { opacity: 1; }
+[data-guia-activo="1"] [data-guia="1"] .guia-barra > span,
+[data-guia-activo="2"] [data-guia="2"] .guia-barra > span,
+[data-guia-activo="3"] [data-guia="3"] .guia-barra > span,
+[data-guia-activo="4"] [data-guia="4"] .guia-barra > span { animation: swc-progreso var(--guia-ms, 2200ms) linear both; }
+[data-guia-activo="fin"] .guia-paso { opacity: 1; }
 @keyframes swc-dash { to { stroke-dashoffset: 0; } }
 @keyframes swc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
@@ -149,7 +178,6 @@
 .animate-fade-up { opacity: 0; animation: swc-fade-up 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
 .animate-fade-down { opacity: 0; animation: swc-fade-down 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
 
-.tw-caret { color: currentColor; font-weight: 300; animation: swc-caret 1s step-end infinite; }
 .live-ping { animation: swc-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
 .kenburns { animation: swc-kenburns 20s ease-out forwards alternate; }
 .float-slow { animation: swc-float 7s ease-in-out infinite; }
@@ -162,18 +190,6 @@
 @keyframes swc-bob-r { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
 .bob-l { animation: swc-bob-l 1.8s ease-in-out infinite; }
 .bob-r { animation: swc-bob-r 1.8s ease-in-out infinite; }
-
-/* Reveal al hacer scroll (lo activa el componente Reveal con .is-visible) */
-.reveal {
-  opacity: 0;
-  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-  /* will-change eliminado: evita mantener capas de composición vivas de forma permanente. */
-}
-.reveal-up { transform: translateY(30px); }
-.reveal-left { transform: translateX(-36px); }
-.reveal-right { transform: translateX(36px); }
-.reveal-scale { transform: scale(0.93); }
-.reveal.is-visible { opacity: 1; transform: none; }
 
 /* ===================== Decorativos técnicos ===================== */
 .tech-grid {
@@ -213,7 +229,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal { opacity: 1 !important; transform: none !important; }
 }
 
 /* ===================== Transición suave entre páginas ===================== */
@@ -240,4 +255,46 @@
 }
 @keyframes vt-entrada {
   from { opacity: 0; transform: translateY(8px); }
+}
+
+/* Portada desde lg: la columna de texto termina antes de la pantalla de la tablet.
+   La foto se dibuja como object-cover centrado de ancho W = max(100vw, 177,7svh) (1672/941 con la
+   escena de 100svh), así que la pantalla (x = 683/1672) empieza en 50vw − 0,0915·W.
+   max(48px, 50vw − 592px) = margen del contenedor max-w-7xl con px-12. El título escala con la
+   columna para que «minera conectada» (~8,6 em) quepa en una línea. */
+@media (min-width: 1024px) {
+  .portada-columna {
+    --foto: max(100vw, 177.7svh);
+    --col: calc(50vw - 0.0915 * var(--foto) - max(48px, 50vw - 592px) - 36px);
+    max-width: var(--col);
+  }
+  .portada-titulo {
+    font-size: min(3.05rem, calc(var(--col) / 8.9));
+  }
+}
+
+/* ── Profundidad por scroll en páginas interiores (pedido del dueño, 26/11). Línea de tiempo nativa,
+   sin JS; sin soporte de scroll-timeline o con movimiento reducido todo queda quieto y completo.
+   - .prof-hero (sección) + .prof-hero-foto / .prof-hero-texto: al bajar, la foto se aleja más lento y
+     se acerca un poco; el texto sube más rápido y se apaga (capas a distinta velocidad).
+   - .prof-entrar: una pantalla grande sube y se aclara al llegar a la vista (plana: el dueño
+     descartó las inclinaciones 3D el 26/11).
+   - .prof-ventana: la foto se desplaza dentro de su marco (ventana con profundidad). ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .prof-hero { view-timeline-name: --prof-hero; }
+    .prof-hero-foto { animation: prof-foto linear both; animation-timeline: --prof-hero; animation-range: exit 0% exit 100%; }
+    .prof-hero-texto { animation: prof-texto linear both; animation-timeline: --prof-hero; animation-range: exit 0% exit 85%; }
+    .prof-entrar { animation: prof-entrar linear both; animation-timeline: view(); animation-range: entry 0% cover 38%; }
+    .prof-ventana > * { animation: prof-ventana linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  }
+}
+@keyframes prof-foto { to { transform: translateY(22%) scale(1.1); } }
+@keyframes prof-texto { to { transform: translateY(-40%); opacity: 0; } }
+@keyframes prof-entrar { from { transform: translateY(70px) scale(0.96); opacity: 0.25; } }
+@keyframes prof-ventana { from { transform: translateY(-7%) scale(1.16); } to { transform: translateY(7%) scale(1.16); } }
+
+/* Pantallas que esperan a verse para encenderse (AlVer). Solo con JS: sin scripts se encienden al cargar. */
+@media (scripting: enabled) {
+  [data-esperando] * { animation-play-state: paused !important; }
 }

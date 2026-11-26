@@ -1,79 +1,141 @@
 import Image from "next/image";
-import { Typewriter } from "./Typewriter";
+import type { CSSProperties } from "react";
 import { CTAButton } from "./ui/CTAButton";
+import { HeroDolly } from "./HeroDolly";
+import { PanelOperativoDemo } from "./demo/PanelOperativoDemo";
+import { CursorDemo } from "./demo/CursorDemo";
+import { PORTADA } from "../lib/demo";
+
+const { ancho, alto, pantalla } = PORTADA;
+const porc = (v: number, total: number) => `${(v / total) * 100}%`;
+
+/** Los cuatro pasos del cursor sobre el panel (mismo orden que HeroDolly). */
+const GUIA = [
+  { titulo: "OTs no planificadas", texto: "Las órdenes que nadie programó, a la vista apenas entras." },
+  { titulo: "Ficha del equipo", texto: "Un clic en el CAEX-214: horómetro, OTs abiertas y prioridad." },
+  { titulo: "Estado de la flota", texto: "Cuántos equipos están operativos, en mantención o fuera de servicio." },
+  { titulo: "Eventos del turno", texto: "Lo último que pasó: OTs creadas, cerradas y cambios de estado." },
+];
 
 /**
- * Hero full-bleed con la foto final (tablet + faena).
- * El texto va a la IZQUIERDA, sobre el paisaje; la TABLET (derecha) queda limpia, sin texto encima.
- * Degradado solo en el lado izquierdo para legibilidad. Mismo criterio en móvil.
+ * Portada: foto de la tablet en faena con el panel de sworkc (HTML, datos de ejemplo) en su pantalla.
+ * - Móvil y tablet: texto sobre fondo navy y, debajo, la foto recortada a la tablet.
+ * - Desde lg: la foto llena la escena (object-cover replicado con unidades de contenedor) y
+ *   HeroDolly acerca la cámara a la pantalla al bajar.
+ * Al cargar, el panel se enciende una vez (PanelOperativoDemo `encender`).
  */
 export function Hero() {
   return (
-    <section
-      id="inicio"
-      className="relative w-full overflow-hidden bg-[#0d1430] min-h-[88svh] lg:min-h-[92svh]"
-    >
-      {/* Imagen de fondo, esquina a esquina */}
-      <Image
-        src="/hero/final.png"
-        alt="Tablet mostrando el dashboard de sworkc (Visión Operativa) en una faena minera al atardecer"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-[center_42%] lg:object-center"
-      />
+    <HeroDolly className="relative bg-[#060733] lg:h-[92svh] lg:motion-safe:h-[260svh]">
+      <div data-dolly="escena" className="relative lg:sticky lg:top-0 lg:h-[92svh] lg:overflow-hidden lg:motion-safe:h-svh">
+        {/* Texto: en lg va a la izquierda, sobre el paisaje, y termina antes de la pantalla */}
+        <div
+          data-dolly="texto"
+          className="relative z-10 mx-auto flex max-w-7xl px-6 pb-10 pt-28 sm:px-10 lg:h-full lg:items-center lg:px-12 lg:pb-6"
+        >
+          <div className="portada-columna max-w-xl">
+            <h1
+              className="portada-titulo animate-fade-up font-display text-[2.4rem] font-bold leading-[1.06] tracking-tight text-white sm:text-5xl"
+              style={{ animationDelay: "0.1s" }}
+            >
+              {/* Cortes fijos desde lg para que el título no entre en la pantalla de la tablet. */}
+              <span className="lg:block">Continuidad</span>{" "}
+              <span className="lg:block">operacional</span>{" "}
+              <span className="lg:block">minera conectada</span>{" "}
+              <span className="lg:block">entre turnos</span>
+            </h1>
 
-      {/* Tinte sutil + degradado IZQUIERDO (oscurece el paisaje para el texto; deja la tablet limpia) */}
-      <div aria-hidden className="absolute inset-0" style={{ background: "rgba(9,13,34,0.2)" }} />
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(7,10,26,0.95) 0%, rgba(7,10,26,0.8) 20%, rgba(7,10,26,0.42) 40%, rgba(7,10,26,0.06) 56%, transparent 66%)",
-        }}
-      />
+            <p
+              className="animate-fade-up mt-5 max-w-md text-base leading-relaxed text-white/85 sm:text-lg"
+              style={{ animationDelay: "0.2s" }}
+            >
+              Digitalizamos órdenes de trabajo, mantenciones y equipos: información de terreno
+              convertida en decisiones.
+            </p>
 
-      {/* Texto (izquierda, centrado vertical) */}
-      <div className="relative mx-auto flex min-h-[88svh] max-w-7xl items-center px-6 pb-14 pt-28 sm:px-10 lg:min-h-[92svh] lg:px-12">
-        <div className="max-w-md lg:max-w-xl">
-          <h1
-            className="animate-fade-up font-display text-[2.6rem] font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)] sm:text-5xl"
-            style={{ animationDelay: "0.1s" }}
-          >
-            <span className="block">Continuidad operacional minera</span>
-            <span className="mt-1 block">
-              <Typewriter
-                reserve
-                words={["con trazabilidad total", "conectada entre turnos", "con la información en un solo lugar"]}
-                typeSpeed={95}
-                deleteSpeed={45}
-                pause={2400}
-              />
-            </span>
-          </h1>
-
-          <p
-            className="animate-fade-up mt-5 max-w-md text-base leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.45)] sm:text-lg"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Digitalizamos órdenes de trabajo, mantenciones y equipos: información de terreno
-            convertida en decisiones.
-          </p>
-
-          <div
-            className="animate-fade-up mt-7 flex flex-col gap-3 sm:flex-row"
-            style={{ animationDelay: "0.3s" }}
-          >
-            <CTAButton href="#contacto" variant="primary">
-              Solicitar una demostración
-            </CTAButton>
-            <CTAButton href="#servicios" variant="ghost-dark" icon={false}>
-              Ver cómo funciona
-            </CTAButton>
+            <div className="animate-fade-up mt-7 flex flex-col gap-3 sm:flex-row lg:flex-wrap" style={{ animationDelay: "0.3s" }}>
+              <CTAButton href="#contacto" variant="primary">
+                Solicitar una demostración
+              </CTAButton>
+              <CTAButton href="#servicios" variant="ghost-dark" icon={false}>
+                Ver cómo funciona
+              </CTAButton>
+            </div>
           </div>
         </div>
+
+        {/* Foto + panel. Móvil: banda recortada a la tablet. lg: capa de fondo con caja "cover". */}
+        <div className="relative h-[80vw] overflow-hidden sm:h-[58vw] lg:absolute lg:inset-0 lg:h-auto lg:[container-type:size]">
+          <div
+            className="absolute left-1/2 top-1/2 w-[150%] -translate-x-[67.6%] -translate-y-[54.7%] sm:w-[118%] lg:w-[max(100cqw,calc(100cqh*1672/941))] lg:-translate-x-1/2 lg:-translate-y-1/2"
+            style={{ aspectRatio: `${ancho} / ${alto}` } as CSSProperties}
+          >
+            <div data-dolly="foto" className="absolute inset-0">
+              <Image
+                src="/hero/portada.jpg"
+                alt="Tablet con el panel de sworkc en una faena minera al atardecer"
+                fill
+                priority
+                sizes="(min-width: 1024px) 100vw, 150vw"
+                className="object-cover"
+              />
+              <div
+                className="absolute overflow-hidden rounded-[0.5%]"
+                style={{ left: porc(pantalla.x, ancho), top: porc(pantalla.y, alto), width: porc(pantalla.w, ancho) }}
+              >
+                <PanelOperativoDemo encender />
+              </div>
+            </div>
+          </div>
+          {/* Móvil: la foto nace del navy del texto */}
+          <div aria-hidden className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[#060733] lg:hidden" />
+        </div>
+
+        {/* Pantallas anchas: guía junto al panel acercado. Cada paso es un botón que lleva al cursor a
+            esa acción; HeroDolly la muestra solo si sobra ancho y marca el activo (data-guia-activo). */}
+        <div data-dolly="guia" className="pointer-events-none invisible absolute inset-y-0 left-0 z-10 hidden items-center opacity-0 transition-[opacity,visibility] duration-500 lg:flex">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060733]/40 via-[#060733]/80 to-[#060733]/90" />
+          <div className="pointer-events-auto relative ml-auto mr-10 w-[21rem] pt-16">
+            <p className="font-display text-xl font-semibold text-white">Así se usa el panel</p>
+            <p className="mt-1 text-sm text-white/65">Elige un paso para verlo en la pantalla.</p>
+            <ol className="mt-5 space-y-2">
+              {GUIA.map((g, i) => (
+                <li key={g.titulo}>
+                  <button
+                    type="button"
+                    data-guia={i + 1}
+                    data-guia-ir={i + 1}
+                    className="guia-paso grid w-full grid-cols-[28px_minmax(0,1fr)] gap-3 rounded-xl px-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                  >
+                    <span className="guia-num grid h-7 w-7 place-items-center rounded-full border border-white/35 font-mono text-xs text-white/85">{i + 1}</span>
+                    <span>
+                      <span className="block font-display text-base font-semibold text-white">{g.titulo}</span>
+                      <span className="mt-1 block text-sm leading-relaxed text-white/70">{g.texto}</span>
+                      <span aria-hidden className="guia-barra mt-2 block h-0.5 overflow-hidden rounded-full bg-white/10">
+                        <span className="block h-full origin-left rounded-full bg-white/70" />
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        {/* lg: cursor que recorre el panel cuando la cámara termina de acercarse (lo mueve HeroDolly) */}
+        <CursorDemo className="hidden lg:block" />
+
+        {/* lg: velo izquierdo para el texto; se retira al acercarse a la tablet */}
+        <div
+          data-dolly="velo"
+          aria-hidden
+          className="absolute inset-0 hidden lg:block"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(6,7,30,0.94) 0%, rgba(6,7,30,0.78) 18%, rgba(6,7,30,0.4) 30%, rgba(6,7,30,0.08) 38%, transparent 44%), rgba(9,13,34,0.18)",
+          }}
+        />
       </div>
-    </section>
+    </HeroDolly>
   );
 }

@@ -16,39 +16,42 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 
 | Componente | Tipo | Rol |
 |---|---|---|
-| `Hero.tsx` | S | Hero full-bleed: imagen `final.png` + overlay + texto a la izquierda con `Typewriter`. |
-| `Navbar.tsx` | C | Navbar blanco flotante sticky: logo, enlaces, CTA, menú móvil. Foco de teclado, `aria-controls`, cierre con Escape. |
-| `Typewriter.tsx` | C | Efecto de escritura rotando frases, con `reserve` (reserva el ancho de la frase más larga → sin CLS). Respeta reduced-motion. |
-| `hooks.ts` | C | `useReducedMotion`, `useInterval` (con cleanup), `useInViewport` (IntersectionObserver). |
+| `Hero.tsx` | S | Portada: `portada.jpg` con `PanelOperativoDemo encender` en la pantalla de la tablet. Móvil: texto arriba y foto recortada a la tablet; desde `lg`: foto de fondo, columna de texto `.portada-columna`. |
+| `HeroDolly.tsx` | C | Envuelve la portada: desde `lg` y sin movimiento reducido, la sección mide dos pantallas y al bajar acerca la cámara a la tablet (mueve los hijos `data-dolly`). |
+| `Navbar.tsx` | C | Navbar blanco flotante sticky que se compacta al bajar: logo, enlaces, CTA, menú móvil. Foco de teclado, `aria-controls`, cierre con Escape. |
+| `hooks.ts` | C | `useReducedMotion`. |
+
+## `components/demo/` — pantallas del sistema redibujadas
+
+| Componente | Tipo | Rol |
+|---|---|---|
+| `ModuloDemo.tsx` | S | Recorte de la pantalla de sworkc por módulo de «Cómo funciona» (OT, ficha, notificaciones, flota, cierre de turno, confiabilidad, HH, materiales, dashboard, reportes); filas en cascada al montar. |
+| `TelefonoDemo.tsx` | S | La app en un teléfono (4 pantallas según `data-paso`); estilos en `TelefonoDemo.module.css`. |
+| `PanelOperativoDemo.tsx` | S | Réplica HTML de «Visión Operativa» (diseño 1280 × 838, escala con `cqw`; estilos en `PanelOperativoDemo.module.css`). `encender` anima el arranque una vez. Datos de `lib/demo.ts`. |
+| `EdeDemo.tsx` | S | Réplica HTML del EDE (`EdeDemo`) y selector de período (`EdePeriodo`, radios nativos); período y resaltado por CSS `:has` desde `[data-ede]`. Estilos en `EdeDemo.module.css`. |
 
 ## `components/ui/` — primitivas e iconos
 
 | Componente | Tipo | Rol |
 |---|---|---|
-| `CTAButton.tsx` | S | Botón/CTA premium con degradado, brillo que cruza al hover e icono que se desliza. Variantes primary/cyan/ghost. |
-| `Reveal.tsx` | C | Anima la entrada al hacer scroll (IntersectionObserver, one-shot). Variantes up/left/right/scale + delay. Respeta reduced-motion. |
+| `CTAButton.tsx` | S | Botón/CTA con degradado e icono que se desliza al hover. Variantes primary/cyan/ghost. |
 | `TechGrid.tsx` | S | Capa decorativa de cuadrícula técnica (light/dark, opcional animada). |
 | `icons.ts` | — | Re-exporta los iconos de **Tabler** con alias estilo lucide (punto único para cambiar de librería). Solo los iconos en uso. |
 | `send-animated.tsx` | C | Icono de "enviar" animado (motion) usado en el submit de Contacto. |
 | `bell · boxes · chart-line · clipboard-check · clock · file-chart-line · layout-grid · refresh-cw · timer · wrench` | C | Iconos **animados** (motion) usados en las tarjetas/módulos de Servicios (animan al hover). |
 
-## `components/charts/`
+## `components/charts/` (eliminada)
 
-| Componente | Tipo | Rol |
-|---|---|---|
-| `FleetDonut.tsx` | C | Anillo de estado de flota (SVG propio). "En vivo": el `setInterval` se **pausa fuera de viewport**. `role="img"` accesible. |
-| `FailureBars.tsx` | C | Barras de fallas por turno (SVG propio), feed que avanza. Pausa fuera de viewport + `role="img"`. |
-| `AvailabilityKPI.tsx` | C | KPI de disponibilidad con **count-up** (`requestAnimationFrame`) + sparkline (SVG). Pausa fuera de viewport. |
-| `QuienesSomosChart.tsx` | C | Área chart de Quiénes Somos (**ApexCharts**, `dynamic ssr:false`). Respeta reduced-motion. |
-| `ServicioModuleChart.tsx` | C | Mini-gráficos por módulo (**ApexCharts**), 10 variantes generadas con un factory `baseOptions/axisOptions/palette`. |
+Los gráficos de muestra (`FleetDonut`, `FailureBars`, `AvailabilityKPI`, `ServicioModuleChart`, `QuienesSomosChart`) se eliminaron entre la fase 1 y el 26/11: los reemplazaron las pantallas redibujadas de `components/demo/`, que no cambian cifras solas. Se desinstalaron `apexcharts` y `react-apexcharts`.
 
 ## `components/sections/`
 
 | Sección | Tipo | Rol |
 |---|---|---|
 | `QuienesSomos.tsx` | C | Texto editorial + gráfico de tendencia. |
-| `Servicios.tsx` | C | Los 10 módulos como mapa/panel interactivo (desktop) / acordeón (móvil), con icono animado, detalle y mini-gráfico por módulo. |
-| `DashboardInteractivo.tsx` | C | "Centro de control operacional": fila de KPIs, filtros (Rango/Turno), charts en vivo (FleetDonut/FailureBars/AvailabilityKPI) y feed de alertas. |
+| `Servicios.tsx` | C | Los 10 módulos como mapa/panel interactivo (desktop: clic o mouse con pausa de 140 ms) / acordeón (móvil), con icono animado, detalle y el recorte de pantalla del módulo (`ModuloDemo`). |
+| `DashboardInteractivo.tsx` | S | Centro de control: recorrido de una OT (terreno → panel → cierre) con `TelefonoDemo` y `PanelOperativoDemo recorrido`; estilos en `DashboardInteractivo.module.css`. |
+| `RecorridoOT.tsx` | C | Desde lg y sin movimiento reducido fija la escena, elige el paso (data-paso 0–3) según el scroll y hace viajar la tarjeta de la OT del teléfono al panel. |
 | `FranjaAzul.tsx` | S | Franja blanca tipográfica "¿Sabías que…?" (dato de alto impacto). |
 | `Contacto.tsx` | C | Full-bleed: panel de imagen (trabajador) + formulario premium → `POST /api/contact`, con estados loading/success/error. |
 | `FAQ.tsx` | C | Cronograma en 2 columnas: 6 preguntas numeradas con acordeón ("Leer más"). |
@@ -57,3 +60,15 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 ## Eliminados en la limpieza (2026-06-26)
 
 `components/LiveDashboard.tsx`, `components/ui/Tilt.tsx`, `components/ui/SectionShell.tsx`, `components/ui/SectionHeading.tsx` — eran **código muerto** (0 imports). Ver [MEJORAS-AUDITORIA.md](MEJORAS-AUDITORIA.md).
+
+## Movimiento compartido (26/11)
+
+| Pieza | Tipo | Qué hace |
+|---|---|---|
+| `components/site/ExploradorModulos.tsx` | C | Producto, módulos: lista + tarjeta con `ModuloDemo`; avance automático en escritorio. |
+| `components/site/TelefonoPasos.tsx` | C | Elige la pantalla de `TelefonoDemo` según el punto (`data-terreno`) que pasa por el centro. |
+| `components/site/PantallaEnVivo.tsx` | C | Pantalla de Producto que se enciende al verse y un cursor la recorre (panel o EDE). |
+| `components/demo/motorCursor.ts` + `CursorDemo.tsx` | — / S | Motor y dibujo del cursor de las pantallas de ejemplo (portada, panel, EDE). |
+| `components/ui/Palabras.tsx` + `revelado.module.css` | S | Revelados atados al scroll de una sección (palabras, párrafo, línea, filas, vía). |
+| `.prof-hero*`, `.prof-entrar`, `.prof-ventana` (`globals.css`) | CSS | Profundidad plana con scroll nativo en páginas interiores. |
+
