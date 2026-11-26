@@ -215,15 +215,17 @@ export function Contacto() {
                 ))}
               </ul>
             </div>
-            <div className={`${s.trabajador} relative ml-auto mt-8 w-[70%] max-w-[320px] lg:absolute lg:bottom-0 lg:right-0 lg:mt-0 lg:w-[36%] lg:max-w-[440px] xl:w-[46%]`}>
+            <div className={`${s.trabajador} relative -mr-6 ml-auto mt-8 w-[70%] max-w-[320px] sm:-mr-8 lg:absolute lg:mr-0 lg:bottom-0 lg:right-0 lg:mt-0 lg:w-[36%] lg:max-w-[440px] xl:w-[46%]`}>
               <div className="absolute inset-x-8 bottom-0 h-16 rounded-full bg-black/30 blur-2xl" aria-hidden />
+              {/* La foto viene recortada en su borde izquierdo: espejada, ese corte queda pegado al
+                  borde con el formulario (y en móvil al borde de la pantalla) y no se ve. */}
               <Image
                 src="/img/contact.png"
                 alt="Trabajador minero mostrando sworkc en una tablet"
                 width={447}
                 height={558}
                 priority={false}
-                className="relative z-10 h-auto w-full object-contain object-right-bottom drop-shadow-[0_18px_36px_rgba(0,0,0,0.32)]"
+                className="relative z-10 h-auto w-full -scale-x-100 object-contain object-right-bottom drop-shadow-[0_18px_36px_rgba(0,0,0,0.32)]"
               />
             </div>
           </div>
