@@ -57,7 +57,7 @@ npm run lint     # eslint
 
 ## 5. Secciones de la página (orden)
 
-1. **Hero** — imagen de faena full-bleed + titular con efecto de escritura.
+1. **Hero** — foto de faena con el panel de sworkc en la tablet; se enciende al cargar y, desde lg, la cámara se acerca a la pantalla al bajar.
 2. **Quiénes Somos** — texto + gráfico (ApexCharts).
 3. **Servicios** — los 10 módulos como panel interactivo (acordeón en móvil) con mini-gráficos.
 4. **Franja "¿Sabías que…?"** — banda blanca tipográfica de alto impacto.

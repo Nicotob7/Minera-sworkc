@@ -1,155 +1,401 @@
-import { COLOR_ESTADO, ETIQUETA_ESTADO, FLOTA, OTS, OTS_PRIORITARIAS, type Estado } from "../../lib/demo";
+import type { CSSProperties } from "react";
+import {
+  COLOR_DETENIDO,
+  COLOR_ESTADO,
+  EQUIPO_DESTACADO,
+  EQUIPOS_VISTA_RAPIDA,
+  EVENTOS,
+  EVENTOS_MAS,
+  FLOTA,
+  FLOTA_POR_GRUPO,
+  OTS,
+  OTS_PRIORITARIAS,
+  type TipoEvento,
+} from "../../lib/demo";
+import {
+  Activity,
+  AlertTriangle,
+  Ban,
+  Bell,
+  Calendar,
+  ChartDonut,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  DeviceDesktop,
+  Download,
+  Gauge,
+  History,
+  LayoutDashboard,
+  Logout,
+  Moon,
+  Package,
+  Pencil,
+  Plus,
+  Refresh,
+  Scan,
+  Settings,
+  ShieldCheck,
+  SidebarCollapse,
+  Sun,
+  Tool,
+  Truck,
+  type IconType,
+} from "../ui/icons";
+import s from "./PanelOperativoDemo.module.css";
+
+/** Retraso escalonado de la animación de encendido (ver .encender en el CSS). */
+const d = (i: number) => ({ "--d": i }) as CSSProperties;
+const pct = (v: number) => Math.round((v / FLOTA.total) * 100);
+const AZUL_OT = "#3b82f6";
+const GRIS = "#4b5563";
+
+const MENU: { label: string; icon: IconType; activo?: boolean; sub?: boolean }[] = [
+  { label: "Dashboard operativo", icon: LayoutDashboard, activo: true },
+  { label: "Cierre de turno", icon: ClipboardCheck },
+  { label: "Confiabilidad", icon: Activity },
+  { label: "Escanear QR", icon: Scan },
+  { label: "Gestión de flota", icon: Truck },
+  { label: "Mantenimiento", icon: Tool, sub: true },
+  { label: "Inventario", icon: Package },
+  { label: "Configuración", icon: Settings },
+];
+
+const KPIS: {
+  label: string;
+  sub: string;
+  icon: IconType;
+  valor: number;
+  detalle: string;
+  color: string;
+  frac: number;
+  pct?: string;
+  alerta?: boolean;
+}[] = [
+  { label: "Total activos", sub: "Inventario", icon: Truck, valor: FLOTA.total, detalle: "equipos", color: GRIS, frac: 1, pct: "100%" },
+  { label: "Disponibles", sub: "Operación", icon: ShieldCheck, valor: FLOTA.operativo, detalle: `de ${FLOTA.total} equipos`, color: COLOR_ESTADO.operativo, frac: FLOTA.operativo / FLOTA.total, pct: `${pct(FLOTA.operativo)}%` },
+  { label: "En mantención", sub: "Seguimiento", icon: Tool, valor: FLOTA.mantencion, detalle: "por OT abierta", color: COLOR_ESTADO.mantencion, frac: FLOTA.mantencion / FLOTA.total, pct: `${pct(FLOTA.mantencion)}%` },
+  { label: "Detenidos", sub: "Parada", icon: Ban, valor: FLOTA.detenido, detalle: `de ${FLOTA.total}`, color: COLOR_DETENIDO, frac: FLOTA.detenido / FLOTA.total, pct: `${pct(FLOTA.detenido)}%` },
+  { label: "Fuera de servicio", sub: "Crítico", icon: AlertTriangle, valor: FLOTA.fuera, detalle: `de ${FLOTA.total}`, color: COLOR_ESTADO.fuera, frac: FLOTA.fuera / FLOTA.total, pct: `${pct(FLOTA.fuera)}%` },
+  { label: "OTs activas", sub: "Trabajo", icon: ClipboardCheck, valor: OTS.abiertas, detalle: `${OTS.noPlanificadas} NP · ${OTS.correctivas} CC · ${OTS.planificadas} PL`, color: AZUL_OT, frac: 1 },
+  { label: "OTs NP abiertas", sub: "No planif.", icon: Gauge, valor: OTS.noPlanificadas, detalle: `de ${OTS.abiertas} activas`, color: COLOR_ESTADO.fuera, frac: OTS.noPlanificadas / OTS.abiertas, pct: `${Math.round((OTS.noPlanificadas / OTS.abiertas) * 100)}%`, alerta: true },
+];
+
+/** Colores de las etiquetas, los mismos tonos del producto. */
+const TONO: Record<TipoEvento | "PL" | "NP" | "CC", { fondo: string; texto: string; punto: string }> = {
+  PL: { fondo: "#dbeafe", texto: "#1d4ed8", punto: AZUL_OT },
+  NP: { fondo: "#fee2e2", texto: "#b91c1c", punto: "#ea580c" },
+  CC: { fondo: "#fef3c7", texto: "#b45309", punto: AZUL_OT },
+  "Op.": { fondo: "#dcfce7", texto: "#15803d", punto: COLOR_ESTADO.operativo },
+  "Mant.": { fondo: "#fef3c7", texto: "#b45309", punto: COLOR_ESTADO.mantencion },
+  "F/S": { fondo: "#fee2e2", texto: "#b91c1c", punto: COLOR_ESTADO.fuera },
+};
+
+const MAX_GRUPO = Math.max(...FLOTA_POR_GRUPO.map((g) => g.operativo + g.mantencion + g.fuera));
+
+const CUENTAS = [
+  { n: FLOTA.total, label: "Tot.", color: "#9ca3af" },
+  { n: FLOTA.operativo, label: "Op.", color: COLOR_ESTADO.operativo },
+  { n: FLOTA.detenido, label: "Det.", color: COLOR_DETENIDO },
+  { n: FLOTA.mantencion, label: "Mant.", color: COLOR_ESTADO.mantencion },
+  { n: FLOTA.fuera, label: "F/S", color: COLOR_ESTADO.fuera },
+  { n: FLOTA.mantencionVencida, label: "Venc.", color: COLOR_ESTADO.mantencion },
+  { n: OTS.abiertas, label: "OT", color: "#6366f1" },
+];
+
+const DISTRIBUCION = [
+  { label: "Operativo", n: FLOTA.operativo, color: COLOR_ESTADO.operativo },
+  { label: "Detenido", n: FLOTA.detenido, color: COLOR_DETENIDO },
+  { label: "En mantención", n: FLOTA.mantencion, color: COLOR_ESTADO.mantencion },
+  { label: "Fuera de servicio", n: FLOTA.fuera, color: COLOR_ESTADO.fuera },
+];
+
+// Segmentos de la dona (pathLength 100) precalculados: inicio acumulado de cada estado.
+const SEGMENTOS: { color: string; largo: number; inicio: number }[] = [];
+for (let i = 0, ini = 0; i < DISTRIBUCION.length; i++) {
+  const largo = (DISTRIBUCION[i].n / FLOTA.total) * 100;
+  if (largo > 0) SEGMENTOS.push({ color: DISTRIBUCION[i].color, largo, inicio: ini });
+  ini += largo;
+}
+
+function Cabecera({ icon: I, titulo, children }: { icon: IconType; titulo: string; children?: React.ReactNode }) {
+  return (
+    <div className={s.panelCab}>
+      <I stroke={1.7} />
+      {titulo}
+      {children}
+    </div>
+  );
+}
 
 /**
- * Panel «Visión operativa» de sworkc redibujado con datos de ejemplo (lib/demo.ts).
- * SVG estático: escala como una imagen, sin JS. viewBox 900×589 = pantalla de la tablet de la portada.
- * Reemplaza las capturas que traían datos de prueba.
+ * Pantalla «Visión Operativa» de sworkc, reconstruida en HTML con los datos de ejemplo de lib/demo.ts.
+ * Se diseña a 1280 × 838 y escala con el ancho del contenedor (unidades cqw), así sirve igual
+ * dentro de la tablet de la portada que a pantalla completa. `encender` reproduce una sola vez
+ * el arranque del panel; las cifras no cambian después.
  */
-
-const TEMAS = {
-  oscuro: { fondo: "#0d0f14", lateral: "#111319", tarjeta: "#161a22", borde: "#262b36", texto: "#e9edf5", tenue: "#8b93a7", activo: "#2a2312", activoTexto: "#f5b400", tinteRojo: "#3a1517", tinteAzul: "#15233d" },
-  claro: { fondo: "#f6f7fa", lateral: "#ffffff", tarjeta: "#ffffff", borde: "#e3e7ee", texto: "#0b1020", tenue: "#5b6680", activo: "#fff4d6", activoTexto: "#8a5300", tinteRojo: "#fde4e4", tinteAzul: "#e3ecfd" },
-} as const;
-
-const AMBAR = "#f5b400";
-const AZUL = "#2563eb";
-const NAV = ["Panel operativo", "Cierre de turno", "Confiabilidad", "Escanear QR", "Gestión de flota", "Mantenimiento", "Configuración"];
-
-export function PanelOperativoDemo({ tema = "claro", className = "" }: { tema?: keyof typeof TEMAS; className?: string }) {
-  const t = TEMAS[tema];
-  const kpis = [
-    { label: "Total activos", valor: FLOTA.total, sufijo: "equipos", frac: 1, color: t.tenue },
-    { label: "Operativos", valor: FLOTA.operativo, sufijo: `de ${FLOTA.total}`, frac: FLOTA.operativo / FLOTA.total, color: COLOR_ESTADO.operativo },
-    { label: "En mantención", valor: FLOTA.mantencion, sufijo: `de ${FLOTA.total}`, frac: FLOTA.mantencion / FLOTA.total, color: COLOR_ESTADO.mantencion },
-    { label: "Fuera de servicio", valor: FLOTA.fuera, sufijo: `de ${FLOTA.total}`, frac: FLOTA.fuera / FLOTA.total, color: COLOR_ESTADO.fuera, alerta: true },
-    { label: "OTs activas", valor: OTS.abiertas, sufijo: "abiertas", frac: 0.35, color: AZUL },
-    { label: "OTs no planificadas", valor: OTS.noPlanificadas, sufijo: "abiertas", frac: OTS.noPlanificadas / OTS.abiertas, color: COLOR_ESTADO.fuera, alerta: true },
-  ];
-
-  // Dona: un círculo por estado con stroke-dasharray, empezando arriba.
-  const R = 74;
-  const C = 2 * Math.PI * R;
-  const segmentos: { e: Estado; largo: number; inicio: number }[] = [];
-  let acumulado = 0;
-  for (const e of ["operativo", "mantencion", "fuera"] as Estado[]) {
-    const largo = (FLOTA[e] / FLOTA.total) * C;
-    segmentos.push({ e, largo, inicio: acumulado });
-    acumulado += largo;
-  }
-
+export function PanelOperativoDemo({ encender = false }: { encender?: boolean }) {
   return (
-    <svg
-      viewBox="0 0 900 589"
+    <div
+      className={s.marco}
       role="img"
-      aria-label={`Panel de sworkc con datos de ejemplo: ${FLOTA.total} equipos, ${FLOTA.operativo} operativos, ${FLOTA.mantencion} en mantención y ${FLOTA.fuera} fuera de servicio; ${OTS.abiertas} OTs abiertas, ${OTS.noPlanificadas} no planificadas.`}
-      className={`block h-auto w-full font-sans ${className}`}
+      aria-label={`Panel operativo de sworkc con datos de ejemplo: ${FLOTA.total} equipos, ${FLOTA.operativo} disponibles, ${FLOTA.mantencion} en mantención y ${FLOTA.fuera} fuera de servicio; ${OTS.abiertas} OTs activas, ${OTS.noPlanificadas} no planificadas.`}
     >
-      <rect width="900" height="589" fill={t.fondo} />
+      <div className={`${s.pantalla} ${encender ? s.encender : ""}`} aria-hidden>
+        <aside className={s.lateral}>
+          <div className={s.marca}>
+            Sistema minería
+            <SidebarCollapse stroke={1.6} />
+          </div>
+          <div className={s.menu}>
+            {MENU.map((m, i) => (
+              <div key={m.label} className={m.activo ? s.itemActivo : s.item} style={d(i)}>
+                <m.icon stroke={1.6} />
+                <span>{m.label}</span>
+                {m.sub && <ChevronRight stroke={1.8} className={s.flecha} />}
+              </div>
+            ))}
+          </div>
+          <div className={s.sesion}>
+            <span className={s.sesionEtiqueta}>Sesión activa</span>
+            <b>Jefe de mantención</b>
+            <span>Turno A · Faena norte</span>
+            <div className={s.salir}>
+              <Logout stroke={1.6} />
+              Cerrar sesión
+            </div>
+          </div>
+        </aside>
 
-      {/* Menú lateral */}
-      <rect width="150" height="589" fill={t.lateral} />
-      <line x1="150" x2="150" y1="0" y2="589" stroke={t.borde} />
-      <text x="20" y="36" fontSize="16" fontWeight="700" fill={t.texto}>sworkc</text>
-      {NAV.map((item, i) => {
-        const y = 76 + i * 30;
-        return (
-          <g key={item}>
-            {i === 0 && <rect x="10" y={y - 16} width="130" height="24" rx="6" fill={t.activo} />}
-            <rect x="21" y={y - 8} width="8" height="8" rx="2" fill="none" stroke={i === 0 ? t.activoTexto : t.tenue} strokeWidth="1.4" />
-            <text x="38" y={y} fontSize="10" fontWeight={i === 0 ? 600 : 400} fill={i === 0 ? t.activoTexto : t.tenue}>{item}</text>
-          </g>
-        );
-      })}
-      <text x="20" y="552" fontSize="9.5" fontWeight="600" fill={t.texto}>Jefe de mantención</text>
-      <text x="20" y="567" fontSize="8.5" fill={t.tenue}>Turno día</text>
+        <div className={s.principal}>
+          <div className={s.barra}>
+            <span className={s.barraTitulo}>Trazabilidad operativa</span>
+            <div className={s.barraAcciones}>
+              <div className={s.tema}>
+                <span><Sun stroke={1.8} /></span>
+                <span><DeviceDesktop stroke={1.8} /></span>
+                <span><Moon stroke={1.8} /></span>
+              </div>
+              <span className={s.circulo}><Bell stroke={1.8} /></span>
+              <span className={s.circulo}>J</span>
+            </div>
+          </div>
 
-      {/* Encabezado */}
-      <text x="170" y="40" fontSize="17" fontWeight="700" fill={t.texto}>Visión operativa</text>
-      <text x="170" y="57" fontSize="9.5" fill={t.tenue}>Flota, órdenes y mantenimiento · últimos 30 días</text>
-      <rect x="684" y="28" width="90" height="20" rx="10" fill="none" stroke={t.borde} />
-      <text x="729" y="41.5" fontSize="8.5" fill={t.tenue} textAnchor="middle">Datos de ejemplo</text>
-      <rect x="784" y="24" width="100" height="28" rx="6" fill={AMBAR} />
-      <text x="834" y="42" fontSize="10" fontWeight="700" fill="#1a1400" textAnchor="middle">+ Nueva OT</text>
+          <div className={s.contenido}>
+            <div className={s.cabecera}>
+              <div>
+                <div className={s.titulo}>
+                  <LayoutDashboard stroke={1.7} />
+                  Visión Operativa
+                </div>
+                <p className={s.subtitulo}>
+                  Estado actual de la flota · OTs y eventos de <b>Últimos 30 días</b>
+                </p>
+              </div>
+              <div className={s.filtrosCol}>
+                <div className={s.filtros}>
+                  <span className={s.chip}>Datos de ejemplo</span>
+                  <span className={s.control}>Todas las faenas <ChevronDown stroke={1.8} /></span>
+                  <span className={s.control}><Calendar stroke={1.8} /> Últimos 30 días <ChevronDown stroke={1.8} /></span>
+                  <span className={s.control}><Refresh stroke={1.8} /></span>
+                  <span className={`${s.control} ${s.boton}`}><Plus stroke={2.2} /> Nueva OT</span>
+                </div>
+                <div className={s.filtros}>
+                  <span className={s.accion}><Pencil stroke={1.8} /> Editar dashboard</span>
+                  <span className={`${s.accion} ${s.accionTenue}`}><Download stroke={1.8} /> Reporte</span>
+                </div>
+              </div>
+            </div>
 
-      {/* Indicadores */}
-      {kpis.map((k, i) => {
-        const x = 170 + i * 120;
-        return (
-          <g key={k.label}>
-            <rect x={x} y="72" width="112" height="72" rx="6" fill={t.tarjeta} stroke={k.alerta ? COLOR_ESTADO.fuera : t.borde} />
-            <text x={x + 10} y="90" fontSize="8.5" fill={t.tenue}>{k.label}</text>
-            <text x={x + 10} y="121" fill={k.alerta ? COLOR_ESTADO.fuera : t.texto}>
-              <tspan fontSize="21" fontWeight="700">{k.valor}</tspan>
-              <tspan dx="5" fontSize="9" fill={t.tenue}>{k.sufijo}</tspan>
-            </text>
-            <rect x={x + 10} y="132" width="92" height="3" rx="1.5" fill={t.borde} />
-            <rect x={x + 10} y="132" width={92 * k.frac} height="3" rx="1.5" fill={k.color} />
-          </g>
-        );
-      })}
+            <div className={s.kpis}>
+              {KPIS.map((k, i) => (
+                <div key={k.label} className={k.alerta ? s.kpiAlerta : s.kpi} style={d(i)}>
+                  <div className={s.kpiCab}>
+                    <k.icon stroke={1.7} style={{ color: k.color }} />
+                    <div>
+                      <b>{k.label}</b>
+                      <span>{k.sub}</span>
+                    </div>
+                    {k.pct && <em style={{ color: k.color }}>{k.pct}</em>}
+                  </div>
+                  <div className={s.kpiValor}>
+                    <span className={s.cifra} style={{ "--n": k.valor, color: k.alerta ? COLOR_ESTADO.fuera : undefined } as CSSProperties} />
+                    <small>{k.detalle}</small>
+                  </div>
+                  <div className={s.kpiBarra}>
+                    <i style={{ width: `${k.frac * 100}%`, background: k.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
 
-      {/* Distribución de estado */}
-      <rect x="170" y="156" width="352" height="416" rx="8" fill={t.tarjeta} stroke={t.borde} />
-      <text x="186" y="181" fontSize="10.5" fontWeight="600" fill={t.texto}>Distribución de estado</text>
-      <g transform="rotate(-90 286 372)">
-        {segmentos.map((s) => (
-          <circle
-            key={s.e}
-            cx="286"
-            cy="372"
-            r={R}
-            fill="none"
-            stroke={COLOR_ESTADO[s.e]}
-            strokeWidth="24"
-            strokeDasharray={`${Math.max(0, s.largo - 2)} ${C}`}
-            strokeDashoffset={-s.inicio}
-          />
-        ))}
-      </g>
-      <text x="286" y="378" fontSize="26" fontWeight="700" fill={t.texto} textAnchor="middle">{FLOTA.total}</text>
-      <text x="286" y="394" fontSize="9" fill={t.tenue} textAnchor="middle">equipos</text>
-      {segmentos.map((s, i) => {
-        const y = 326 + i * 34;
-        return (
-          <g key={s.e}>
-            <rect x="388" y={y} width="120" height="26" rx="6" fill={t.tarjeta} stroke={t.borde} />
-            <circle cx="400" cy={y + 13} r="3.5" fill={COLOR_ESTADO[s.e]} />
-            <text x="410" y={y + 16.5} fontSize="9" fill={t.texto}>{ETIQUETA_ESTADO[s.e]}</text>
-            <text x="500" y={y + 17} fontSize="10" fontWeight="700" fill={t.texto} textAnchor="end">{FLOTA[s.e]}</text>
-          </g>
-        );
-      })}
+            <div className={s.grilla}>
+              <section className={`${s.panel} ${s.areaTipo}`} style={d(0)}>
+                <Cabecera icon={Truck} titulo="Flota por tipo" />
+                <div className={s.tipos}>
+                  {FLOTA_POR_GRUPO.map((g, i) => {
+                    const total = g.operativo + g.mantencion + g.fuera;
+                    return (
+                      <div key={g.flota} className={s.tipo}>
+                        <span>{g.flota}</span>
+                        <div className={s.pista}>
+                          <div className={s.relleno} style={{ ...d(i), width: `${(total / MAX_GRUPO) * 100}%` }}>
+                            {(["operativo", "mantencion", "fuera"] as const).map((e) =>
+                              g[e] > 0 ? (
+                                <i key={e} style={{ flexGrow: g[e], background: COLOR_ESTADO[e] }}>
+                                  {g[e]}
+                                </i>
+                              ) : null,
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
 
-      {/* OTs prioritarias */}
-      <rect x="532" y="156" width="352" height="416" rx="8" fill={t.tarjeta} stroke={t.borde} />
-      <text x="548" y="181" fontSize="10.5" fontWeight="600" fill={t.texto}>OTs prioritarias</text>
-      <rect x="636" y="170" width="20" height="15" rx="7.5" fill={t.tinteRojo} />
-      <text x="646" y="181" fontSize="8.5" fontWeight="700" fill={COLOR_ESTADO.fuera} textAnchor="middle">{OTS.prioritarias}</text>
-      <text x="548" y="208" fontSize="8" fontWeight="600" fill={t.tenue}>Tipo</text>
-      <text x="592" y="208" fontSize="8" fontWeight="600" fill={t.tenue}>Orden y equipo</text>
-      <text x="868" y="208" fontSize="8" fontWeight="600" fill={t.tenue} textAnchor="end">Prioridad</text>
-      <line x1="548" x2="868" y1="216" y2="216" stroke={t.borde} />
-      {OTS_PRIORITARIAS.map((ot, i) => {
-        const top = 216 + i * 66;
-        const color = ot.prioridad === "Alta" ? COLOR_ESTADO.fuera : COLOR_ESTADO.mantencion;
-        return (
-          <g key={ot.codigo}>
-            <rect x="548" y={top + 20} width="30" height="17" rx="8.5" fill={ot.tipo === "NP" ? t.tinteRojo : t.tinteAzul} />
-            <text x="563" y={top + 31.5} fontSize="8" fontWeight="700" fill={ot.tipo === "NP" ? COLOR_ESTADO.fuera : AZUL} textAnchor="middle">{ot.tipo}</text>
-            <text x="592" y={top + 29} fill={t.texto}>
-              <tspan className="font-mono" fontSize="10.5" fontWeight="700">{ot.codigo}</tspan>
-              <tspan dx="6" fontSize="9" fill={t.tenue}>{ot.equipo}</tspan>
-            </text>
-            <text x="592" y={top + 45} fontSize="9" fill={t.tenue}>{ot.detalle}</text>
-            <circle cx={868 - ot.prioridad.length * 5.4 - 7} cy={top + 29} r="3" fill={color} />
-            <text x="868" y={top + 32} fontSize="9" fontWeight="700" fill={color} textAnchor="end">{ot.prioridad}</text>
-            <line x1="548" x2="868" y1={top + 66} y2={top + 66} stroke={t.borde} />
-          </g>
-        );
-      })}
-      <text x="548" y="508" fontSize="9" fontWeight="600" fill={t.activoTexto}>
-        + {OTS.prioritarias - OTS_PRIORITARIAS.length} más
-      </text>
-    </svg>
+              <section className={`${s.panel} ${s.areaEventos}`} style={d(1)}>
+                <Cabecera icon={History} titulo="Eventos" />
+                <ul className={s.eventos}>
+                  {EVENTOS.map((e, i) => (
+                    <li key={e.texto} className={s.evento} style={d(i)}>
+                      <span className={s.punto} style={{ background: TONO[e.tipo].punto }} />
+                      <b>{e.texto}</b>
+                      <span className={s.etiqueta} style={{ background: TONO[e.tipo].fondo, color: TONO[e.tipo].texto }}>
+                        {e.tipo}
+                      </span>
+                      <span className={s.hace}>{e.hace}</span>
+                    </li>
+                  ))}
+                </ul>
+                <span className={s.mas}>+{EVENTOS_MAS} eventos más</span>
+              </section>
+
+              <section className={`${s.panel} ${s.areaEstado}`} style={d(2)}>
+                <Cabecera icon={Truck} titulo="Estado de la flota" />
+                <div className={s.estado}>
+                  <div className={s.cuentas}>
+                    {CUENTAS.map((c) => (
+                      <div key={c.label} className={s.cuenta} style={{ borderColor: c.color }}>
+                        <b>{c.n}</b>
+                        <span>{c.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={s.barraFlota}>
+                    {(["operativo", "mantencion", "fuera"] as const).map((e) => (
+                      <i key={e} style={{ flexGrow: FLOTA[e], background: COLOR_ESTADO[e] }} />
+                    ))}
+                  </div>
+                  <span className={s.nota}>
+                    <b>{pct(FLOTA.operativo)}%</b> de la flota operativa
+                  </span>
+                  <div className={s.separador} />
+                  <span className={s.nota}>Vista rápida de equipos con mayor prioridad operacional</span>
+                  <div className={s.pestanas}>
+                    <ChevronLeft stroke={1.8} />
+                    {EQUIPOS_VISTA_RAPIDA.map((c, i) => (
+                      <span key={c} className={i === 0 ? `${s.pestana} ${s.pestanaActiva}` : s.pestana}>
+                        <i style={{ background: i === 1 ? COLOR_ESTADO.mantencion : i === 2 ? COLOR_ESTADO.fuera : COLOR_ESTADO.operativo }} />
+                        {c}
+                      </span>
+                    ))}
+                    <ChevronRight stroke={1.8} />
+                  </div>
+                  <div className={s.fichaFoto}>
+                    {/* Recorte de /img/faena/pala-electrica.jpg (Sansumaria, CC BY-SA 3.0; crédito en lib/creditos.ts). */}
+                    {/* eslint-disable-next-line @next/next/no-img-element -- imagen chica dentro de una pantalla dibujada */}
+                    <img src="/img/faena/pala-ficha.jpg" alt="" width={720} height={300} loading="lazy" decoding="async" />
+                    <span className={s.fichaEstado}>Operativo</span>
+                  </div>
+                  <div className={s.fichaNombre}>
+                    <b>{EQUIPO_DESTACADO.codigo}</b>
+                    <span>{EQUIPO_DESTACADO.modelo}</span>
+                    <small>{EQUIPO_DESTACADO.flota}</small>
+                  </div>
+                  <div className={s.datos}>
+                    <div className={s.dato}><span>Horómetro</span><b>{EQUIPO_DESTACADO.horometro}</b></div>
+                    <div className={s.dato}><span>OTs abiertas</span><b>{EQUIPO_DESTACADO.otsAbiertas}</b></div>
+                    <div className={s.dato}><span>Prioridad máx.</span><b style={{ color: "#b45309" }}>{EQUIPO_DESTACADO.prioridadMax}</b></div>
+                    <div className={s.dato}><span>Mantención</span><b style={{ color: "#b45309" }}>{EQUIPO_DESTACADO.mantencion}</b></div>
+                  </div>
+                  <span className={s.nota}>{EQUIPO_DESTACADO.aviso}</span>
+                  <span className={s.nota}>
+                    OT prioritaria <span className={s.otPrioritaria}>Media · {EQUIPO_DESTACADO.ot}</span>
+                  </span>
+                </div>
+              </section>
+
+              <section className={`${s.panel} ${s.areaDistribucion}`} style={d(3)}>
+                <Cabecera icon={ChartDonut} titulo="Distribución de estado" />
+                <div className={s.distribucion}>
+                  <div className={s.dona}>
+                    <svg viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" fill="none" stroke="#eef0f3" strokeWidth="13" />
+                      {SEGMENTOS.map((g, i) => (
+                        <circle
+                          key={g.color}
+                          className={s.segmento}
+                          style={d(i)}
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          fill="none"
+                          stroke={g.color}
+                          strokeWidth="13"
+                          pathLength={100}
+                          strokeDasharray={`${g.largo} ${100 - g.largo}`}
+                          strokeDashoffset={-g.inicio}
+                        />
+                      ))}
+                    </svg>
+                    <div className={s.donaCentro}>
+                      <b>{FLOTA.total}</b>
+                      <span>EQ</span>
+                    </div>
+                  </div>
+                  <div className={s.leyenda}>
+                    {DISTRIBUCION.map((e) => (
+                      <div key={e.label}>
+                        <i style={{ background: e.color }} />
+                        {e.label}
+                        <b>{e.n}</b>
+                        <small>{pct(e.n)}%</small>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              <section className={`${s.panel} ${s.areaPrioritarias}`} style={d(4)}>
+                <Cabecera icon={Tool} titulo="OTs prioritarias">
+                  <span className={s.badge}>{OTS.prioritarias}</span>
+                </Cabecera>
+                <ul className={s.ots}>
+                  {OTS_PRIORITARIAS.map((ot, i) => (
+                    <li key={ot.codigo} className={s.ot} style={d(i)}>
+                      <span className={s.etiqueta} style={{ background: TONO[ot.tipo].fondo, color: TONO[ot.tipo].texto }}>
+                        {ot.tipo}
+                      </span>
+                      <div>
+                        <b>{ot.codigo}</b> <small className={s.equipo}>{ot.equipo}</small>
+                        <small>{ot.detalle}</small>
+                      </div>
+                      <span className={s.prioridad} style={{ color: ot.prioridad === "Alta" ? COLOR_ESTADO.fuera : "#d97706" }}>
+                        <i style={{ background: ot.prioridad === "Alta" ? COLOR_ESTADO.fuera : COLOR_ESTADO.mantencion }} />
+                        {ot.prioridad}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <span className={s.masOts}>+{OTS.prioritarias - OTS_PRIORITARIAS.length} más</span>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

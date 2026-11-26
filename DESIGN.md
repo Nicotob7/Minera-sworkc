@@ -25,22 +25,26 @@ Estrategia **Committed**: el azul de marca carga 30–60% de la superficie.
 - **Bitácora / spec-ledger**: filas `grid [ícono | título+desc | capacidades]` separadas por hairlines (`border-border`), heading con `border-b-2` azul. Íconos de Tabler desde `components/ui/icons.ts` (sin círculo). Reemplaza toda grilla de tarjetas.
 - **Ficha técnica** (`<dl>` clave/valor): filas `[etiqueta | valor]` con hairlines. Usada en terreno, dónde-estamos.
 - **Banda de producto**: fondo #060733, marco de "monitor" (borde blanco/15, barra superior con punto cyan), pantalla del sistema redibujada (`components/demo/`) con el rótulo "Datos de ejemplo" dentro de la propia pantalla.
-- **Pantallas redibujadas** (`components/demo/PanelOperativoDemo.tsx`, `EdeDemo.tsx`): SVG estático con los datos de ejemplo de `lib/demo.ts` (equipos CAEX-214, PALA-07, PERF-31, CAR-012; OTs OT-2026-0xx; personas solo por rol). Nunca capturas con datos de prueba.
-- **Portada del inicio**: `public/hero/portada.jpg` (foto con la pantalla de la tablet en negro, generada por `swc/scripts/limpiar-portada.mjs`) + `PanelOperativoDemo` oscuro alineado a la pantalla desde `lg`. Título fijo, sin máquina de escribir.
+- **Pantallas redibujadas** (`components/demo/`), con los datos de ejemplo de `lib/demo.ts` (equipos CAEX-214, PALA-07, PERF-31, CAR-012; OTs OT-2026-0xx; personas solo por rol). Nunca capturas con datos de prueba.
+  - `PanelOperativoDemo`: réplica en HTML de «Visión Operativa» tal como se ve el sistema (tema claro, mayúsculas y colores del producto, no del sitio). Se diseña a 1280 × 838 y mide todo en `--u` (1/1280 del ancho del contenedor, `cqw`), así escala nítido de la tablet a pantalla completa. `encender` reproduce el arranque una vez.
+  - `EdeDemo`: todavía SVG.
+- **Portada del inicio**: `public/hero/portada.jpg` (foto con la pantalla de la tablet en negro, generada por `swc/scripts/limpiar-portada.mjs`) + `PanelOperativoDemo` alineado a la pantalla en todos los tamaños. Móvil: texto sobre navy y la foto recortada a la tablet debajo. Desde `lg`: foto de fondo y columna de texto que termina antes de la pantalla (`.portada-columna` en `globals.css`, calculada con la misma geometría de la foto). Título fijo, sin máquina de escribir.
 - **Marco de teléfono**: borde grueso navy `border-[7px] border-[#060733] rounded-[2.1rem]`, captura móvil real (390px @3x), sin pie de imagen. Usado en la sección terreno de /producto; en desktop va `sticky top-28` junto a la bitácora.
 - **RelatedLinks**: enlaces con `border-t-2` azul que se enciende al hover; sin tarjetas.
 - **Menú flotante**: píldora blanca que se compacta al bajar (margen, alto y logo; 200 ms ease-out). `html { scroll-padding-top: 7rem }` deja todas las anclas bajo el menú; no usar `scroll-mt` sueltos ni `scroll-behavior: smooth` en `html`.
 
 ## Movimiento
 
-- Nada aparece por hacer scroll en cada sección (se eliminó `Reveal`). El movimiento se reserva para la entrada de la portada y uno o dos momentos por página (plan de la fase 2 en `D:/nicot/Documents/sworkc-web/fase0/bosquejo.html`).
+- Nada aparece por hacer scroll en cada sección (se eliminó `Reveal`). El movimiento se reserva para la entrada de la portada y uno o dos momentos por página.
+- Lo que se mueve es real: la foto de faena y la pantalla del sistema. Sin ilustraciones, dibujos ni maquetas geométricas (el rajo 3D procedural del bosquejo quedó descartado por eso).
+- Portada: al cargar, el panel de la tablet se enciende una vez (cascada de menú e indicadores, cifras que cuentan hasta su valor, barras y dona que se trazan; ~2 s). Desde `lg`, la sección mide dos pantallas con la escena fija y, al bajar, la cámara se acerca a la tablet hasta que el panel llena la pantalla (`components/HeroDolly.tsx`, transformaciones por cuadro, sin cambiar la velocidad del scroll).
 - Las cifras de las muestras no cambian solas: un panel que se mueve sin intervención contradice la regla de no prometer "tiempo real".
 - Todo respeta `prefers-reduced-motion`.
 
 ## Imágenes
 
 - Faena: `swc/public/img/faena/` — Chuquicamata (Diego Delso, CC BY-SA 4.0), Centinela desde la ISS (Alexander Gerst, CC BY-SA 2.0), pala P&H 4100XPB (Sansumaria, CC BY-SA 3.0). **La atribución CC va en el pie de página**: una línea "Fotografías vía Wikimedia Commons" que despliega autor, licencia, enlace a la obra y aviso de recorte (`lib/creditos.ts`). Al agregar una foto, agregarla ahí.
-- Producto: pantallas redibujadas en `components/demo/`; la única captura vigente es `public/img/producto/escanear-qr.jpg`. Se eliminaron `panel-operacional.jpg`, `ede.jpg` y `public/hero/final.png` porque traían datos de prueba; la original de la portada se recupera del historial de git (instrucciones en `swc/scripts/limpiar-portada.mjs`).
+- Producto: pantallas redibujadas en `components/demo/`; la única captura vigente es `public/img/producto/escanear-qr.jpg`. `public/img/faena/pala-ficha.jpg` es un recorte de la pala (misma atribución) para la ficha de equipo del panel. Se eliminaron `panel-operacional.jpg`, `ede.jpg` y `public/hero/final.png` porque traían datos de prueba; la original de la portada se recupera del historial de git (instrucciones en `swc/scripts/limpiar-portada.mjs`).
 
 ## Prohibido (además de los bans de la skill)
 

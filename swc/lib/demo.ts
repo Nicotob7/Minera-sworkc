@@ -16,13 +16,54 @@ export const ETIQUETA_ESTADO: Record<Estado, string> = {
   fuera: "Fuera de servicio",
 };
 
-export const FLOTA = { total: 51, operativo: 43, mantencion: 5, fuera: 3 };
-export const OTS = { abiertas: 18, noPlanificadas: 4, prioritarias: 6 };
+/** Detenido no se usa en las otras pantallas: aparte para no agrandar `Estado`. */
+export const COLOR_DETENIDO = "#f97316";
+
+export const FLOTA = { total: 51, operativo: 43, detenido: 0, mantencion: 5, fuera: 3, mantencionVencida: 2 };
+/** OTs activas por tipo, como las cuenta el producto: NP no planificada, CC corrección de condición, PL planificada. */
+export const OTS = { abiertas: 18, noPlanificadas: 4, correctivas: 5, planificadas: 9, prioritarias: 6 };
+
+/** Equipos por flota (suman FLOTA). */
+export const FLOTA_POR_GRUPO = [
+  { flota: "Flota extracción", operativo: 21, mantencion: 2, fuera: 1 },
+  { flota: "Flota apoyo", operativo: 10, mantencion: 2, fuera: 1 },
+  { flota: "Flota perforación", operativo: 7, mantencion: 0, fuera: 1 },
+  { flota: "Flota carguío", operativo: 5, mantencion: 1, fuera: 0 },
+];
+
+export type TipoEvento = "PL" | "NP" | "CC" | "Op." | "Mant." | "F/S";
+
+export const EVENTOS: { texto: string; tipo: TipoEvento; hace: string }[] = [
+  { texto: "OT-2026-054 — Creada", tipo: "PL", hace: "hace 1 h" },
+  { texto: "CAEX-214 — En mantención", tipo: "Mant.", hace: "hace 2 h" },
+  { texto: "OT-2026-053 — Cerrada", tipo: "CC", hace: "hace 3 h" },
+  { texto: "OT-2026-052 — Creada", tipo: "NP", hace: "hace 5 h" },
+  { texto: "PERF-31 — Operativo", tipo: "Op.", hace: "hace 8 h" },
+  { texto: "OT-2026-051 — Creada", tipo: "PL", hace: "hace 1 día" },
+  { texto: "CAR-012 — Fuera de servicio", tipo: "F/S", hace: "hace 1 día" },
+  { texto: "OT-2026-050 — Cerrada", tipo: "PL", hace: "hace 2 días" },
+];
+export const EVENTOS_MAS = 34;
+
+/** Equipo destacado en «Estado de la flota» (la foto es un recorte de la pala de lib/creditos.ts). */
+export const EQUIPO_DESTACADO = {
+  codigo: "PALA-07",
+  modelo: "Pala eléctrica de cable",
+  flota: "Flota carguío · Pala",
+  estado: "operativo" as Estado,
+  horometro: "31.480,2 h",
+  otsAbiertas: 1,
+  prioridadMax: "Media",
+  mantencion: "Próxima",
+  aviso: "Faltan 38 h para la mantención",
+  ot: "OT-2026-047",
+};
+export const EQUIPOS_VISTA_RAPIDA = ["PALA-07", "CAEX-214", "CAR-012", "PERF-31"];
 
 export type Prioridad = "Alta" | "Media";
 
 export const OTS_PRIORITARIAS: {
-  tipo: "NP" | "P";
+  tipo: "NP" | "CC" | "PL";
   codigo: string;
   equipo: string;
   detalle: string;
@@ -30,8 +71,8 @@ export const OTS_PRIORITARIAS: {
 }[] = [
   { tipo: "NP", codigo: "OT-2026-052", equipo: "CAEX-214", detalle: "Fuga hidráulica en cilindro de levante", prioridad: "Alta" },
   { tipo: "NP", codigo: "OT-2026-049", equipo: "CAR-012", detalle: "Falla del sensor de presión de frenos", prioridad: "Alta" },
-  { tipo: "P", codigo: "OT-2026-041", equipo: "PERF-31", detalle: "Mantención preventiva de 500 h", prioridad: "Media" },
-  { tipo: "P", codigo: "OT-2026-047", equipo: "PALA-07", detalle: "Inspección de dientes del balde", prioridad: "Media" },
+  { tipo: "PL", codigo: "OT-2026-041", equipo: "PERF-31", detalle: "Mantención preventiva de 500 h", prioridad: "Media" },
+  { tipo: "PL", codigo: "OT-2026-047", equipo: "PALA-07", detalle: "Inspección de dientes del balde", prioridad: "Media" },
 ];
 
 /** Expediente Digital del Equipo (EDE) de ejemplo. */

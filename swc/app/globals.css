@@ -227,3 +227,19 @@
 @keyframes vt-entrada {
   from { opacity: 0; transform: translateY(8px); }
 }
+
+/* Portada desde lg: la columna de texto termina antes de la pantalla de la tablet.
+   La foto se dibuja como object-cover centrado de ancho W = max(100vw, 177,7svh) (1672/941 con la
+   escena de 100svh), así que la pantalla (x = 683/1672) empieza en 50vw − 0,0915·W.
+   max(48px, 50vw − 592px) = margen del contenedor max-w-7xl con px-12. El título escala con la
+   columna para que «minera conectada» (~8,6 em) quepa en una línea. */
+@media (min-width: 1024px) {
+  .portada-columna {
+    --foto: max(100vw, 177.7svh);
+    --col: calc(50vw - 0.0915 * var(--foto) - max(48px, 50vw - 592px) - 36px);
+    max-width: var(--col);
+  }
+  .portada-titulo {
+    font-size: min(3.05rem, calc(var(--col) / 8.9));
+  }
+}

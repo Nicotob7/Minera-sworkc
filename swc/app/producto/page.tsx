@@ -160,7 +160,7 @@ export default function ProductoPage() {
                 <span className="h-2 w-2 rounded-full bg-cyan-400" aria-hidden />
                 Visión operativa
               </div>
-              <PanelOperativoDemo tema="claro" />
+              <PanelOperativoDemo />
             </div>
           </div>
         </div>

@@ -16,7 +16,8 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 
 | Componente | Tipo | Rol |
 |---|---|---|
-| `Hero.tsx` | S | Hero full-bleed: `portada.jpg` + overlay + título fijo a la izquierda; desde `lg`, `PanelOperativoDemo` alineado a la pantalla de la tablet. |
+| `Hero.tsx` | S | Portada: `portada.jpg` con `PanelOperativoDemo encender` en la pantalla de la tablet. Móvil: texto arriba y foto recortada a la tablet; desde `lg`: foto de fondo, columna de texto `.portada-columna`. |
+| `HeroDolly.tsx` | C | Envuelve la portada: desde `lg` y sin movimiento reducido, la sección mide dos pantallas y al bajar acerca la cámara a la tablet (mueve los hijos `data-dolly`). |
 | `Navbar.tsx` | C | Navbar blanco flotante sticky que se compacta al bajar: logo, enlaces, CTA, menú móvil. Foco de teclado, `aria-controls`, cierre con Escape. |
 | `hooks.ts` | C | `useReducedMotion`. |
 
@@ -24,7 +25,7 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 
 | Componente | Tipo | Rol |
 |---|---|---|
-| `PanelOperativoDemo.tsx` | S | Panel «Visión operativa» en SVG (tema oscuro para la tablet de la portada, claro para /producto). Datos de `lib/demo.ts`. |
+| `PanelOperativoDemo.tsx` | S | Réplica HTML de «Visión Operativa» (diseño 1280 × 838, escala con `cqw`; estilos en `PanelOperativoDemo.module.css`). `encender` anima el arranque una vez. Datos de `lib/demo.ts`. |
 | `EdeDemo.tsx` | S | Expediente Digital del Equipo en SVG para /producto. Datos de `lib/demo.ts`. |
 
 ## `components/ui/` — primitivas e iconos
