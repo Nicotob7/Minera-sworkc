@@ -2,33 +2,30 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { PORTADA } from "../lib/demo";
+import { crearCursorDemo, type PasoCursor } from "./demo/motorCursor";
 
 const { ancho, alto, pantalla } = PORTADA;
 const ASPECTO = ancho / alto;
 const recortar = (v: number) => Math.min(1, Math.max(0, v));
 /** smoothstep: el acercamiento arranca y termina sin tirón. */
 const suave = (t: number) => t * t * (3 - 2 * t);
-const esperar = (ms: number) => new Promise((r) => window.setTimeout(r, ms));
-const CURVA = "cubic-bezier(0.65, 0, 0.35, 1)";
 /** Ancho de la columna de la guía (w-[21rem]) y su separación del panel (mr-10). */
 const GUIA_ANCHO = 336;
 const GUIA_SEPARACION = 40;
-
-type Corrida = { cancelado: boolean };
 
 /**
  * Portada desde lg: la sección mide 2,6 pantallas y la escena queda fija mientras se baja.
  * - Primer tramo: la cámara se acerca a la tablet hasta que el panel ocupa la pantalla; el texto
  *   y el velo oscuro se retiran. La velocidad del scroll no se toca (sin scroll-jacking).
- * - Al completarse el acercamiento, un cursor usa el panel una vez: se posa en «OTs NP abiertas»,
- *   abre la ficha del CAEX-214, señala la dona y el primer evento. Solo cambian estados de la
- *   interfaz (data-demo / data-equipo en la capa de la foto), ninguna cifra.
+ * - Al completarse el acercamiento, un cursor usa el panel una vez (motor en demo/motorCursor.ts):
+ *   se posa en «OTs NP abiertas», abre la ficha del CAEX-214, señala la dona y el primer evento.
+ *   Solo cambian estados de la interfaz (data-demo / data-equipo en la capa de la foto).
  * - En pantallas anchas, panel y guía se centran juntos y cada paso de la guía es un botón que
  *   lleva al cursor a esa acción (el recorrido automático se detiene).
  * Si el visitante vuelve a subir, todo se cancela y queda listo para repetirse.
  * Bajo lg o con movimiento reducido no hace nada: la portada queda estática.
  *
- * Mueve los hijos marcados con data-dolly="escena" | "foto" | "texto" | "velo" | "cursor" | "guia".
+ * Mueve los hijos marcados con data-dolly="escena" | "foto" | "texto" | "velo" | "guia" y [data-cursor].
  */
 export function HeroDolly({ className, children }: { className: string; children: ReactNode }) {
   const ref = useRef<HTMLElement>(null);
@@ -40,49 +37,13 @@ export function HeroDolly({ className, children }: { className: string; children
     const foto = pieza("foto");
     const texto = pieza("texto");
     const velo = pieza("velo");
-    const cursor = pieza("cursor");
     const guia = pieza("guia");
+    const cursor = seccion?.querySelector<HTMLElement>("[data-cursor]");
     if (!seccion || !escena || !foto || !texto || !velo || !cursor || !guia) return;
 
     const activo = window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)");
     let cuadro = 0;
-    let corrida: Corrida | null = null; // no nula: el recorrido ya empezó (o el visitante eligió un paso)
-    let cursorVisible = false;
-    let pos: [number, number] = [0, 0];
 
-    /* ── Cursor ── */
-    const ubicar = ([x, y]: [number, number]) => `translate(${x}px, ${y}px)`;
-    // Punta de la flecha: el SVG la tiene en (4, 2) de 24, dibujado a 22 px.
-    const punto = (nombre: string, fx = 0.5, fy = 0.5): [number, number] | null => {
-      const el = foto.querySelector(`[data-objetivo="${nombre}"]`);
-      if (!el) return null;
-      const e = escena.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      return [r.left - e.left + r.width * fx - 3.7, r.top - e.top + r.height * fy - 1.8];
-    };
-    const mover = async (c: Corrida, destino: [number, number] | null, ms: number) => {
-      if (!destino || c.cancelado) return;
-      const a = cursor.animate([{ transform: ubicar(pos) }, { transform: ubicar(destino) }], { duration: ms, easing: CURVA, fill: "forwards" });
-      pos = destino;
-      await a.finished.catch(() => {});
-      cursor.style.transform = ubicar(destino);
-    };
-    const clic = async (c: Corrida) => {
-      if (c.cancelado) return;
-      cursor.querySelector<HTMLElement>("[data-clic]")?.animate(
-        [{ opacity: 0.9, transform: "scale(0.3)" }, { opacity: 0, transform: "scale(1.6)" }],
-        { duration: 450, easing: "ease-out" },
-      );
-      await cursor.querySelector("svg")?.animate([{ transform: "scale(1)" }, { transform: "scale(0.82)" }, { transform: "scale(1)" }], { duration: 220, easing: "ease-out" }).finished.catch(() => {});
-    };
-    const mostrarCursor = async () => {
-      if (cursorVisible) return;
-      cursorVisible = true;
-      const e = escena.getBoundingClientRect();
-      pos = [e.width * 0.74, e.height * 0.9];
-      cursor.style.transform = ubicar(pos);
-      await cursor.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: "forwards" }).finished.catch(() => {});
-    };
     /** Marca el paso en la guía y reinicia su barra (que dura lo que dura el paso). */
     const activar = (n: number | "fin", ms = 0) => {
       delete guia.dataset.guiaActivo;
@@ -90,88 +51,41 @@ export function HeroDolly({ className, children }: { className: string; children
       guia.style.setProperty("--guia-ms", `${ms}ms`);
       guia.dataset.guiaActivo = String(n);
     };
-
-    /* ── Los cuatro pasos (mismo orden que la guía de Hero.tsx) ── */
-    const PASOS: ((c: Corrida) => Promise<void>)[] = [
-      async (c) => {
-        activar(1, 2150);
-        delete foto.dataset.demo;
-        await mover(c, punto("kpi-np", 0.55, 0.45), 850);
-        if (c.cancelado) return;
-        foto.dataset.demo = "kpi";
-        await esperar(1300);
-      },
-      async (c) => {
-        activar(2, 2620);
-        delete foto.dataset.demo;
-        await mover(c, punto("tab-caex", 0.45, 0.6), 900);
-        await clic(c);
-        if (c.cancelado) return;
-        foto.dataset.equipo = "caex";
-        await esperar(1500);
-      },
-      async (c) => {
-        activar(3, 2350);
-        delete foto.dataset.demo;
-        await mover(c, punto("dona-mant", 0.35, 0.5), 950);
-        if (c.cancelado) return;
-        foto.dataset.demo = "dona";
-        await esperar(1400);
-      },
-      async (c) => {
-        activar(4, 2250);
-        delete foto.dataset.demo;
-        await mover(c, punto("evento", 0.3, 0.5), 850);
-        if (c.cancelado) return;
-        foto.dataset.demo = "eventos";
-        await esperar(1400);
-      },
+    const estado = (demo?: string) => {
+      if (demo) foto.dataset.demo = demo;
+      else delete foto.dataset.demo;
+    };
+    // Mismo orden que la guía de Hero.tsx.
+    const PASOS: PasoCursor[] = [
+      { objetivo: "kpi-np", fx: 0.55, fy: 0.45, ms: 850, antes: () => (activar(1, 2150), estado()), hacer: () => estado("kpi"), espera: 1300 },
+      { objetivo: "tab-caex", fx: 0.45, fy: 0.6, ms: 900, clic: true, antes: () => (activar(2, 2620), estado()), hacer: () => (foto.dataset.equipo = "caex"), espera: 1500 },
+      { objetivo: "dona-mant", fx: 0.35, ms: 950, antes: () => (activar(3, 2350), estado()), hacer: () => estado("dona"), espera: 1400 },
+      { objetivo: "evento", fx: 0.3, ms: 850, antes: () => (activar(4, 2250), estado()), hacer: () => estado("eventos"), espera: 1400 },
     ];
+    const recorrido = crearCursorDemo({
+      escena,
+      raiz: foto,
+      cursor,
+      pasos: PASOS,
+      alTerminar: () => (estado(), activar("fin")),
+      alDetener: () => {
+        estado();
+        delete foto.dataset.equipo;
+        delete guia.dataset.guiaActivo;
+      },
+    });
 
-    const recorrer = async (c: Corrida) => {
-      await mostrarCursor();
-      for (const paso of PASOS) {
-        if (c.cancelado) return;
-        await paso(c);
-      }
-      if (c.cancelado) return;
-      delete foto.dataset.demo;
-      activar("fin");
-      await cursor.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" }).finished.catch(() => {});
-      cursorVisible = false;
-    };
-
-    /** Clic en un paso de la guía: corta lo que esté corriendo y muestra solo ese paso. */
-    const irA = async (n: number) => {
-      if (corrida) corrida.cancelado = true;
-      for (const a of cursor.getAnimations({ subtree: true })) if (a.playState === "running") a.finish();
-      const c: Corrida = { cancelado: false };
-      corrida = c;
-      await mostrarCursor();
-      await PASOS[n - 1]?.(c);
-    };
     const alClic = (ev: MouseEvent) => {
       const boton = (ev.target as HTMLElement).closest<HTMLElement>("[data-guia-ir]");
-      if (boton) void irA(Number(boton.dataset.guiaIr));
+      if (boton) void recorrido.irA(Number(boton.dataset.guiaIr));
     };
     guia.addEventListener("click", alClic);
-
-    const detener = () => {
-      if (corrida) corrida.cancelado = true;
-      corrida = null;
-      cursorVisible = false;
-      for (const a of cursor.getAnimations({ subtree: true })) a.cancel();
-      cursor.style.opacity = "0";
-      delete foto.dataset.demo;
-      delete foto.dataset.equipo;
-      delete guia.dataset.guiaActivo;
-    };
 
     /* ── Acercamiento por scroll ── */
     const pintar = () => {
       cuadro = 0;
       if (!activo.matches) {
-        detener();
+        recorrido.detener();
         for (const prop of ["opacity", "visibility", "width"]) guia.style.removeProperty(prop);
         for (const el of [foto, texto, velo]) {
           for (const prop of ["transform", "transform-origin", "opacity", "visibility"]) el.style.removeProperty(prop);
@@ -204,8 +118,8 @@ export function HeroDolly({ className, children }: { className: string; children
       const dy = fy - y0;
 
       const r = seccion.getBoundingClientRect();
-      const recorrido = r.height - h;
-      const p = recorrido > 0 ? recortar(-r.top / recorrido) : 0;
+      const tramo = r.height - h;
+      const p = tramo > 0 ? recortar(-r.top / tramo) : 0;
       // El acercamiento ocupa hasta p = 0,6; el resto del tramo fijo es para el recorrido del cursor.
       const t = suave(recortar((p - 0.03) / 0.57));
 
@@ -219,14 +133,10 @@ export function HeroDolly({ className, children }: { className: string; children
       velo.style.opacity = String(1 - recortar(t * 1.6));
 
       // Arranca solo con la escena todavía fija (p < 0,97): si se baja de largo, no corre fuera de vista.
-      if (t >= 0.999 && p < 0.97 && !corrida) {
-        corrida = { cancelado: false };
-        void recorrer(corrida);
-      } else if (t < 0.9 && corrida) {
-        detener();
-      }
+      if (t >= 0.999 && p < 0.97 && !recorrido.empezado) void recorrido.recorrer();
+      else if (t < 0.9 && recorrido.empezado) recorrido.detener();
       // La guía ocupa desde el borde izquierdo hasta el panel; su columna queda pegada a él.
-      const visible = conGuia && corrida !== null && t >= 0.999;
+      const visible = conGuia && recorrido.empezado && t >= 0.999;
       guia.style.width = `${Math.max(0, fx - anchoFinal / 2)}px`;
       guia.style.opacity = visible ? "1" : "0";
       guia.style.visibility = visible ? "visible" : "hidden";
@@ -241,7 +151,7 @@ export function HeroDolly({ className, children }: { className: string; children
     activo.addEventListener("change", pedir);
     return () => {
       cancelAnimationFrame(cuadro);
-      detener();
+      recorrido.detener();
       guia.removeEventListener("click", alClic);
       window.removeEventListener("scroll", pedir);
       window.removeEventListener("resize", pedir);

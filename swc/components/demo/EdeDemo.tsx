@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { COLOR_ESTADO, EDE, ETIQUETA_ESTADO, type Estado } from "../../lib/demo";
 import { ArrowLeft, Plus, Truck } from "../ui/icons";
 import s from "./EdeDemo.module.css";
@@ -28,6 +29,9 @@ const NAV: [string, string[]][] = [
 ];
 
 /** Historial con la fecha marcada solo en el primer cambio de cada día. */
+/** Orden de entrada en cascada (ver .encender en el CSS). */
+const d = (i: number) => ({ "--d": i }) as CSSProperties;
+
 const HISTORIAL = EDE.historial.map((h, i) => ({ ...h, nuevaFecha: i === 0 || EDE.historial[i - 1].fecha !== h.fecha }));
 
 /** Un valor por período; el CSS muestra el del período elegido. */
@@ -56,14 +60,15 @@ export function EdePeriodo() {
   );
 }
 
-export function EdeDemo() {
+/** `encender`: tarjetas, filas e historial entran en cascada una vez (Producto, al verse). */
+export function EdeDemo({ encender = false }: { encender?: boolean }) {
   return (
     <div
       className={s.marco}
       role="img"
       aria-label={`Expediente digital del equipo ${EDE.equipo} con datos de ejemplo: ${EDE.kpis.map((k) => `${k.sigla} ${k.valor}`).join(", ")} en 90 días; últimas detenciones con motivo y duración, repuestos e historial de cambios.`}
     >
-      <div className={s.pantalla} aria-hidden>
+      <div className={`${s.pantalla} ${encender ? s.encender : ""}`} aria-hidden>
         <div className={s.barra}>
           <span className={s.volver}>
             <ArrowLeft stroke={1.8} />
@@ -109,15 +114,15 @@ export function EdeDemo() {
                 </span>
               </div>
               <div className={s.tabs}>
-                <span className={s.tab7}>7 d</span>
-                <span className={s.tab30}>30 d</span>
-                <span className={s.tab90}>90 d</span>
+                <span className={s.tab7} data-objetivo="ede-tab-7">7 d</span>
+                <span className={s.tab30} data-objetivo="ede-tab-30">30 d</span>
+                <span className={s.tab90} data-objetivo="ede-tab-90">90 d</span>
               </div>
             </div>
 
             <div className={s.kpis}>
               {EDE.kpis.map((k, i) => (
-                <div key={k.sigla} className={`${s.kpi} ${CLASE_KPI[i]}`}>
+                <div key={k.sigla} className={`${s.kpi} ${CLASE_KPI[i]}`} style={d(i)}>
                   <span className={s.kpiSigla}>{k.sigla}</span>
                   <b className={s.kpiValor}>
                     <PorPeriodo v7={k.v7} v30={k.v30} v90={k.valor} />
@@ -129,19 +134,19 @@ export function EdeDemo() {
 
             <div className={s.panel}>
               <span className={s.panelTitulo}>Últimas detenciones</span>
-              {EDE.detenciones.map((d) => (
+              {EDE.detenciones.map((det, i) => (
                 <div
-                  key={d.fecha}
-                  className={`${s.detencion} ${d.dias <= 7 ? s.en7 : ""} ${d.dias <= 30 ? s.en30 : ""}`}
+                  key={det.fecha}
+                  className={`${s.detencion} ${det.dias <= 7 ? s.en7 : ""} ${det.dias <= 30 ? s.en30 : ""}`}
                 >
                   <div>
-                    <div className={s.fila}>
-                      <span className={s.fecha}>{d.fecha}</span>
-                      <span className={s.chip} style={{ background: CHIP[d.estado].fondo, color: CHIP[d.estado].texto }}>
-                        {ETIQUETA_ESTADO[d.estado]}
+                    <div className={s.fila} style={d(i)} data-objetivo={i === 0 ? "ede-detencion" : undefined}>
+                      <span className={s.fecha}>{det.fecha}</span>
+                      <span className={s.chip} style={{ background: CHIP[det.estado].fondo, color: CHIP[det.estado].texto }}>
+                        {ETIQUETA_ESTADO[det.estado]}
                       </span>
-                      <b>{d.horas}</b>
-                      <span>{d.causa}</span>
+                      <b>{det.horas}</b>
+                      <span>{det.causa}</span>
                     </div>
                   </div>
                 </div>
@@ -174,11 +179,11 @@ export function EdeDemo() {
 
           <aside className={s.historial}>
             <span className={s.panelTitulo}>Historial de cambios</span>
-            {HISTORIAL.map((h) => {
+            {HISTORIAL.map((h, i) => {
               return (
                 <div key={`${h.fecha}-${h.hora}`}>
                   {h.nuevaFecha && <span className={s.historialFecha}>{h.fecha}</span>}
-                  <div className={s.cambio}>
+                  <div className={s.cambio} style={d(i)} data-objetivo={i === 0 ? "ede-historial" : undefined}>
                     <span className={s.hora}>{h.hora}</span>
                     <div>
                       <b>{h.rol}</b>

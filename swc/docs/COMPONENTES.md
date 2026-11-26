@@ -40,15 +40,9 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 | `send-animated.tsx` | C | Icono de "enviar" animado (motion) usado en el submit de Contacto. |
 | `bell · boxes · chart-line · clipboard-check · clock · file-chart-line · layout-grid · refresh-cw · timer · wrench` | C | Iconos **animados** (motion) usados en las tarjetas/módulos de Servicios (animan al hover). |
 
-## `components/charts/`
+## `components/charts/` (eliminada)
 
-| Componente | Tipo | Rol |
-|---|---|---|
-| `FleetDonut.tsx` | C | Anillo de estado de flota (SVG propio). "En vivo": el `setInterval` se **pausa fuera de viewport**. `role="img"` accesible. |
-| `FailureBars.tsx` | C | Barras de fallas por turno (SVG propio), feed que avanza. Pausa fuera de viewport + `role="img"`. |
-| `AvailabilityKPI.tsx` | C | KPI de disponibilidad con **count-up** (`requestAnimationFrame`) + sparkline (SVG). Pausa fuera de viewport. |
-| `QuienesSomosChart.tsx` | C | Área chart de Quiénes Somos (**ApexCharts**, `dynamic ssr:false`). Respeta reduced-motion. |
-| `ServicioModuleChart.tsx` | C | **Sin uso desde la fase 2** (lo reemplazó `ModuloDemo`); igual que `AvailabilityKPI`, `FailureBars` y `FleetDonut`. Pendiente borrarlos con OK del dueño. |
+Los gráficos de muestra (`FleetDonut`, `FailureBars`, `AvailabilityKPI`, `ServicioModuleChart`, `QuienesSomosChart`) se eliminaron entre la fase 1 y el 26/11: los reemplazaron las pantallas redibujadas de `components/demo/`, que no cambian cifras solas. Se desinstalaron `apexcharts` y `react-apexcharts`.
 
 ## `components/sections/`
 
@@ -73,7 +67,8 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 |---|---|---|
 | `components/site/ExploradorModulos.tsx` | C | Producto, módulos: lista + tarjeta con `ModuloDemo`; avance automático en escritorio. |
 | `components/site/TelefonoPasos.tsx` | C | Elige la pantalla de `TelefonoDemo` según el punto (`data-terreno`) que pasa por el centro. |
-| `components/ui/AlVer.tsx` | C | Pausa las animaciones de adentro hasta que el bloque se ve (solo con JS). |
+| `components/site/PantallaEnVivo.tsx` | C | Pantalla de Producto que se enciende al verse y un cursor la recorre (panel o EDE). |
+| `components/demo/motorCursor.ts` + `CursorDemo.tsx` | — / S | Motor y dibujo del cursor de las pantallas de ejemplo (portada, panel, EDE). |
 | `components/ui/Palabras.tsx` + `revelado.module.css` | S | Revelados atados al scroll de una sección (palabras, párrafo, línea, filas, vía). |
 | `.prof-hero*`, `.prof-entrar`, `.prof-ventana` (`globals.css`) | CSS | Profundidad plana con scroll nativo en páginas interiores. |
 

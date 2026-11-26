@@ -527,7 +527,42 @@
   transform: translateY(calc(-3 * var(--u)));
 }
 
+/* ── Recorrido del cursor en Producto (PantallaEnVivo pone data-demo en un ancestro) ── */
+.pantalla [data-objetivo="ede-detencion"],
+.pantalla [data-objetivo="ede-historial"] {
+  border-radius: calc(4 * var(--u));
+  transition:
+    background-color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+:global([data-demo="detencion"]) .pantalla [data-objetivo="ede-detencion"],
+:global([data-demo="historial"]) .pantalla [data-objetivo="ede-historial"] {
+  background: #eff6ff;
+  box-shadow: 0 0 0 calc(5 * var(--u)) #eff6ff;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  /* Encendido (Producto, al verse): tarjetas, filas e historial en cascada. */
+  .encender .panel {
+    animation: aparecerEde 400ms ease 100ms both;
+  }
+
+  .encender .kpi {
+    animation: subirEde 500ms var(--ease) both;
+    animation-delay: calc(200ms + var(--d) * 70ms);
+  }
+
+  .encender .fila {
+    animation: entrarEde 420ms var(--ease) both;
+    animation-delay: calc(520ms + var(--d) * 60ms);
+  }
+
+  .encender .cambio {
+    animation: entrarEde 420ms var(--ease) both;
+    animation-delay: calc(650ms + var(--d) * 80ms);
+  }
+
   /* Al aparecer, la cifra del período nuevo entra desde abajo (el display la remonta). */
   .kpiValor > span {
     animation: subir 420ms var(--ease) both;
@@ -538,5 +573,25 @@
   from {
     opacity: 0;
     transform: translateY(70%);
+  }
+}
+
+@keyframes aparecerEde {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes subirEde {
+  from {
+    opacity: 0;
+    transform: translateY(calc(12 * var(--u)));
+  }
+}
+
+@keyframes entrarEde {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-10 * var(--u)));
   }
 }

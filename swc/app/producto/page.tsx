@@ -7,7 +7,7 @@ import { EdeDemo, EdePeriodo } from "../../components/demo/EdeDemo";
 import { TelefonoDemo } from "../../components/demo/TelefonoDemo";
 import { ExploradorModulos } from "../../components/site/ExploradorModulos";
 import { TelefonoPasos } from "../../components/site/TelefonoPasos";
-import { AlVer } from "../../components/ui/AlVer";
+import { PantallaEnVivo } from "../../components/site/PantallaEnVivo";
 import {
   BuildingCommunity,
   QrCode,
@@ -116,15 +116,15 @@ export default function ProductoPage() {
             Así se ve el panel de sworkc, aquí redibujado con datos de ejemplo.
           </p>
 
-          {/* Sube al llegar a la vista (.prof-entrar) y se enciende cuando se ve (AlVer). */}
+          {/* Sube al llegar a la vista (.prof-entrar), se enciende cuando se ve y un cursor la usa (PantallaEnVivo). */}
           <div className="prof-entrar mt-10">
-            <AlVer className="overflow-hidden rounded-xl border border-white/15 bg-[#0b1020] shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
+            <PantallaEnVivo recorrido="panel" retraso={2600} className="overflow-hidden rounded-xl border border-white/15 bg-[#0b1020] shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5 text-xs text-white/60">
                 <span className="h-2 w-2 rounded-full bg-cyan-400" aria-hidden />
                 Visión operativa
               </div>
               <PanelOperativoDemo encender />
-            </AlVer>
+            </PantallaEnVivo>
           </div>
         </div>
       </section>
@@ -147,8 +147,11 @@ export default function ProductoPage() {
             <EdePeriodo />
           </div>
 
-          <div className="prof-entrar mt-8 overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
-            <EdeDemo />
+          {/* Sube al verse, entra en cascada y un cursor recorre los períodos (se detiene si eliges uno). */}
+          <div className="prof-entrar mt-8">
+            <PantallaEnVivo recorrido="ede" retraso={1300} className="overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
+              <EdeDemo encender />
+            </PantallaEnVivo>
           </div>
 
           <dl className="mt-10 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
