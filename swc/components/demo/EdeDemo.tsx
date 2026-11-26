@@ -1,174 +1,201 @@
-import { COLOR_ESTADO, EDE, ETIQUETA_ESTADO } from "../../lib/demo";
+import { COLOR_ESTADO, EDE, ETIQUETA_ESTADO, type Estado } from "../../lib/demo";
+import { ArrowLeft, Plus, Truck } from "../ui/icons";
+import s from "./EdeDemo.module.css";
 
 /**
- * Expediente Digital del Equipo (EDE) de sworkc redibujado con datos de ejemplo (lib/demo.ts).
- * SVG estático: escala como una imagen, sin JS. Reemplaza la captura que traía datos de prueba.
+ * Expediente Digital del Equipo (EDE) de sworkc, reconstruido en HTML con los datos de ejemplo
+ * de lib/demo.ts. Diseño a 1120 × 600; todo se mide en --u (1/1120 del ancho del contenedor).
+ *
+ * El período lo eligen los botones reales de <EdePeriodo> y las definiciones de la página
+ * marcan su tarjeta al pasar el mouse: ambas cosas por CSS (:has) desde un ancestro con
+ * `data-ede`, sin JavaScript. Al cambiar de período las cifras se deslizan a su valor y las
+ * detenciones fuera del período se pliegan.
  */
 
-const C = { fondo: "#ffffff", panel: "#f6f7fa", borde: "#e3e7ee", texto: "#0b1020", tenue: "#5b6680", azul: "#2563eb", ambar: "#f5b400", activo: "#fff4d6", activoTexto: "#8a5300" };
+export const PERIODOS = ["7", "30", "90"] as const;
+export type Periodo = (typeof PERIODOS)[number];
+
+const CLASE_KPI = [s.kpiDisp, s.kpiMttr, s.kpiMtbf, s.kpiMtbs];
+const CHIP: Record<Estado, { fondo: string; texto: string }> = {
+  operativo: { fondo: "#dcfce7", texto: "#15803d" },
+  mantencion: { fondo: "#fef3c7", texto: "#b45309" },
+  fuera: { fondo: "#fee2e2", texto: "#b91c1c" },
+};
 const NAV: [string, string[]][] = [
   ["General", ["Resumen"]],
   ["Operación", ["Inspección", "Uso", "Intervenciones", "EDE"]],
   ["Control", ["Acciones"]],
 ];
 
-/** Parte un texto en líneas de hasta `max` caracteres, por palabras. */
-function lineas(texto: string, max: number) {
-  const out: string[] = [];
-  for (const p of texto.split(" ")) {
-    const ultima = out[out.length - 1];
-    if (ultima !== undefined && (ultima + " " + p).length <= max) out[out.length - 1] = ultima + " " + p;
-    else out.push(p);
-  }
-  return out;
+/** Historial con la fecha marcada solo en el primer cambio de cada día. */
+const HISTORIAL = EDE.historial.map((h, i) => ({ ...h, nuevaFecha: i === 0 || EDE.historial[i - 1].fecha !== h.fecha }));
+
+/** Un valor por período; el CSS muestra el del período elegido. */
+function PorPeriodo({ v7, v30, v90 }: { v7: string; v30: string; v90: string }) {
+  return (
+    <>
+      <span className={s.p7}>{v7}</span>
+      <span className={s.p30}>{v30}</span>
+      <span className={s.p90}>{v90}</span>
+    </>
+  );
 }
 
-export function EdeDemo({ className = "" }: { className?: string }) {
-  // Posiciones del menú: grupo (rótulo) + sus ítems, apilados.
-  const menu: { grupo: string; y: number; filas: { item: string; y: number }[] }[] = [];
-  let navY = 96;
-  for (const [grupo, items] of NAV) {
-    const y = navY;
-    navY += 22;
-    const filas = items.map((item, i) => ({ item, y: navY + i * 24 }));
-    navY += items.length * 24 + 10;
-    menu.push({ grupo, y, filas });
-  }
-
+/** Selector de período (radios nativos: teclado y lector de pantalla sin JS). */
+export function EdePeriodo() {
   return (
-    <svg
-      viewBox="0 0 900 600"
+    <fieldset className={s.periodo}>
+      <legend>Período del EDE</legend>
+      {PERIODOS.map((p) => (
+        <label key={p}>
+          <input type="radio" name="ede-periodo" value={p} defaultChecked={p === "90"} />
+          {p} días
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
+export function EdeDemo() {
+  return (
+    <div
+      className={s.marco}
       role="img"
-      aria-label={`Expediente digital del equipo ${EDE.equipo} con datos de ejemplo: ${EDE.kpis.map((k) => `${k.sigla} ${k.valor}`).join(", ")}; últimas detenciones con motivo y duración, repuestos e historial de cambios.`}
-      className={`block h-auto w-full font-sans ${className}`}
+      aria-label={`Expediente digital del equipo ${EDE.equipo} con datos de ejemplo: ${EDE.kpis.map((k) => `${k.sigla} ${k.valor}`).join(", ")} en 90 días; últimas detenciones con motivo y duración, repuestos e historial de cambios.`}
     >
-      <rect width="900" height="600" fill={C.fondo} />
+      <div className={s.pantalla} aria-hidden>
+        <div className={s.barra}>
+          <span className={s.volver}>
+            <ArrowLeft stroke={1.8} />
+          </span>
+          <span className={s.equipoIcono}>
+            <Truck stroke={1.7} />
+          </span>
+          <div className={s.equipo}>
+            <b>{EDE.equipo}</b>
+            <span>{EDE.descripcion}</span>
+          </div>
+          <span className={s.estado}>
+            <i style={{ background: COLOR_ESTADO[EDE.estado] }} />
+            {ETIQUETA_ESTADO[EDE.estado]}
+          </span>
+          <span className={s.nuevaOt}>
+            <Plus stroke={2.2} /> Nueva OT
+          </span>
+        </div>
 
-      {/* Encabezado del equipo */}
-      <circle cx="28" cy="32" r="14" fill={C.panel} />
-      <path d="M32 26 l-6 6 l6 6" fill="none" stroke={C.texto} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="52" y="18" width="28" height="28" rx="6" fill={C.activo} />
-      <rect x="59" y="27" width="10" height="8" rx="1.5" fill="none" stroke={C.activoTexto} strokeWidth="1.5" />
-      <rect x="69" y="30" width="5" height="5" rx="1" fill="none" stroke={C.activoTexto} strokeWidth="1.5" />
-      <text x="92" y="30" fontSize="15" fontWeight="700" fill={C.texto}>{EDE.equipo}</text>
-      <text x="92" y="46" fontSize="9.5" fill={C.tenue}>{EDE.descripcion}</text>
-      <rect x="690" y="20" width="92" height="24" rx="12" fill={C.fondo} stroke={C.borde} />
-      <circle cx="704" cy="32" r="3.5" fill={COLOR_ESTADO[EDE.estado]} />
-      <text x="713" y="35.5" fontSize="9.5" fontWeight="700" fill={C.texto}>{ETIQUETA_ESTADO[EDE.estado]}</text>
-      <rect x="792" y="18" width="92" height="28" rx="6" fill={C.ambar} />
-      <text x="838" y="36" fontSize="10" fontWeight="700" fill="#1a1400" textAnchor="middle">+ Nueva OT</text>
-      <line x1="0" x2="900" y1="64" y2="64" stroke={C.borde} />
+        <div className={s.cuerpo}>
+          <nav className={s.menu}>
+            {NAV.map(([grupo, items]) => (
+              <div key={grupo}>
+                <span className={s.grupo}>{grupo}</span>
+                {items.map((item) => (
+                  <span key={item} className={item === "EDE" ? `${s.item} ${s.itemActivo}` : s.item}>
+                    {item}
+                    {item === "Intervenciones" && <em>{EDE.intervenciones}</em>}
+                  </span>
+                ))}
+              </div>
+            ))}
+            <span className={s.ejemplo}>Datos de ejemplo</span>
+          </nav>
 
-      {/* Menú del equipo */}
-      <line x1="140" x2="140" y1="64" y2="600" stroke={C.borde} />
-      {menu.map(({ grupo, y: yGrupo, filas }) => (
-        <g key={grupo}>
-          <text x="20" y={yGrupo} fontSize="8" fontWeight="600" fill={C.tenue}>{grupo}</text>
-          {filas.map(({ item, y }) => {
-            const activo = item === "EDE";
-            return (
-              <g key={item}>
-                {activo && <rect x="8" y={y - 15} width="124" height="22" rx="6" fill={C.activo} />}
-                <text x="20" y={y} fontSize="10" fontWeight={activo ? 600 : 400} fill={activo ? C.activoTexto : C.texto}>{item}</text>
-                {item === "Intervenciones" && (
-                  <>
-                    <rect x="106" y={y - 11} width="20" height="14" rx="7" fill={C.panel} />
-                    <text x="116" y={y - 1} fontSize="8" fontWeight="600" fill={C.tenue} textAnchor="middle">{EDE.intervenciones}</text>
-                  </>
-                )}
-              </g>
-            );
-          })}
-        </g>
-      ))}
-      <rect x="12" y="562" width="116" height="20" rx="10" fill={C.panel} />
-      <text x="70" y="575.5" fontSize="8.5" fill={C.tenue} textAnchor="middle">Datos de ejemplo</text>
+          <div className={s.principal}>
+            <div className={s.cabecera}>
+              <div>
+                <b>EDE, expediente digital del equipo</b>
+                <span>
+                  Indicadores de los últimos <PorPeriodo v7="7" v30="30" v90="90" /> días
+                </span>
+              </div>
+              <div className={s.tabs}>
+                <span className={s.tab7}>7 d</span>
+                <span className={s.tab30}>30 d</span>
+                <span className={s.tab90}>90 d</span>
+              </div>
+            </div>
 
-      {/* Indicadores */}
-      <text x="156" y="96" fontSize="13" fontWeight="700" fill={C.texto}>EDE, expediente digital del equipo</text>
-      <text x="156" y="122" fontSize="9" fill={C.tenue}>Indicadores de los últimos 90 días</text>
-      <rect x="548" y="108" width="92" height="22" rx="7" fill={C.panel} />
-      <rect x="606" y="110" width="32" height="18" rx="5" fill={C.fondo} stroke={C.borde} />
-      {["7 d", "30 d", "90 d"].map((p, i) => (
-        <text key={p} x={562 + i * 30} y="122.5" fontSize="8.5" fontWeight={i === 2 ? 700 : 400} fill={i === 2 ? C.texto : C.tenue} textAnchor="middle">{p}</text>
-      ))}
-      {EDE.kpis.map((k, i) => {
-        const x = 156 + i * 123;
-        return (
-          <g key={k.sigla}>
-            <rect x={x} y="138" width="115" height="86" rx="8" fill={C.fondo} stroke={C.borde} />
-            <text x={x + 12} y="157" fontSize="8.5" fontWeight="600" fill={C.tenue}>{k.sigla}</text>
-            <text x={x + 12} y="183" className="font-mono" fontSize="17" fontWeight="700" fill={C.texto}>{k.valor}</text>
-            <text x={x + 12} y="201" fontSize="8" fill={C.tenue}>
-              {lineas(k.ayuda, 22).map((l, j) => (
-                <tspan key={j} x={x + 12} dy={j ? 11 : 0}>{l}</tspan>
+            <div className={s.kpis}>
+              {EDE.kpis.map((k, i) => (
+                <div key={k.sigla} className={`${s.kpi} ${CLASE_KPI[i]}`}>
+                  <span className={s.kpiSigla}>{k.sigla}</span>
+                  <b className={s.kpiValor}>
+                    <PorPeriodo v7={k.v7} v30={k.v30} v90={k.valor} />
+                  </b>
+                  <span className={s.kpiAyuda}>{k.ayuda}</span>
+                </div>
               ))}
-            </text>
-          </g>
-        );
-      })}
+            </div>
 
-      {/* Últimas detenciones */}
-      <rect x="156" y="236" width="484" height="212" rx="8" fill={C.fondo} stroke={C.borde} />
-      <text x="172" y="259" fontSize="10" fontWeight="700" fill={C.texto}>Últimas detenciones</text>
-      {EDE.detenciones.map((d, i) => {
-        const y = 286 + i * 34;
-        const ancho = ETIQUETA_ESTADO[d.estado].length * 4.6 + 16;
-        return (
-          <g key={d.fecha + d.causa}>
-            {i > 0 && <line x1="172" x2="624" y1={y - 17} y2={y - 17} stroke={C.borde} />}
-            <text x="172" y={y + 3} className="font-mono" fontSize="8.5" fill={C.tenue}>{d.fecha}</text>
-            <rect x="244" y={y - 8} width={ancho} height="16" rx="8" fill={d.estado === "fuera" ? "#fde4e4" : "#fff4d6"} />
-            <text x={244 + ancho / 2} y={y + 3} fontSize="8" fontWeight="600" fill={d.estado === "fuera" ? COLOR_ESTADO.fuera : C.activoTexto} textAnchor="middle">{ETIQUETA_ESTADO[d.estado]}</text>
-            <text x="350" y={y + 3} className="font-mono" fontSize="8.5" fill={C.texto}>{d.horas}</text>
-            <text x="394" y={y + 3} fontSize="8.5" fill={C.tenue}>{d.causa}</text>
-          </g>
-        );
-      })}
+            <div className={s.panel}>
+              <span className={s.panelTitulo}>Últimas detenciones</span>
+              {EDE.detenciones.map((d) => (
+                <div
+                  key={d.fecha}
+                  className={`${s.detencion} ${d.dias <= 7 ? s.en7 : ""} ${d.dias <= 30 ? s.en30 : ""}`}
+                >
+                  <div>
+                    <div className={s.fila}>
+                      <span className={s.fecha}>{d.fecha}</span>
+                      <span className={s.chip} style={{ background: CHIP[d.estado].fondo, color: CHIP[d.estado].texto }}>
+                        {ETIQUETA_ESTADO[d.estado]}
+                      </span>
+                      <b>{d.horas}</b>
+                      <span>{d.causa}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className={s.vacio}>
+                <div>
+                  <span>Sin detenciones en los últimos 7 días.</span>
+                </div>
+              </div>
+            </div>
 
-      {/* Repuestos */}
-      <rect x="156" y="460" width="484" height="124" rx="8" fill={C.fondo} stroke={C.borde} />
-      <text x="172" y="483" fontSize="10" fontWeight="700" fill={C.texto}>Repuestos solicitados</text>
-      {["OT", "Repuesto", "Plan.", "Usado"].map((h, i) => (
-        <text key={h} x={[172, 300, 560, 624][i]} y="503" fontSize="8" fontWeight="600" fill={C.tenue} textAnchor={i > 1 ? "end" : "start"}>{h}</text>
-      ))}
-      {[
-        ["OT-2026-044", "Filtro hidráulico", "2 u", "2 u"],
-        ["OT-2026-041", "Aceite 15W40", "20 L", "18 L"],
-      ].map((r, i) => {
-        const y = 530 + i * 28;
-        return (
-          <g key={r[0]}>
-            <line x1="172" x2="624" y1={y - 16} y2={y - 16} stroke={C.borde} />
-            <text x="172" y={y} className="font-mono" fontSize="9" fontWeight="700" fill={C.texto}>{r[0]}</text>
-            <text x="300" y={y} fontSize="9" fill={C.texto}>{r[1]}</text>
-            <text x="560" y={y} className="font-mono" fontSize="9" fill={C.tenue} textAnchor="end">{r[2]}</text>
-            <text x="624" y={y} className="font-mono" fontSize="9" fill={C.texto} textAnchor="end">{r[3]}</text>
-          </g>
-        );
-      })}
+            <div className={s.panel}>
+              <span className={s.panelTitulo}>Repuestos solicitados</span>
+              <div className={`${s.repuesto} ${s.repuestoCab}`}>
+                <span>OT</span>
+                <span>Repuesto</span>
+                <span>Plan.</span>
+                <span>Usado</span>
+              </div>
+              {EDE.repuestos.map((r) => (
+                <div key={r.ot} className={s.repuesto}>
+                  <b>{r.ot}</b>
+                  <span>{r.repuesto}</span>
+                  <span>{r.plan}</span>
+                  <span>{r.usado}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-      {/* Historial de cambios */}
-      <line x1="656" x2="656" y1="64" y2="600" stroke={C.borde} />
-      <text x="672" y="96" fontSize="10" fontWeight="700" fill={C.texto}>Historial de cambios</text>
-      {EDE.historial.map((h, i) => {
-        const y = 128 + i * 90;
-        const nuevaFecha = i === 0 || EDE.historial[i - 1].fecha !== h.fecha;
-        return (
-          <g key={h.fecha + h.hora}>
-            {nuevaFecha && <text x="672" y={y} fontSize="8" fontWeight="700" fill={C.tenue}>{h.fecha}</text>}
-            <text x="672" y={y + 22} className="font-mono" fontSize="8" fill={C.tenue}>{h.hora}</text>
-            <rect x="704" y={y + 12} width="2" height={h.de ? 48 : 30} rx="1" fill={C.azul} />
-            <text x="714" y={y + 22} fontSize="9" fontWeight="700" fill={C.texto}>{h.rol}</text>
-            <text x="714" y={y + 36} fontSize="9" fill={C.azul}>{h.accion}</text>
-            {h.de && (
-              <text x="714" y={y + 52} fontSize="8.5" fill={C.tenue}>
-                {h.de} → <tspan fill={C.texto} fontWeight="600">{h.a}</tspan>
-              </text>
-            )}
-          </g>
-        );
-      })}
-    </svg>
+          <aside className={s.historial}>
+            <span className={s.panelTitulo}>Historial de cambios</span>
+            {HISTORIAL.map((h) => {
+              return (
+                <div key={`${h.fecha}-${h.hora}`}>
+                  {h.nuevaFecha && <span className={s.historialFecha}>{h.fecha}</span>}
+                  <div className={s.cambio}>
+                    <span className={s.hora}>{h.hora}</span>
+                    <div>
+                      <b>{h.rol}</b>
+                      <span>{h.accion}</span>
+                      {h.de && (
+                        <span className={s.deA}>
+                          {h.de} → <b>{h.a}</b>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </aside>
+        </div>
+      </div>
+    </div>
   );
 }

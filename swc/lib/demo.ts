@@ -81,18 +81,24 @@ export const EDE = {
   descripcion: "Camión de extracción · Flota norte",
   estado: "operativo" as Estado,
   intervenciones: 12,
+  /** `valor` es el de 90 días; `v30` y `v7`, los de los otros períodos del EDE ("—": sin fallas en el período). */
   kpis: [
-    { sigla: "Disponibilidad", valor: "92,6 %", ayuda: "del período en estado operativo" },
-    { sigla: "MTTR", valor: "6,4 h", ayuda: "duración media de reparación" },
-    { sigla: "MTBF", valor: "182,5 h", ayuda: "horas operativas entre fallas" },
-    { sigla: "MTBS", valor: "410,3 h", ayuda: "horas operativas entre paradas" },
+    { sigla: "Disponibilidad", valor: "92,6 %", v30: "97,8 %", v7: "100 %", ayuda: "del período en estado operativo" },
+    { sigla: "MTTR", valor: "6,4 h", v30: "9,8 h", v7: "—", ayuda: "duración media de reparación" },
+    { sigla: "MTBF", valor: "182,5 h", v30: "704,0 h", v7: "—", ayuda: "horas operativas entre fallas" },
+    { sigla: "MTBS", valor: "410,3 h", v30: "352,0 h", v7: "—", ayuda: "horas operativas entre paradas" },
   ],
+  /** `dias`: antigüedad respecto del 26 nov 2026, para filtrar por período. */
   detenciones: [
-    { fecha: "12 nov 2026", estado: "mantencion" as Estado, horas: "6,2 h", causa: "Mantención preventiva de 500 h" },
-    { fecha: "03 nov 2026", estado: "fuera" as Estado, horas: "9,8 h", causa: "Fuga hidráulica en cilindro de levante" },
-    { fecha: "21 oct 2026", estado: "mantencion" as Estado, horas: "4,1 h", causa: "Cambio de neumático posterior" },
-    { fecha: "08 oct 2026", estado: "fuera" as Estado, horas: "7,5 h", causa: "Falla del sensor de presión de frenos" },
-    { fecha: "24 sep 2026", estado: "mantencion" as Estado, horas: "3,0 h", causa: "Lubricación y revisión de frenos" },
+    { fecha: "12 nov 2026", dias: 14, estado: "mantencion" as Estado, horas: "6,2 h", causa: "Mantención preventiva de 500 h" },
+    { fecha: "03 nov 2026", dias: 23, estado: "fuera" as Estado, horas: "9,8 h", causa: "Fuga hidráulica en cilindro de levante" },
+    { fecha: "21 oct 2026", dias: 36, estado: "mantencion" as Estado, horas: "4,1 h", causa: "Cambio de neumático posterior" },
+    { fecha: "08 oct 2026", dias: 49, estado: "fuera" as Estado, horas: "7,5 h", causa: "Falla del sensor de presión de frenos" },
+    { fecha: "24 sep 2026", dias: 63, estado: "mantencion" as Estado, horas: "3,0 h", causa: "Lubricación y revisión de frenos" },
+  ],
+  repuestos: [
+    { ot: "OT-2026-044", repuesto: "Filtro hidráulico", plan: "2 u", usado: "2 u" },
+    { ot: "OT-2026-041", repuesto: "Aceite 15W40", plan: "20 L", usado: "18 L" },
   ],
   historial: [
     { fecha: "12 nov 2026", hora: "08:14", rol: "Jefe de turno", accion: "cambió el estado", de: "Operativo", a: "En mantención" },

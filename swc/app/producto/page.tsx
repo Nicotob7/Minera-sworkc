@@ -4,7 +4,7 @@ import { PageHero } from "../../components/site/PageHero";
 import { RelatedLinks } from "../../components/site/RelatedLinks";
 import { CTAFinal } from "../../components/site/CTAFinal";
 import { PanelOperativoDemo } from "../../components/demo/PanelOperativoDemo";
-import { EdeDemo } from "../../components/demo/EdeDemo";
+import { EdeDemo, EdePeriodo } from "../../components/demo/EdeDemo";
 import {
   ArrowsExchange,
   Bell,
@@ -166,8 +166,8 @@ export default function ProductoPage() {
         </div>
       </section>
 
-      {/* ── EDE: expediente con captura real + definiciones de KPI ── */}
-      <section id="ede" className="bg-white py-16 sm:py-24">
+      {/* ── EDE: expediente redibujado en HTML; período y definiciones lo mueven por CSS (data-ede) ── */}
+      <section id="ede" data-ede className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[#0a0c77] pb-5">
             <h2 className="font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
@@ -175,38 +175,40 @@ export default function ProductoPage() {
             </h2>
           </div>
 
-          <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-14">
-            <div className="flex flex-col">
-              <div className="overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
-                <EdeDemo />
-              </div>
-            </div>
-
-            <div>
-              <p className="max-w-[48ch] text-base leading-relaxed text-ink-soft">
-                El Expediente Digital del Equipo reúne la vida operativa de cada máquina:
-                detenciones con motivo y duración, intervenciones, repuestos usados y sus
-                indicadores de confiabilidad por período.
-              </p>
-              <dl className="mt-8">
-                {EDE_KPIS.map((k) => (
-                  <div key={k.sigla} className="grid grid-cols-[86px_minmax(0,1fr)] gap-4 border-t border-border py-4 last:border-b">
-                    <dt>
-                      <span className="font-display text-sm font-semibold text-[#0a0c77]">{k.sigla}</span>
-                      <span className="ml-1.5 text-xs text-muted-foreground">{k.unidad}</span>
-                    </dt>
-                    <dd>
-                      <p className="font-display text-sm font-semibold text-ink">{k.nombre}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-ink-soft">{k.desc}</p>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                Calculados sobre los datos reales de tu operación, en el período que elijas.
-              </p>
-            </div>
+          <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
+            <p className="max-w-[60ch] text-base leading-relaxed text-ink-soft">
+              El Expediente Digital del Equipo reúne la vida operativa de cada máquina:
+              detenciones con motivo y duración, intervenciones, repuestos usados y sus
+              indicadores de confiabilidad por período.
+            </p>
+            <EdePeriodo />
           </div>
+
+          <div className="mt-8 overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
+            <EdeDemo />
+          </div>
+
+          <dl className="mt-10 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+            {EDE_KPIS.map((k, i) => (
+              <div
+                key={k.sigla}
+                data-def={i}
+                className="border-t border-border py-4 transition-colors duration-200 hover:border-[#f59e0b]"
+              >
+                <dt>
+                  <span className="font-display text-sm font-semibold text-[#0a0c77]">{k.sigla}</span>
+                  <span className="ml-1.5 text-xs text-muted-foreground">{k.unidad}</span>
+                </dt>
+                <dd>
+                  <p className="mt-1 font-display text-sm font-semibold text-ink">{k.nombre}</p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-ink-soft">{k.desc}</p>
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Calculados sobre los datos reales de tu operación, en el período que elijas. Arriba, datos de ejemplo.
+          </p>
         </div>
       </section>
 

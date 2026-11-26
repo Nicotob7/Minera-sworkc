@@ -28,7 +28,7 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 | `ModuloDemo.tsx` | S | Recorte de la pantalla de sworkc por módulo de «Cómo funciona» (OT, ficha, notificaciones, flota, cierre de turno, confiabilidad, HH, materiales, dashboard, reportes); filas en cascada al montar. |
 | `TelefonoDemo.tsx` | S | La app en un teléfono (4 pantallas según `data-paso`); estilos en `TelefonoDemo.module.css`. |
 | `PanelOperativoDemo.tsx` | S | Réplica HTML de «Visión Operativa» (diseño 1280 × 838, escala con `cqw`; estilos en `PanelOperativoDemo.module.css`). `encender` anima el arranque una vez. Datos de `lib/demo.ts`. |
-| `EdeDemo.tsx` | S | Expediente Digital del Equipo en SVG para /producto. Datos de `lib/demo.ts`. |
+| `EdeDemo.tsx` | S | Réplica HTML del EDE (`EdeDemo`) y selector de período (`EdePeriodo`, radios nativos); período y resaltado por CSS `:has` desde `[data-ede]`. Estilos en `EdeDemo.module.css`. |
 
 ## `components/ui/` — primitivas e iconos
 
