@@ -24,19 +24,20 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Producto",
     wide: true,
     links: [
+      // Un ítem por sección de /producto (antes QR, offline y multiempresa llevaban a la misma).
       { label: "Visión general", href: "/producto", desc: "El sistema de continuidad operacional, en profundidad" },
       { label: "Módulos operacionales", href: "/producto#modulos", desc: "OT, horas, mantención, turnos, materiales y reportes" },
+      { label: "Panel operacional", href: "/producto#panel", desc: "Flota, estados y OTs prioritarias en una vista" },
       { label: "Expediente del equipo (EDE)", href: "/producto#ede", desc: "Historial y KPIs por máquina" },
-      { label: "Uso con QR en terreno", href: "/producto#qr", desc: "Registro sin fricción desde el equipo" },
-      { label: "Modo offline", href: "/producto#offline", desc: "Funciona sin señal y sincroniza al reconectar" },
-      { label: "Multiempresa", href: "/producto#multitenant", desc: "Un espacio propio por operación" },
+      { label: "Uso en terreno", href: "/producto#terreno", desc: "QR en el equipo, sin señal y un espacio por empresa" },
     ],
   },
   {
     id: "empresa",
     label: "Empresa",
     links: [
-      { label: "Nosotros", href: "/nosotros", desc: "Quiénes somos y cómo trabajamos" },
+      { label: "Nosotros", href: "/nosotros", desc: "Quiénes somos y por qué existe sworkc" },
+      { label: "Implementación por etapas", href: "/nosotros#implementacion", desc: "Levantamiento, configuración, capacitación y puesta en marcha" },
       { label: "Contacto", href: "/#contacto", desc: "Solicita una demostración" },
     ],
   },
@@ -58,6 +59,7 @@ export const FOOTER_COLUMNS: { title: string; links: NavLink[] }[] = [
       { label: "Visión general", href: "/producto" },
       { label: "Módulos", href: "/producto#modulos" },
       { label: "Expediente del equipo", href: "/producto#ede" },
+      { label: "Uso en terreno", href: "/producto#terreno" },
     ],
   },
   {

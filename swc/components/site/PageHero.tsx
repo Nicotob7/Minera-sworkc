@@ -19,21 +19,18 @@ type PageHeroProps = {
  * Hero de páginas interiores, lenguaje "sala de control": fotografía real de
  * faena bajo una veladura azul de marca, título con peso, y una fila de
  * lecturas con datos reales de la página. Los créditos de las fotos (CC) van
- * en el pie de página (lib/creditos.ts), no sobre la imagen.
+ * en el pie de página (lib/creditos.ts), no sobre la imagen. Al bajar, foto y texto se
+ * separan en profundidad (.prof-hero*, globals.css).
  */
 export function PageHero({ path, title, intro, readouts, img, children }: PageHeroProps) {
   return (
-    <section className="relative isolate overflow-hidden bg-[#060733] text-white">
+    <section className="prof-hero relative isolate overflow-hidden bg-[#060733] text-white">
       {img && (
         <>
-          <Image
-            src={img.src}
-            alt={img.alt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
+          {/* Capa de fondo: al bajar se aleja más lento que el texto (.prof-hero-foto, globals.css). */}
+          <div className="prof-hero-foto absolute inset-0">
+            <Image src={img.src} alt={img.alt} fill priority sizes="100vw" className="object-cover" />
+          </div>
           {/* Veladura de marca: el azul manda, la foto respira a la derecha. */}
           <div
             aria-hidden
@@ -51,7 +48,7 @@ export function PageHero({ path, title, intro, readouts, img, children }: PageHe
         </>
       )}
 
-      <div className="relative mx-auto w-full max-w-6xl px-6 pb-16 pt-36 sm:pb-20 sm:pt-44 lg:px-10">
+      <div className="prof-hero-texto relative mx-auto w-full max-w-6xl px-6 pb-16 pt-36 sm:pb-20 sm:pt-44 lg:px-10">
         <div className="max-w-3xl">
           <p className="text-sm text-cyan-300">
             <span className="text-white/60">sworkc /</span> {path}

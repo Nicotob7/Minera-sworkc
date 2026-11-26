@@ -272,3 +272,29 @@
     font-size: min(3.05rem, calc(var(--col) / 8.9));
   }
 }
+
+/* ── Profundidad por scroll en páginas interiores (pedido del dueño, 26/11). Línea de tiempo nativa,
+   sin JS; sin soporte de scroll-timeline o con movimiento reducido todo queda quieto y completo.
+   - .prof-hero (sección) + .prof-hero-foto / .prof-hero-texto: al bajar, la foto se aleja más lento y
+     se acerca un poco; el texto sube más rápido y se apaga (capas a distinta velocidad).
+   - .prof-entrar: una pantalla grande sube y se aclara al llegar a la vista (plana: el dueño
+     descartó las inclinaciones 3D el 26/11).
+   - .prof-ventana: la foto se desplaza dentro de su marco (ventana con profundidad). ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .prof-hero { view-timeline-name: --prof-hero; }
+    .prof-hero-foto { animation: prof-foto linear both; animation-timeline: --prof-hero; animation-range: exit 0% exit 100%; }
+    .prof-hero-texto { animation: prof-texto linear both; animation-timeline: --prof-hero; animation-range: exit 0% exit 85%; }
+    .prof-entrar { animation: prof-entrar linear both; animation-timeline: view(); animation-range: entry 0% cover 38%; }
+    .prof-ventana > * { animation: prof-ventana linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  }
+}
+@keyframes prof-foto { to { transform: translateY(22%) scale(1.1); } }
+@keyframes prof-texto { to { transform: translateY(-40%); opacity: 0; } }
+@keyframes prof-entrar { from { transform: translateY(70px) scale(0.96); opacity: 0.25; } }
+@keyframes prof-ventana { from { transform: translateY(-7%) scale(1.16); } to { transform: translateY(7%) scale(1.16); } }
+
+/* Pantallas que esperan a verse para encenderse (AlVer). Solo con JS: sin scripts se encienden al cargar. */
+@media (scripting: enabled) {
+  [data-esperando] * { animation-play-state: paused !important; }
+}

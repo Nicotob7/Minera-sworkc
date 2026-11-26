@@ -66,3 +66,14 @@ Inventario de qué componentes existen y qué hace cada uno. (C) = Client Compon
 ## Eliminados en la limpieza (2026-06-26)
 
 `components/LiveDashboard.tsx`, `components/ui/Tilt.tsx`, `components/ui/SectionShell.tsx`, `components/ui/SectionHeading.tsx` — eran **código muerto** (0 imports). Ver [MEJORAS-AUDITORIA.md](MEJORAS-AUDITORIA.md).
+
+## Movimiento compartido (26/11)
+
+| Pieza | Tipo | Qué hace |
+|---|---|---|
+| `components/site/ExploradorModulos.tsx` | C | Producto, módulos: lista + tarjeta con `ModuloDemo`; avance automático en escritorio. |
+| `components/site/TelefonoPasos.tsx` | C | Elige la pantalla de `TelefonoDemo` según el punto (`data-terreno`) que pasa por el centro. |
+| `components/ui/AlVer.tsx` | C | Pausa las animaciones de adentro hasta que el bloque se ve (solo con JS). |
+| `components/ui/Palabras.tsx` + `revelado.module.css` | S | Revelados atados al scroll de una sección (palabras, párrafo, línea, filas, vía). |
+| `.prof-hero*`, `.prof-entrar`, `.prof-ventana` (`globals.css`) | CSS | Profundidad plana con scroll nativo en páginas interiores. |
+

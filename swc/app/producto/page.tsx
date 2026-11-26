@@ -1,23 +1,16 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PageHero } from "../../components/site/PageHero";
 import { RelatedLinks } from "../../components/site/RelatedLinks";
 import { CTAFinal } from "../../components/site/CTAFinal";
 import { PanelOperativoDemo } from "../../components/demo/PanelOperativoDemo";
 import { EdeDemo, EdePeriodo } from "../../components/demo/EdeDemo";
+import { TelefonoDemo } from "../../components/demo/TelefonoDemo";
+import { ExploradorModulos } from "../../components/site/ExploradorModulos";
+import { TelefonoPasos } from "../../components/site/TelefonoPasos";
+import { AlVer } from "../../components/ui/AlVer";
 import {
-  ArrowsExchange,
-  Bell,
   BuildingCommunity,
-  ChartBar,
-  ClipboardCheck,
-  Clock,
-  FileText,
-  Hourglass,
-  LayoutDashboard,
-  Package,
   QrCode,
-  Truck,
   WifiOff,
 } from "../../components/ui/icons";
 
@@ -27,20 +20,6 @@ export const metadata: Metadata = {
     "sworkc en profundidad: módulos operacionales (OT, horas, mantención, turnos, materiales y reportes), Expediente Digital del Equipo con KPIs, uso con QR en terreno, modo offline y multiempresa.",
   alternates: { canonical: "https://sworkc.cl/producto" },
 };
-
-/* ── Módulos reales del sistema: bitácora de especificación, no tarjetas ── */
-const MODULOS = [
-  { icon: ClipboardCheck, title: "Órdenes de trabajo digitales", desc: "Cada OT se crea, asigna, ejecuta y cierra con evidencia, responsable e historial trazable.", points: ["Asignación por equipo", "Cierre con evidencia", "Historial trazable"] },
-  { icon: Clock, title: "Horas de funcionamiento", desc: "Control del horómetro de cada máquina para anticipar la próxima mantención.", points: ["Conteo por equipo", "Umbrales configurables", "Horas hasta la mantención"] },
-  { icon: Bell, title: "Mantenciones y alertas", desc: "Avisos por horas, fechas, criticidad o condiciones que amenazan la continuidad.", points: ["Prioridad por criticidad", "Aviso a responsables", "Reglas por operación"] },
-  { icon: Truck, title: "Estados de maquinaria", desc: "Equipos disponibles, detenidos, en reparación o inspección, actualizados apenas se registran en terreno.", points: ["Estado por equipo", "Detenciones registradas", "Pendientes priorizados"] },
-  { icon: ArrowsExchange, title: "Gestión de turnos", desc: "Pendientes, fallas y observaciones se entregan al turno siguiente sin depender de memoria.", points: ["Resumen de cierre", "Pendientes heredados", "Contexto entre turnos"] },
-  { icon: ChartBar, title: "Estadísticas de fallas", desc: "Frecuencia, reincidencias y tiempos de detención para decidir con datos reales.", points: ["Fallas por equipo", "Tiempos de reparación", "Patrones repetitivos"] },
-  { icon: Hourglass, title: "Control de horas-hombre", desc: "Registro de HH por reparación, inspección y mantención para comparar productividad.", points: ["HH por actividad", "Comparativa por equipo", "HH estimadas vs reales"] },
-  { icon: Package, title: "Materiales y repuestos por OT", desc: "Traza repuestos, materiales y consumibles usados en cada intervención.", points: ["Consumo por reparación", "Planificado vs utilizado", "Repuestos por equipo en el EDE"] },
-  { icon: LayoutDashboard, title: "Panel operacional", desc: "Disponibilidad, alertas, estados y productividad reunidos en una vista de mando.", points: ["Indicadores clave", "Tendencias visuales", "Alertas centralizadas"] },
-  { icon: FileText, title: "Reportabilidad", desc: "Cada OT se descarga en PDF y el reporte de cierre de turno se envía por correo en Excel y PDF.", points: ["OT en PDF descargable", "Cierre de turno por correo (Excel y PDF)", "Datos consolidados"] },
-];
 
 /* KPIs reales del EDE: definiciones, sin cifras inventadas. */
 const EDE_KPIS = [
@@ -119,30 +98,13 @@ export default function ProductoPage() {
             sin planillas dispersas ni datos duplicados.
           </p>
 
-          <div className="mt-10">
-            {MODULOS.map((m) => (
-              <div
-                key={m.title}
-                className="group grid gap-x-8 gap-y-2 border-b border-border py-5 transition-colors hover:bg-[#f6f8fc] sm:grid-cols-[64px_minmax(0,1.1fr)_minmax(0,1fr)] sm:items-baseline sm:py-6"
-              >
-                <m.icon size={24} stroke={1.6} className="text-[#0a0c77]" aria-hidden />
-                <div>
-                  <h3 className="font-display text-lg font-semibold tracking-tight text-ink">
-                    {m.title}
-                  </h3>
-                  <p className="mt-1 max-w-[48ch] text-sm leading-relaxed text-ink-soft">{m.desc}</p>
-                </div>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {m.points.join(" · ")}
-                </p>
-              </div>
-            ))}
-          </div>
+          {/* Explorador: lista de módulos + tarjeta con la pantalla real del elegido (avanza solo en escritorio). */}
+          <ExploradorModulos />
         </div>
       </section>
 
       {/* ── Panel operacional real, a lo ancho ── */}
-      <section className="relative isolate overflow-hidden bg-[#060733] py-16 text-white sm:py-20">
+      <section id="panel" className="relative isolate overflow-hidden bg-[#060733] py-16 text-white sm:py-20">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
           <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
             <h2 className="max-w-[24ch] font-display text-3xl font-bold tracking-[-0.01em] sm:text-4xl">
@@ -154,14 +116,15 @@ export default function ProductoPage() {
             Así se ve el panel de sworkc, aquí redibujado con datos de ejemplo.
           </p>
 
-          <div className="mt-10">
-            <div className="overflow-hidden rounded-xl border border-white/15 bg-[#0b1020] shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
+          {/* Sube al llegar a la vista (.prof-entrar) y se enciende cuando se ve (AlVer). */}
+          <div className="prof-entrar mt-10">
+            <AlVer className="overflow-hidden rounded-xl border border-white/15 bg-[#0b1020] shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5 text-xs text-white/60">
                 <span className="h-2 w-2 rounded-full bg-cyan-400" aria-hidden />
                 Visión operativa
               </div>
-              <PanelOperativoDemo />
-            </div>
+              <PanelOperativoDemo encender />
+            </AlVer>
           </div>
         </div>
       </section>
@@ -184,7 +147,7 @@ export default function ProductoPage() {
             <EdePeriodo />
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
+          <div className="prof-entrar mt-8 overflow-hidden rounded-xl border border-border shadow-[var(--shadow-lg)]">
             <EdeDemo />
           </div>
 
@@ -213,7 +176,7 @@ export default function ProductoPage() {
       </section>
 
       {/* ── Terreno: pantalla real de teléfono + bitácora QR / offline / multiempresa ── */}
-      <section className="border-t border-border bg-[#f6f8fc] py-16 sm:py-24">
+      <section id="terreno" className="border-t border-border bg-[#f6f8fc] py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6 lg:px-10">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[#0a0c77] pb-5">
             <h2 className="max-w-[26ch] font-display text-3xl font-bold tracking-[-0.01em] text-ink sm:text-4xl">
@@ -221,19 +184,15 @@ export default function ProductoPage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-16">
-            {/* Teléfono con la pantalla real de Escanear QR */}
+          {/* El punto que pasa por el centro elige la pantalla del teléfono (TelefonoPasos → data-paso). */}
+          <TelefonoPasos
+            pasos={{ qr: "0", offline: "1", multitenant: "2" }}
+            className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-16"
+          >
+            {/* Teléfono con la app de sworkc: escanear QR, OT sin señal, OT enviada */}
             <div className="order-last lg:order-first">
               <div className="mx-auto w-[270px] max-w-full lg:sticky lg:top-28">
-                <div className="overflow-hidden rounded-[2.1rem] border-[7px] border-[#060733] bg-[#060733] shadow-[0_35px_90px_rgba(6,7,51,0.35)]">
-                  <Image
-                    src="/img/producto/escanear-qr.jpg"
-                    alt="Pantalla Escanear QR de sworkc en un teléfono: abrir cámara, elegir equipo sin QR y pasos de cómo funciona"
-                    width={900}
-                    height={1948}
-                    className="w-full"
-                  />
-                </div>
+                <TelefonoDemo />
               </div>
             </div>
 
@@ -244,6 +203,7 @@ export default function ProductoPage() {
                   key={t.id}
                   className={`grid gap-x-8 gap-y-3 py-8 first:pt-0 last:pb-0 sm:grid-cols-[64px_minmax(0,1fr)] ${i > 0 ? "border-t border-border" : ""}`}
                   {...{ id: t.id }}
+                  data-terreno={t.id}
                 >
                   <t.icon size={24} stroke={1.6} className="text-[#0a0c77]" aria-hidden />
                   <div>
@@ -263,7 +223,7 @@ export default function ProductoPage() {
                 </article>
               ))}
             </div>
-          </div>
+          </TelefonoPasos>
         </div>
       </section>
 

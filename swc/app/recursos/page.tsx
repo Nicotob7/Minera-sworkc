@@ -46,7 +46,8 @@ export default function RecursosPage() {
             De la máquina en terreno a la orden de trabajo, el cierre de turno y los indicadores,
             en {VIDEO.duracion} minutos.
           </p>
-          <div className="mt-10 overflow-hidden rounded-xl border border-border bg-[#060733] shadow-[var(--shadow-lg)]">
+          {/* El video sube y se aclara al llegar a la vista (.prof-entrar). */}
+          <div className="prof-entrar mt-10 overflow-hidden rounded-xl border border-border bg-[#060733] shadow-[var(--shadow-lg)]">
             <video
               controls
               playsInline

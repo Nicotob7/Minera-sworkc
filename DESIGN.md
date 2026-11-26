@@ -32,7 +32,7 @@ Estrategia **Committed**: el azul de marca carga 30–60% de la superficie.
 - **Portada del inicio**: `public/hero/portada.jpg` (foto con la pantalla de la tablet en negro, generada por `swc/scripts/limpiar-portada.mjs`) + `PanelOperativoDemo` alineado a la pantalla en todos los tamaños. Móvil: texto sobre navy y la foto recortada a la tablet debajo. Desde `lg`: foto de fondo y columna de texto que termina antes de la pantalla (`.portada-columna` en `globals.css`, calculada con la misma geometría de la foto). Título fijo, sin máquina de escribir.
 - **Marco de teléfono**: borde grueso navy `border-[7px] border-[#060733] rounded-[2.1rem]`, captura móvil real (390px @3x), sin pie de imagen. Usado en la sección terreno de /producto; en desktop va `sticky top-28` junto a la bitácora.
 - **RelatedLinks**: enlaces con `border-t-2` azul que se enciende al hover; sin tarjetas.
-- **Menú flotante**: píldora blanca que se compacta al bajar (margen, alto y logo; 200 ms ease-out). `html { scroll-padding-top: 7rem }` deja todas las anclas bajo el menú; no usar `scroll-mt` sueltos ni `scroll-behavior: smooth` en `html`.
+- **Menú flotante**: píldora blanca que se compacta al bajar (margen, alto y logo; 200 ms ease-out). Cada ítem de los desplegables lleva a una sección distinta (`components/site/nav.ts`): Producto → visión general, módulos, panel, EDE y uso en terreno; Empresa → Nosotros, implementación y contacto. `html { scroll-padding-top: 7rem }` deja todas las anclas bajo el menú; no usar `scroll-mt` sueltos ni `scroll-behavior: smooth` en `html`.
 
 ## Movimiento
 
@@ -46,6 +46,9 @@ Estrategia **Committed**: el azul de marca carga 30–60% de la superficie.
 - «Cómo funciona»: al elegir un módulo (clic, o mouse con 140 ms de pausa en escritorio) el centro muestra el recorte de su pantalla real (`components/demo/ModuloDemo.tsx`) y sus filas entran en cascada, con barras y cifras que crecen a su valor. Sin gráficos genéricos (se sacó ApexCharts del sitio) ni adornos de fondo.
 - «Cómo funciona» avanza solo un módulo cada 4,5 s en escritorio mientras está en pantalla, con una barra de avance en el módulo activo y un punto que viaja por su conector; se pausa al leer la tarjeta central o con foco de teclado, y se apaga para siempre cuando el visitante elige un módulo con clic.
 - Producto, EDE: al elegir 7, 30 o 90 días las cifras entran desde abajo y las detenciones fuera del período se pliegan (7 días muestra el estado vacío real); pasar el mouse por una definición (DISP, MTTR, MTBF, MTBS) marca su tarjeta en la pantalla.
+- Páginas interiores (26/11): sin inclinaciones 3D (el dueño las descartó: «queda feo»); profundidad plana con scroll nativo (`globals.css`): `PageHero` separa foto y texto en capas (`.prof-hero*`), las pantallas grandes suben al llegar a la vista (`.prof-entrar`) y la foto de Nosotros se desplaza en su marco (`.prof-ventana`).
+- Producto: los módulos son un explorador (`components/site/ExploradorModulos.tsx`): lista a la izquierda y tarjeta con la pantalla real del elegido; avanza solo cada 5 s en escritorio, se pausa al leer la tarjeta y se apaga al elegir. El panel de «La sala de control» se enciende cuando se ve (`AlVer`); en «Uso en terreno» el teléfono cambia de pantalla según el punto que se lee (`TelefonoPasos`).
+- Nosotros: la frase se arma palabra por palabra y una vía se llena al recorrer las 4 etapas (`components/ui/revelado.module.css` + `Palabras`, compartidos con Quiénes somos).
 - Las cifras de las muestras no cambian solas: un panel que se mueve sin intervención contradice la regla de no prometer "tiempo real".
 - Todo respeta `prefers-reduced-motion`.
 
