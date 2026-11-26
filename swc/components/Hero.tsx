@@ -17,7 +17,7 @@ const porc = (v: number, total: number) => `${(v / total) * 100}%`;
  */
 export function Hero() {
   return (
-    <HeroDolly className="relative bg-[#060733] lg:h-[92svh] lg:motion-safe:h-[200svh]">
+    <HeroDolly className="relative bg-[#060733] lg:h-[92svh] lg:motion-safe:h-[260svh]">
       <div data-dolly="escena" className="relative lg:sticky lg:top-0 lg:h-[92svh] lg:overflow-hidden lg:motion-safe:h-svh">
         {/* Texto: en lg va a la izquierda, sobre el paisaje, y termina antes de la pantalla */}
         <div
@@ -80,6 +80,14 @@ export function Hero() {
           </div>
           {/* Móvil: la foto nace del navy del texto */}
           <div aria-hidden className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[#060733] lg:hidden" />
+        </div>
+
+        {/* lg: cursor que recorre el panel cuando la cámara termina de acercarse (lo mueve HeroDolly) */}
+        <div data-dolly="cursor" aria-hidden className="pointer-events-none absolute left-0 top-0 z-20 hidden opacity-0 lg:block">
+          <span data-clic className="absolute -left-3 -top-3 h-6 w-6 rounded-full border-2 border-[#0a0c77]/60 opacity-0" />
+          <svg width="22" height="22" viewBox="0 0 24 24" className="relative drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]">
+            <path d="M4 2 L4 19.5 L8.6 15.2 L11.7 21.8 L14.6 20.5 L11.5 14 L17.8 14 Z" fill="#0b1020" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round" />
+          </svg>
         </div>
 
         {/* lg: velo izquierdo para el texto; se retira al acercarse a la tablet */}

@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { ComponentType } from "react";
 import { CheckCircle2, Plus } from "../ui/icons";
 import { TechGrid } from "../ui/TechGrid";
 import { ModuloDemo, type ModuloId } from "../demo/ModuloDemo";
+import { useReducedMotion } from "../hooks";
 import { BellIcon } from "../ui/bell";
 import { BoxesIcon } from "../ui/boxes";
 import { ChartLineIcon } from "../ui/chart-line";
@@ -15,6 +16,9 @@ import { LayoutGridIcon } from "../ui/layout-grid";
 import { RefreshCWIcon } from "../ui/refresh-cw";
 import { TimerIcon } from "../ui/timer";
 import { WrenchIcon } from "../ui/wrench";
+
+/** Escritorio: el mapa avanza solo un módulo cada AUTO_MS mientras está en pantalla. */
+const AUTO_MS = 4500;
 
 type AnimatedIcon = ComponentType<{ size?: number; className?: string }>;
 
@@ -144,23 +148,34 @@ function ModuleNode({
   side,
   onSelect,
   onHover,
+  progreso,
 }: {
   module: Module;
   active: boolean;
   side: "left" | "right";
   onSelect: (id: ModuloId) => void;
   onHover: (id: ModuloId | null) => void;
+  /** Clave de la barra de avance automático (null: sin avance automático). */
+  progreso: string | null;
 }) {
   const Icon = module.icon;
 
   return (
     <li className="relative h-full">
+      {/* Conector hacia la tarjeta central: se enciende con el módulo activo y un punto viaja por él. */}
       <span
         aria-hidden
-        className={`absolute top-1/2 hidden h-px w-10 -translate-y-1/2 bg-white/24 lg:block ${
-          side === "left" ? "-right-10" : "-left-10"
-        }`}
-      />
+        className={`absolute top-1/2 hidden h-px w-10 -translate-y-1/2 transition-colors duration-300 lg:block ${
+          active ? "bg-white/70" : "bg-white/24"
+        } ${side === "left" ? "-right-10" : "-left-10"}`}
+      >
+        {active && (
+          <span
+            className="absolute -top-[2.5px] left-0 h-1.5 w-1.5 rounded-full bg-white"
+            style={{ animation: `${side === "left" ? "swc-viaje" : "swc-viaje-inv"} 650ms cubic-bezier(0.23, 1, 0.32, 1) both` }}
+          />
+        )}
+      </span>
       <button
         type="button"
         onClick={() => onSelect(module.id)}
@@ -202,6 +217,15 @@ function ModuleNode({
             {module.stat}
           </span>
         </span>
+        {active && progreso && (
+          <span aria-hidden className="pointer-events-none absolute inset-x-3 bottom-1.5 h-0.5 overflow-hidden rounded-full bg-white/10">
+            <span
+              key={progreso}
+              className="block h-full origin-left rounded-full bg-white/70"
+              style={{ animation: `swc-progreso ${AUTO_MS}ms linear both` }}
+            />
+          </span>
+        )}
       </button>
     </li>
   );
@@ -221,7 +245,12 @@ function ActiveDetail({
       className={`overflow-hidden rounded-[var(--radius-lg)] border border-white/12 bg-white text-ink shadow-[var(--shadow-lg)] ${className}`}
       style={{ animation: "swc-fade-up 0.18s ease-out both" }}
     >
-      <div className={`${compact ? "p-4" : "p-5"} border-b border-border`}>
+      {/* key: al cambiar de módulo el texto entra de nuevo (fundido corto hacia arriba). */}
+      <div
+        key={module.id}
+        className={`${compact ? "p-4" : "p-5"} border-b border-border`}
+        style={{ animation: "swc-aparecer 320ms cubic-bezier(0.23, 1, 0.32, 1) both" }}
+      >
         <p className="text-xs font-semibold text-brand-900">
           {module.tag}
         </p>
@@ -263,6 +292,43 @@ export function Servicios() {
     if (id) pausaHover.current = window.setTimeout(() => setActiveId(id), 140);
   };
 
+  // Avance automático (escritorio, en pantalla, sin movimiento reducido). Se pausa mientras se
+  // lee la tarjeta central o hay foco de teclado en el mapa, y se apaga para siempre cuando el
+  // visitante elige un módulo con clic: desde ahí manda él.
+  const reducido = useReducedMotion();
+  const mapaRef = useRef<HTMLDivElement>(null);
+  const [enVista, setEnVista] = useState(false);
+  const [pausa, setPausa] = useState(false);
+  const [automatico, setAutomatico] = useState(true);
+  const [ciclo, setCiclo] = useState(0);
+  const corriendo = isDesktop && automatico && enVista && !pausa && !reducido;
+
+  useEffect(() => {
+    const el = mapaRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setEnVista(e.isIntersecting), { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [isDesktop]);
+
+  useEffect(() => {
+    if (!corriendo) return;
+    const t = window.setTimeout(() => {
+      setActiveId((cur) => MODULES[(MODULES.findIndex((m) => m.id === cur) + 1) % MODULES.length].id);
+    }, AUTO_MS);
+    return () => window.clearTimeout(t);
+  }, [corriendo, activeId, ciclo]);
+
+  const elegir = (id: ModuloId) => {
+    setAutomatico(false);
+    setActiveId(id);
+  };
+  const reanudar = () => {
+    setPausa(false);
+    setCiclo((c) => c + 1);
+  };
+  const progreso = corriendo ? `${activeId}-${ciclo}` : null;
+
   return (
     <section
       id="servicios"
@@ -288,7 +354,12 @@ export function Servicios() {
 
         {/* Desktop concept map */}
         {isDesktop ? (
-        <div className="relative mt-12 grid grid-cols-[minmax(0,1fr)_minmax(260px,330px)_minmax(0,1fr)] items-stretch gap-7 lg:h-[460px] xl:h-[480px]">
+        <div
+          ref={mapaRef}
+          onFocus={() => setPausa(true)}
+          onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && reanudar()}
+          className="relative mt-12 grid grid-cols-[minmax(0,1fr)_minmax(260px,330px)_minmax(0,1fr)] items-stretch gap-7 lg:h-[460px] xl:h-[480px]"
+        >
           <ul className="grid h-full grid-rows-5 gap-4">
             {LEFT_MODULES.map((module) => (
               <ModuleNode
@@ -296,13 +367,14 @@ export function Servicios() {
                 module={module}
                 active={activeId === module.id}
                 side="left"
-                onSelect={setActiveId}
+                onSelect={elegir}
                 onHover={hoverModule}
+                progreso={progreso}
               />
             ))}
           </ul>
 
-          <div className="h-full">
+          <div className="h-full" onPointerEnter={() => setPausa(true)} onPointerLeave={reanudar}>
             {activeModule && (
               <ActiveDetail module={activeModule} compact className="flex h-full flex-col" />
             )}
@@ -315,8 +387,9 @@ export function Servicios() {
                 module={module}
                 active={activeId === module.id}
                 side="right"
-                onSelect={setActiveId}
+                onSelect={elegir}
                 onHover={hoverModule}
+                progreso={progreso}
               />
             ))}
           </ul>

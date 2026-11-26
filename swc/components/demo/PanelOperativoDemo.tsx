@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import {
   COLOR_DETENIDO,
   COLOR_ESTADO,
+  EQUIPO_CAEX,
   EQUIPO_DESTACADO,
   EQUIPOS_VISTA_RAPIDA,
   EVENTOS,
@@ -11,6 +12,8 @@ import {
   OTS,
   OTS_PRIORITARIAS,
   RECORRIDO_OT,
+  ETIQUETA_ESTADO,
+  type Estado,
   type TipoEvento,
 } from "../../lib/demo";
 import {
@@ -144,6 +147,51 @@ function Texto({ partes, recorrido }: { partes: string | Parte[]; recorrido: boo
   );
 }
 
+const CHIP_FICHA: Record<Estado, { fondo: string; texto: string }> = {
+  operativo: { fondo: "#dcfce7", texto: "#15803d" },
+  mantencion: { fondo: "#fef3c7", texto: "#b45309" },
+  fuera: { fondo: "#fee2e2", texto: "#b91c1c" },
+};
+const TONO_PRIORIDAD: Record<string, { fondo: string; texto: string }> = {
+  Alta: { fondo: "#fee2e2", texto: "#b91c1c" },
+  Media: { fondo: "#fef3c7", texto: "#b45309" },
+};
+
+/** Ficha del equipo elegido en «Estado de la flota». */
+function FichaEquipo({ e, foto, className }: { e: typeof EQUIPO_DESTACADO; foto: string; className: string }) {
+  const pr = TONO_PRIORIDAD[e.prioridadMax] ?? TONO_PRIORIDAD.Media;
+  return (
+    <div className={className}>
+      <div className={s.fichaFoto}>
+        {/* Recortes de /img/faena/pala-electrica.jpg (Sansumaria, CC BY-SA 3.0; crédito en lib/creditos.ts). */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- imagen chica dentro de una pantalla dibujada */}
+        <img src={foto} alt="" width={720} height={300} loading="lazy" decoding="async" />
+        <span className={s.fichaEstado} style={{ background: CHIP_FICHA[e.estado].fondo, color: CHIP_FICHA[e.estado].texto }}>
+          {ETIQUETA_ESTADO[e.estado]}
+        </span>
+      </div>
+      <div className={s.fichaNombre}>
+        <b>{e.codigo}</b>
+        <span>{e.modelo}</span>
+        <small>{e.flota}</small>
+      </div>
+      <div className={s.datos}>
+        <div className={s.dato}><span>Horómetro</span><b>{e.horometro}</b></div>
+        <div className={s.dato}><span>OTs abiertas</span><b>{e.otsAbiertas}</b></div>
+        <div className={s.dato}><span>Prioridad máx.</span><b style={{ color: pr.texto }}>{e.prioridadMax}</b></div>
+        <div className={s.dato}><span>Mantención</span><b style={{ color: "#b45309" }}>{e.mantencion}</b></div>
+      </div>
+      <span className={s.nota}>{e.aviso}</span>
+      <span className={s.nota}>
+        OT prioritaria{" "}
+        <span className={s.otPrioritaria} style={{ background: pr.fondo, color: pr.texto }}>
+          {e.prioridadMax} · {e.ot}
+        </span>
+      </span>
+    </div>
+  );
+}
+
 function Cabecera({ icon: I, titulo, children }: { icon: IconType; titulo: string; children?: React.ReactNode }) {
   return (
     <div className={s.panelCab}>
@@ -238,7 +286,7 @@ export function PanelOperativoDemo({ encender = false, recorrido = false }: { en
 
             <div className={s.kpis}>
               {KPIS.map((k, i) => (
-                <div key={k.label} className={k.alerta ? s.kpiAlerta : s.kpi} style={d(i)}>
+                <div key={k.label} className={k.alerta ? s.kpiAlerta : s.kpi} style={d(i)} data-objetivo={k.alerta ? "kpi-np" : undefined}>
                   <div className={s.kpiCab}>
                     <k.icon stroke={1.7} style={{ color: k.color }} />
                     <div>
@@ -313,7 +361,7 @@ export function PanelOperativoDemo({ encender = false, recorrido = false }: { en
                     </li>
                   )}
                   {EVENTOS.map((e, i) => (
-                    <li key={e.texto} className={s.evento} style={d(i)}>
+                    <li key={e.texto} className={s.evento} style={d(i)} data-objetivo={i === 0 ? "evento" : undefined}>
                       <span className={s.punto} style={{ background: TONO[e.tipo].punto }} />
                       <b>{e.texto}</b>
                       <span className={s.etiqueta} style={{ background: TONO[e.tipo].fondo, color: TONO[e.tipo].texto }}>
@@ -352,34 +400,22 @@ export function PanelOperativoDemo({ encender = false, recorrido = false }: { en
                   <div className={s.pestanas}>
                     <ChevronLeft stroke={1.8} />
                     {EQUIPOS_VISTA_RAPIDA.map((c, i) => (
-                      <span key={c} className={i === 0 ? `${s.pestana} ${s.pestanaActiva}` : s.pestana}>
+                      <span
+                        key={c}
+                        className={`${s.pestana} ${i === 0 ? s.tabPala : i === 1 ? s.tabCaex : ""}`}
+                        data-objetivo={i === 1 ? "tab-caex" : undefined}
+                      >
                         <i style={{ background: i === 1 ? COLOR_ESTADO.mantencion : i === 2 ? COLOR_ESTADO.fuera : COLOR_ESTADO.operativo }} />
                         {c}
                       </span>
                     ))}
                     <ChevronRight stroke={1.8} />
                   </div>
-                  <div className={s.fichaFoto}>
-                    {/* Recorte de /img/faena/pala-electrica.jpg (Sansumaria, CC BY-SA 3.0; crédito en lib/creditos.ts). */}
-                    {/* eslint-disable-next-line @next/next/no-img-element -- imagen chica dentro de una pantalla dibujada */}
-                    <img src="/img/faena/pala-ficha.jpg" alt="" width={720} height={300} loading="lazy" decoding="async" />
-                    <span className={s.fichaEstado}>Operativo</span>
+                  {/* La segunda ficha solo existe en la portada: la abre el recorrido del cursor (HeroDolly). */}
+                  <div className={s.fichas}>
+                    <FichaEquipo e={EQUIPO_DESTACADO} foto="/img/faena/pala-ficha.jpg" className={s.fichaPala} />
+                    {encender && <FichaEquipo e={EQUIPO_CAEX} foto="/img/faena/caex-evidencia.jpg" className={s.fichaCaex} />}
                   </div>
-                  <div className={s.fichaNombre}>
-                    <b>{EQUIPO_DESTACADO.codigo}</b>
-                    <span>{EQUIPO_DESTACADO.modelo}</span>
-                    <small>{EQUIPO_DESTACADO.flota}</small>
-                  </div>
-                  <div className={s.datos}>
-                    <div className={s.dato}><span>Horómetro</span><b>{EQUIPO_DESTACADO.horometro}</b></div>
-                    <div className={s.dato}><span>OTs abiertas</span><b>{EQUIPO_DESTACADO.otsAbiertas}</b></div>
-                    <div className={s.dato}><span>Prioridad máx.</span><b style={{ color: "#b45309" }}>{EQUIPO_DESTACADO.prioridadMax}</b></div>
-                    <div className={s.dato}><span>Mantención</span><b style={{ color: "#b45309" }}>{EQUIPO_DESTACADO.mantencion}</b></div>
-                  </div>
-                  <span className={s.nota}>{EQUIPO_DESTACADO.aviso}</span>
-                  <span className={s.nota}>
-                    OT prioritaria <span className={s.otPrioritaria}>Media · {EQUIPO_DESTACADO.ot}</span>
-                  </span>
                 </div>
               </section>
 
@@ -392,7 +428,7 @@ export function PanelOperativoDemo({ encender = false, recorrido = false }: { en
                       {SEGMENTOS.map((g, i) => (
                         <circle
                           key={g.color}
-                          className={s.segmento}
+                          className={`${s.segmento} ${g.color === COLOR_ESTADO.mantencion ? s.segMant : ""}`}
                           style={d(i)}
                           cx="50"
                           cy="50"
@@ -413,7 +449,7 @@ export function PanelOperativoDemo({ encender = false, recorrido = false }: { en
                   </div>
                   <div className={s.leyenda}>
                     {DISTRIBUCION.map((e) => (
-                      <div key={e.label}>
+                      <div key={e.label} data-objetivo={e.color === COLOR_ESTADO.mantencion ? "dona-mant" : undefined}>
                         <i style={{ background: e.color }} />
                         {e.label}
                         <b>{e.n}</b>

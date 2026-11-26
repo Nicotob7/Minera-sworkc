@@ -716,8 +716,32 @@
   border-radius: 50%;
 }
 
-.pestanaActiva {
+.pestana {
+  transition: background-color 250ms ease;
+}
+
+.tabPala {
   background: #fde68a;
+}
+
+/* Fichas apiladas: la del CAEX entra cuando el recorrido de la portada hace clic en su pestaña. */
+.fichas {
+  display: grid;
+}
+
+.fichas > div {
+  display: flex;
+  flex-direction: column;
+  grid-area: 1 / 1;
+  gap: calc(8 * var(--u));
+  transition:
+    opacity 400ms ease,
+    transform 450ms var(--ease);
+}
+
+.fichaCaex {
+  opacity: 0;
+  transform: translateX(calc(12 * var(--u)));
 }
 
 .fichaFoto {
@@ -1000,6 +1024,59 @@
   from {
     background: #bbf7d0;
   }
+}
+
+/* ── Recorrido del cursor en la portada: HeroDolly pone data-demo (lo que se señala) y
+   data-equipo (la ficha elegida) en la capa de la foto. Solo cambian estados de la interfaz,
+   ninguna cifra. ── */
+.pantalla [data-objetivo="kpi-np"],
+.pantalla [data-objetivo="evento"],
+.pantalla [data-objetivo="dona-mant"],
+.segMant {
+  transition:
+    transform 300ms var(--ease),
+    box-shadow 300ms ease,
+    background-color 300ms ease,
+    border-color 300ms ease,
+    stroke-width 300ms var(--ease);
+}
+
+:global([data-demo="kpi"]) .pantalla [data-objetivo="kpi-np"] {
+  box-shadow: 0 calc(10 * var(--u)) calc(24 * var(--u)) rgb(220 38 38 / 0.22);
+  transform: translateY(calc(-4 * var(--u)));
+}
+
+:global([data-demo="dona"]) .pantalla [data-objetivo="dona-mant"] {
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+:global([data-demo="dona"]) .segMant {
+  stroke-width: 18;
+}
+
+:global([data-demo="eventos"]) .pantalla [data-objetivo="evento"] {
+  background: #eff6ff;
+  border-radius: calc(3 * var(--u));
+  box-shadow: 0 0 0 calc(4 * var(--u)) #eff6ff;
+}
+
+:global([data-equipo="caex"]) .tabPala {
+  background: transparent;
+}
+
+:global([data-equipo="caex"]) .tabCaex {
+  background: #fde68a;
+}
+
+:global([data-equipo="caex"]) .fichaPala {
+  opacity: 0;
+  transform: translateX(calc(-12 * var(--u)));
+}
+
+:global([data-equipo="caex"]) .fichaCaex {
+  opacity: 1;
+  transform: none;
 }
 
 /*

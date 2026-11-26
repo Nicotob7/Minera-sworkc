@@ -142,6 +142,11 @@
 @keyframes swc-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
 @keyframes swc-scan { 0% { transform: translateY(-120%); } 100% { transform: translateY(120%); } }
 @keyframes swc-grid-pan { from { background-position: 0 0; } to { background-position: 44px 44px; } }
+/* Cómo funciona: barra de avance automático, punto que viaja por el conector y texto de la tarjeta. */
+@keyframes swc-progreso { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes swc-viaje { from { transform: translateX(0); opacity: 1; } to { transform: translateX(34px); opacity: 0; } }
+@keyframes swc-viaje-inv { from { transform: translateX(34px); opacity: 1; } to { transform: translateX(0); opacity: 0; } }
+@keyframes swc-aparecer { from { opacity: 0; transform: translateY(6px); } }
 @keyframes swc-dash { to { stroke-dashoffset: 0; } }
 @keyframes swc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 

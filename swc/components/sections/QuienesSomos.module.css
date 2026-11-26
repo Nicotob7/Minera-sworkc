@@ -1,0 +1,80 @@
+/*
+ * «Informática que sostiene la operación minera»: el texto se arma con el scroll (pedido del dueño,
+ * 26/11). Línea de tiempo nativa de la sección (view-timeline), sin JavaScript:
+ * - el título sube palabra por palabra mientras la sección entra;
+ * - el párrafo se enciende palabra por palabra al leerlo;
+ * - la ficha traza su línea azul y sus filas entran en orden.
+ * Sin soporte de scroll-timeline o con movimiento reducido, todo se ve quieto y completo.
+ */
+.seccion {
+  view-timeline-name: --quienes;
+}
+
+.ficha {
+  position: relative;
+  padding-top: 2px;
+}
+
+.ficha::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: #0a0c77;
+  transform-origin: left;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .palabra {
+      display: inline-block;
+      animation: subir linear both;
+      animation-timeline: --quienes;
+      animation-range: entry calc(10% + var(--i) * 5%) entry calc(55% + var(--i) * 5%);
+    }
+
+    .leer {
+      animation: encender linear both;
+      animation-timeline: --quienes;
+      animation-range: cover calc(16% + var(--i) * 1.1%) cover calc(24% + var(--i) * 1.1%);
+    }
+
+    .ficha::before {
+      animation: trazar linear both;
+      animation-timeline: --quienes;
+      animation-range: entry 35% cover 38%;
+    }
+
+    .fila {
+      animation: entrar linear both;
+      animation-timeline: --quienes;
+      animation-range: entry calc(45% + var(--i) * 10%) cover calc(30% + var(--i) * 4%);
+    }
+  }
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+}
+
+@keyframes encender {
+  from {
+    opacity: 0.16;
+  }
+}
+
+@keyframes trazar {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}

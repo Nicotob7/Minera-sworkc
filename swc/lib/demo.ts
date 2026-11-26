@@ -60,6 +60,20 @@ export const EQUIPO_DESTACADO = {
 };
 export const EQUIPOS_VISTA_RAPIDA = ["PALA-07", "CAEX-214", "CAR-012", "PERF-31"];
 
+/** Segunda ficha de «Estado de la flota»: la que abre el recorrido de la portada al hacer clic en CAEX-214. */
+export const EQUIPO_CAEX = {
+  codigo: "CAEX-214",
+  modelo: "Camión de extracción",
+  flota: "Flota extracción · CAEX",
+  estado: "mantencion" as Estado,
+  horometro: "18.240,5 h",
+  otsAbiertas: 2,
+  prioridadMax: "Alta",
+  mantencion: "En curso",
+  aviso: "Fuga hidráulica en cilindro de levante",
+  ot: "OT-2026-052",
+};
+
 export type Prioridad = "Alta" | "Media";
 
 export const OTS_PRIORITARIAS: {
